@@ -1,0 +1,7 @@
+{
+  "name": "tir-on-local-preview",
+  "private": true,
+  "scripts": {
+    "dev": "bash scripts/runtime-preview.sh"
+  }
+}

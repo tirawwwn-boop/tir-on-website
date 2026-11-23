@@ -1,0 +1,13 @@
+.runtime/
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+*.log
+.DS_Store
+.local/
+.private/
+artifacts/
+preview/
+__pycache__/

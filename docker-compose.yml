@@ -1,0 +1,88 @@
+name: tir-on
+
+x-wp-env: &wp-env
+  WORDPRESS_DB_HOST: db:3306
+  WORDPRESS_DB_NAME: tiron
+  WORDPRESS_DB_USER: tiron
+  WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
+  WORDPRESS_CONFIG_EXTRA: |
+    define( 'WP_ENVIRONMENT_TYPE', 'local' );
+    define( 'DISALLOW_FILE_EDIT', true );
+    define( 'AUTOMATIC_UPDATER_DISABLED', true );
+
+x-wp-volumes: &wp-volumes
+  - wordpress:/var/www/html
+  - ./theme/tir-on:/var/www/html/wp-content/themes/tir-on:ro
+  - ./local/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+
+services:
+  db:
+    image: mariadb:11.4.13
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: tiron
+      MARIADB_USER: tiron
+      MARIADB_PASSWORD_FILE: /run/secrets/db_password
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    secrets:
+      - db_password
+      - db_root_password
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 15s
+
+  wordpress:
+    image: wordpress:7.1.5-php8.3-apache
+    restart: unless-stopped
+    environment: *wp-env
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+    secrets:
+      - db_password
+    volumes: *wp-volumes
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(is_file('/var/www/html/wp-config.php') && @fsockopen('127.0.0.1', 80) ? 0 : 1);"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  cli:
+    image: wordpress:cli-2.12.0-php8.3
+    profiles: ["tools"]
+    user: "33:33"
+    working_dir: /var/www/html
+    environment:
+      <<: *wp-env
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+      WP_CLI_CONFIG_PATH: /project/wp-cli.yml
+    secrets:
+      - db_password
+      - admin_password
+    volumes:
+      - wordpress:/var/www/html
+      - ./theme/tir-on:/var/www/html/wp-content/themes/tir-on:ro
+      - ./local/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      - ./setup:/project:ro
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
+volumes:
+  wordpress:
+  database:
+
+secrets:
+  db_password:
+    file: ./.local/secrets/db_password
+  db_root_password:
+    file: ./.local/secrets/db_root_password
+  admin_password:
+    file: ./.local/secrets/admin_password
