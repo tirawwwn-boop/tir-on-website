@@ -4,7 +4,9 @@ Prima versiune pentru feedback reunește o instalare locală WordPress + WooComm
 
 ## Previzualizare
 
-**Pentru a vedea designul imediat**, extrage întreaga arhivă de previzualizare și deschide `index.html` în browser. Apasă **Creează-ți Luna** pentru pagina produsului. Poți încerca galeria, comparația dintre fotografie și litofan și personalizarea în browser. Exportul offline reflectă catalogul din momentul generării.
+**Pe telefon**, deschide [prezentarea PDF](artifacts/TIR-ON-mobil.pdf). Cele șapte pagini verticale folosesc textele, imaginile și fonturile magazinului. Pagina 6 arată produsul, iar pagina 7 arată personalizarea. PDF-ul este o ediție pentru lectură și feedback vizual.
+
+**Pentru interacțiuni**, salvează [fișierul HTML autonom](artifacts/TIR-ON-interactiv.html) și deschide-l într-un browser cu JavaScript. Alege **Creează-ți Luna**. Poți încerca galeria, comparația dintre fotografie și litofan, alegerea unei fotografii și coșul de probă. Imaginile, fonturile și cele două pagini sunt incluse în fișier. Vizualizatoarele de atașamente de pe unele telefoane limitează JavaScript. PDF-ul se poate citi și în această situație.
 
 **Pentru catalogul editabil și administrare**, extrage proiectul pe calculator. Cu Docker Compose v2 și OpenSSL disponibile, rulează din directorul care conține `docker-compose.yml`
 
@@ -33,5 +35,7 @@ Pe pagina Luna poți alege un JPG, PNG sau WebP, vedea fotografia și verifica m
 Validarea configurației Docker Compose și verificarea sintaxei scripturilor de instalare au trecut. Daemonul Docker din mediul de lucru a refuzat accesul la socket, astfel că pornirea containerelor rămâne de verificat pe calculatorul de destinație.
 
 Testele efectuate cu WordPress și WooCommerce active, pe SQLite, au confirmat adresa produsului, prețul de 299 RON și păstrarea unui singur produs după repetarea inițializării. Cererile de cumpărare și de checkout prin Store API au primit răspunsul 403. Lista metodelor de plată a fost goală și numărul de comenzi a rămas zero.
+
+Am verificat legăturile și resursele celor două pagini exportate. Într-un DOM simulat, testele fișierului HTML au acoperit navigarea și întoarcerea între pagini, meniul, caruselul, glisorul, galeria, mesaje de validare și coșul de probă. PDF-ul a fost deschis, randat și inspectat pagină cu pagină. Previzualizarea HTTP și testele vizuale într-un browser mobil real rămân neverificate în acest mediu.
 
 După feedbackul vizual, etapa 3 adaugă încărcarea privată, validarea pe server, retenția și asocierea fotografiilor cu comenzile. Etapa 4 integrează Stripe exclusiv în modul de test. Etapele 5 și 6 includ consimțământul, verificările SEO, securitatea, performanța și testele complete ale comenzilor. Pentru lansare vor fi necesare fotografiile finale, datele operatorului, condițiile comerciale verificate juridic și aprobarea explicită pentru activarea plăților.

@@ -170,7 +170,7 @@ html:has(dialog[open]) { overflow: hidden; }
 @media (max-width: 370px) {
   .hero-actions { gap: .8rem; }
   .bag-text { display: none; }
-  .hero h1 { font-size: 2.95rem; }
+  .hero h1 { font-size: clamp(2.65rem, 13vw, 2.95rem); }
   .hero-base { gap: .4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
