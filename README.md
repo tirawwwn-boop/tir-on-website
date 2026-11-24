@@ -2,9 +2,13 @@
 
 Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul inițial este 299 RON și se modifică în WooCommerce.
 
-## Previzualizare pe telefon
+## Previzualizarea V3
 
-Deschide [fișierul HTML din repository](preview/TIR-ON-interactiv.html) în GitHub, autentificat în contul cu acces. Alege **Download raw file**. Pe Android, deschide fișierul `.html` din **Descărcări**, apoi alege **Deschide cu → Chrome**. Dacă GitHub afișează fișierul în loc să îl descarce, folosește butonul de descărcare din pagina fișierului. Previzualizarea include imaginile, fonturile, cele două pagini și selecția unei fotografii pe dispozitiv. Coșul și checkout-ul sunt disponibile în instalarea WordPress.
+Branch-ul `design-v3-refined` pornește din versiunea stabilă WordPress și WooCommerce. Homepage-ul alternează secțiuni espresso și ivory și folosește cele trei vizualizări Luna din V2. În Transformarea, butoanele schimbă vederea completă în detaliul mărit al aceleiași imagini cu Luna stinsă.
+
+Deschide [HTML-ul V3](preview/TIR-ON-V3.html) în GitHub, autentificat în contul cu acces, și alege **Download raw file**. Pe Android, deschide fișierul din **Descărcări** cu Chrome. Previzualizarea include navigarea, galeria și selecția locală a unei fotografii. Coșul și checkout-ul se folosesc din WordPress.
+
+[Capturi la 390 px](preview/TIR-ON-V3-390.jpg) · [Capturi la 1.440 px](preview/TIR-ON-V3-1440.jpg)
 
 ## Pornire locală
 
@@ -27,7 +31,7 @@ Magazinul local este la [localhost:8080](http://localhost:8080/), iar administra
 
 Rulează `python3 tests/commerce_smoke.py http://localhost:8080/` pe o instalare locală cu livrarea și simulatorul de test active. Scriptul folosește Requests, lxml și Pillow, generează un PNG sintetic la execuție și lasă o comandă de test în WooCommerce. Șterge-o ulterior din administrare, împreună cu fotografia, dacă nu mai ai nevoie de ea.
 
-Am verificat formularul cu încărcări multipart în WordPress și WooCommerce active, checkout-ul fără cont, asocierea fotografiei, fișiere invalide, reluarea trimiterii și expirarea coșului. Am verificat descărcarea, ștergerea și retenția fotografiilor din administrare cu stocarea comenzilor WooCommerce HPOS activată și dezactivată. Paginile Acasă și Luna au fost testate în Chromium la 390 px și 1.440 px. Pentru plăți externe trebuie conectat contul Stripe de test și verificată eligibilitatea portofelelor pe dispozitive reale.
+Am verificat formularul cu încărcări multipart în WordPress și WooCommerce active, checkout-ul fără cont, asocierea fotografiei, fișiere invalide, reluarea trimiterii și expirarea coșului. Am verificat descărcarea, ștergerea și retenția fotografiilor din administrare cu stocarea comenzilor WooCommerce HPOS activată și dezactivată. Paginile Acasă și Luna au fost testate în Chromium la 360, 390, 430 și 1.440 px. Pentru plăți externe trebuie conectat contul Stripe de test și verificată eligibilitatea portofelelor pe dispozitive reale.
 
 ## Înainte de lansare
 

@@ -9,10 +9,19 @@ function t_asset($path) {
     return get_theme_file_uri('/assets/' . ltrim($path, '/'));
 }
 
+function t_concept_asset($key, $mobile = false) {
+    $images = [
+        'hero' => 'luna-aprinsa',
+        'feature' => 'luna-living',
+        'relief-unlit' => 'luna-stinsa',
+    ];
+    return t_asset('images/luna-v2/' . $images[$key] . ($mobile ? '-640' : '') . '.webp');
+}
+
 function t_scene($key) {
     $attachment = absint(get_theme_mod('tiron_image_' . $key, 0));
     $url = $attachment ? wp_get_attachment_image_url($attachment, 'full') : false;
-    return $url ?: t_asset('images/' . $key . '.webp');
+    return $url ?: t_concept_asset($key);
 }
 
 function t_luna_id() {
@@ -71,7 +80,8 @@ function t_product_data() {
         'price' => $price_text,
         'description' => $product && $product->get_short_description() ? wp_strip_all_tags($product->get_short_description()) : 'Un litofan circular personalizat după fotografia ta, cu lumină LED alb-caldă și finisaj espresso mat.',
         'concept' => !$images,
-        'images' => $images ?: [t_asset('images/hero-mobile.webp'), t_asset('images/feature.webp'), t_asset('images/detail-mobile.webp')],
+        'concept_mobile_images' => !$images ? [t_concept_asset('hero', true), t_concept_asset('feature', true), t_concept_asset('relief-unlit', true)] : [],
+        'images' => $images ?: [t_concept_asset('hero'), t_concept_asset('feature'), t_concept_asset('relief-unlit')],
         'production' => $metadata('production'),
         'power' => $metadata('power', 'Alimentare prin cablu'),
         'diameter' => $metadata('diameter', 'aprox. 134,5 mm'),

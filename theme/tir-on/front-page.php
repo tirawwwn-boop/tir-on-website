@@ -11,8 +11,14 @@
     <section id="luna" class="feature">
         <div class="wrap feature-inner">
             <figure class="feature-visual">
-                <img src="<?= esc_url(t_scene('feature')); ?>"<?php if (!get_theme_mod('tiron_image_feature')) : ?> srcset="<?= esc_url(t_asset('images/feature-mobile.webp')); ?> 768w, <?= esc_url(t_scene('feature')); ?> 1400w" sizes="(max-width: 700px) 90vw, 45vw"<?php endif; ?> loading="lazy" decoding="async" alt="Compoziție cu Luna și fotografia de peisaj care inspiră litofanul" width="920" height="720">
-                <?php if (!get_theme_mod('tiron_image_feature')) : ?><figcaption>Imagine de concept</figcaption><?php endif; ?>
+                <picture>
+                    <?php if (!get_theme_mod('tiron_image_feature')) : ?>
+                        <source media="(max-width: 760px)" srcset="<?= esc_url(t_concept_asset('feature', true)); ?>">
+                    <?php endif; ?>
+                    <img src="<?= esc_url(t_scene('feature')); ?>" alt="Luna iluminată într-un living, cu finisaj espresso"
+                        width="1122" height="1402" loading="lazy" decoding="async">
+                </picture>
+                <?php if (!get_theme_mod('tiron_image_feature')) : ?><figcaption>Vizualizare de concept</figcaption><?php endif; ?>
             </figure>
             <div class="feature-copy">
                 <p class="section-label"><span></span>Obiectul de lumină</p>

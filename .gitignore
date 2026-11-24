@@ -11,4 +11,7 @@ dist/
 artifacts/
 preview/*
 !preview/TIR-ON-interactiv.html
+!preview/TIR-ON-V3.html
+!preview/TIR-ON-V3-390.jpg
+!preview/TIR-ON-V3-1440.jpg
 __pycache__/

@@ -1,43 +1,22 @@
 (() => {
-    function initComparisons() {
-        document.querySelectorAll('[data-transformation]').forEach((section) => {
-            const stage = section.querySelector('[data-compare]');
-            const range = stage?.querySelector('input[type="range"]');
-            if (!range || !range.disabled) return;
+  const section = document.querySelector('[data-relief]');
+  if (!section) return;
 
-            const modes = section.querySelector('.tl-light-modes');
-            const buttons = modes.querySelectorAll('button');
-            const label = section.querySelector('[data-result-label]');
-            const lit = stage.querySelector('.tl-lit');
-            const unlit = stage.querySelector('.tl-unlit');
+  const controls = section.querySelector('.relief-controls');
+  const buttons = Array.from(controls.querySelectorAll('[data-relief-view]'));
+  const picture = section.querySelector('[data-relief-image]');
+  const caption = section.querySelector('[data-relief-caption]');
 
-            const update = () => {
-                const original = range.valueAsNumber;
-                stage.style.setProperty('--split', original + '%');
-                range.setAttribute('aria-valuetext', original + '% fotografie, ' + (100 - original) + '% ' + label.textContent.toLowerCase());
-            };
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      const detail = button.dataset.reliefView === 'detail';
+      picture.classList.toggle('relief-zoomed', detail);
+      caption.textContent = detail ? 'Textura litofanului · detaliu mărit' : 'Luna stinsă';
+      for (const candidate of buttons) {
+        candidate.setAttribute('aria-pressed', String(candidate === button));
+      }
+    });
+  }
 
-            buttons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const illuminated = button.dataset.light === 'on';
-                    lit.hidden = !illuminated;
-                    unlit.hidden = illuminated;
-                    label.textContent = illuminated ? 'Litofan iluminat' : 'Relief neiluminat';
-                    buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-                    update();
-                });
-            });
-
-            modes.hidden = false;
-            range.disabled = false;
-            range.addEventListener('input', update);
-            update();
-        });
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initComparisons, { once: true });
-    } else {
-        initComparisons();
-    }
+  controls.hidden = false;
 })();

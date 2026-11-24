@@ -24,16 +24,12 @@ if ( function_exists( 'add_action' ) ) {
             'title'    => 'TIR-ON · Povestea de pe pagina principală',
             'priority' => 150,
         ] );
-        foreach ( [ 'original' => 'Fotografia de referință', 'relief' => 'Litofanul iluminat', 'relief-unlit' => 'Relieful neiluminat' ] as $key => $label ) {
-            $setting = 'tiron_image_' . $key;
-            $customizer->add_setting( $setting, [ 'default' => 0, 'sanitize_callback' => 'absint' ] );
-            $customizer->add_control( new WP_Customize_Media_Control( $customizer, $setting, [
-                'label'       => $label . ' · comparație',
-                'section'     => 'tiron_story_copy',
-                'mime_type'   => 'image',
-                'description' => 'Imagine editorială publică. Folosește imagini aliniate în format 3:2.',
-            ] ) );
-        }
+        $customizer->add_setting('tiron_image_relief-unlit', ['default' => 0, 'sanitize_callback' => 'absint']);
+        $customizer->add_control(new WP_Customize_Media_Control($customizer, 'tiron_image_relief-unlit', [
+            'label' => 'Imagine pentru detaliul de relief',
+            'section' => 'tiron_story_copy',
+            'mime_type' => 'image',
+        ]));
         foreach ( tiron_story_fields() as $key => $field ) {
             $setting = 'tiron_' . $key;
             $customizer->add_setting( $setting, [

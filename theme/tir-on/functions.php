@@ -34,6 +34,7 @@ add_action('wp_enqueue_scripts', static function () {
     }
     if (is_front_page()) {
         $css[] = 'story';
+        $css[] = 'home-v3';
         $js[] = 'story';
     }
     if (function_exists('is_product') && is_product() && t_is_luna(get_queried_object_id())) {
@@ -91,7 +92,7 @@ add_action('customize_register', static function ($customizer) {
         $customizer->add_setting('tiron_' . $key, ['default' => $default, 'sanitize_callback' => 'sanitize_text_field']);
         $customizer->add_control('tiron_' . $key, ['label' => $label, 'section' => 'tiron_home', 'type' => 'text']);
     }
-    foreach (['hero' => 'Copertă · vedere principală', 'hero-alt' => 'Luna în ambient', 'feature' => 'Compoziție cu fotografia originală', 'detail' => 'Detaliu de finisaj'] as $key => $label) {
+    foreach (['hero' => 'Copertă · Luna iluminată', 'feature' => 'Prezentare · Luna în interior'] as $key => $label) {
         $setting = 'tiron_image_' . $key;
         $customizer->add_setting($setting, ['default' => 0, 'sanitize_callback' => 'absint']);
         $customizer->add_control(new WP_Customize_Media_Control($customizer, $setting, ['label' => $label, 'section' => 'tiron_home', 'mime_type' => 'image']));
@@ -115,7 +116,7 @@ add_action('wp_head', static function () {
     echo '<meta property="og:image" content="' . esc_url($image) . '">';
     echo '<meta property="og:url" content="' . esc_url(is_front_page() ? home_url('/') : get_permalink()) . '">';
     if (is_front_page() && !get_theme_mod('tiron_image_hero')) {
-        echo '<link rel="preload" as="image" href="' . esc_url(t_asset('images/hero-mobile.webp')) . '" media="(max-width: 700px)">';
-        echo '<link rel="preload" as="image" href="' . esc_url($image) . '" media="(min-width: 701px)">';
+        echo '<link rel="preload" as="image" href="' . esc_url(t_concept_asset('hero', true)) . '" media="(max-width: 760px)">';
+        echo '<link rel="preload" as="image" href="' . esc_url($image) . '" media="(min-width: 761px)">';
     }
 }, 2);

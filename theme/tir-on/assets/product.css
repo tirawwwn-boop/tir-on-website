@@ -28,6 +28,8 @@
 .lp-photo-open { display: block; position: relative; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; }
 .lp-photo-open:focus-visible { outline-offset: -5px !important; }
 .lp-photo-open img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lp-photo-open picture, .lp-thumb picture { display: block; width: 100%; height: 100%; }
+.lp-media[data-concepts="portrait"] .lp-photo-open img { object-fit: contain; }
 .lp-zoom, .lp-dialog button { border-radius: 50%; display: grid; place-items: center; }
 .lp-zoom { position: absolute; bottom: 1rem; right: 1rem; width: 2.65rem; height: 2.65rem; background: rgba(24,20,17,.76); border: 1px solid rgba(255,253,249,.5); color: #fffdf9; }
 .lp-photo-open:hover .lp-zoom { background: #181411; }
@@ -107,6 +109,7 @@
   .lp-breadcrumb { padding: 1rem 0 1.1rem; }
   .lp-info { padding: 0; }
   .lp-media { aspect-ratio: 1.2; }
+  .lp-media[data-concepts="portrait"] { aspect-ratio: .95; }
   .lp-dialog { width: 100%; max-width: 100%; }
   .lp-dialog img { height: 72svh; }
 }

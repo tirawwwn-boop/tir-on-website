@@ -7,6 +7,7 @@
   const get = (selector) => product.querySelector(selector);
   const thumbButtons = Array.from(product.querySelectorAll('[data-gallery-index]'));
   const mainPhoto = get('[data-main-photo]');
+  const mainSource = mainPhoto?.closest('picture')?.querySelector('source');
   const lightbox = get('[data-lightbox]');
   const largePhoto = get('[data-large-photo]');
   const images = thumbButtons.length
@@ -18,6 +19,9 @@
     if (!images.length) return;
     selected = (index + images.length) % images.length;
     const alt = product.dataset.name + ', imaginea ' + (selected + 1);
+    if (mainSource) {
+      mainSource.srcset = thumbButtons[selected].querySelector('source').srcset;
+    }
     mainPhoto.src = images[selected];
     mainPhoto.alt = alt;
     if (lightbox.open) {
