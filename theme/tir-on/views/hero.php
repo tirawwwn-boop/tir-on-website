@@ -5,6 +5,16 @@ $scenes = [
     ['key' => 'detail', 'mobile' => 'detail-mobile', 'name' => t_concept_asset('detail') ? 'Lumină stinsă' : 'Detaliu de design', 'alt' => t_concept_asset('detail') ? 'Luna stinsă, cu litofanul alb în relief' : 'Detaliu al finisajului și al reliefului iluminat'],
 ];
 $library = t_is_library_home();
+if ($library) {
+    // Keep the dark portrait on the first shelf and landscape as a separate example.
+    $scenes = [$scenes[0], t_concept_asset('hero') ? [
+        'key' => 'landscape',
+        'mobile' => 'hero-mobile',
+        'name' => 'Exemplu cu peisaj',
+        'alt' => 'Litofan Luna iluminat, cu un peisaj montan în relief',
+        'url' => t_asset('images/hero.webp'),
+    ] : $scenes[1]];
+}
 ?>
 <section class="hero" aria-label="Colecția TIR-ON Luna" aria-roledescription="carusel" data-hero<?= t_concept_asset('hero') ? ' data-concepts="v2"' : ''; ?>>
     <div class="hero-media">
@@ -14,8 +24,8 @@ $library = t_is_library_home();
             $srcset_attr = $index === 0 ? 'srcset' : 'data-srcset';
             ?>
             <picture class="hero-frame<?= $index === 0 ? ' is-active' : ''; ?>" data-frame data-name="<?= esc_attr($scene['name']); ?>" data-concept="<?= $custom ? '0' : '1'; ?>" aria-hidden="<?= $index === 0 ? 'false' : 'true'; ?>">
-                <?php if (!$custom) : ?><source media="(max-width: 700px)" <?= $srcset_attr; ?>="<?= esc_url(t_concept_asset($scene['key'], true) ?? t_asset('images/' . $scene['mobile'] . '.webp')); ?>"><?php endif; ?>
-                <img <?= $src_attr; ?>="<?= esc_url(t_scene($scene['key'])); ?>" alt="<?= esc_attr($custom ? $scene['name'] : $scene['alt']); ?>" width="1672" height="941" decoding="async"<?= $index === 0 ? ' fetchpriority="high"' : ''; ?>>
+                <?php if (!$custom) : ?><source media="(max-width: 700px)" <?= $srcset_attr; ?>="<?= esc_url(t_concept_asset($scene['key'], true) ?? t_concept_asset($scene['key']) ?? t_asset('images/' . $scene['mobile'] . '.webp')); ?>"><?php endif; ?>
+                <img <?= $src_attr; ?>="<?= esc_url($scene['url'] ?? t_scene($scene['key'])); ?>" alt="<?= esc_attr($custom ? $scene['name'] : $scene['alt']); ?>" width="1672" height="941" decoding="async"<?= $index === 0 ? ' fetchpriority="high"' : ''; ?>>
             </picture>
         <?php endforeach; ?>
     </div>
@@ -37,7 +47,7 @@ $library = t_is_library_home();
                 <div class="hero-indicators" role="group" aria-label="Alege imaginea">
                     <?php foreach ($scenes as $i => $scene) : ?><button type="button" data-slide="<?= $i; ?>" aria-label="<?= esc_attr($scene['name']); ?>" aria-pressed="<?= $i === 0 ? 'true' : 'false'; ?>"></button><?php endforeach; ?>
                 </div>
-                <span class="slider-num"><b data-position>01</b><span>/</span>03</span>
+                <span class="slider-num"><b data-position>01</b><span>/</span><?= esc_html(sprintf('%02d', count($scenes))); ?></span>
             </div>
             <div class="scene-caption" aria-live="polite"><span class="scene-title">TIR-ON LUNA</span><span class="scene-name" data-caption><?= $scenes[0]['name']; ?><?= get_theme_mod('tiron_image_hero') ? '' : ' · Vizualizare de concept'; ?></span></div>
             <div class="scene-actions"><button type="button" data-prev aria-label="Imaginea precedentă"><?= t_icon('prev', 15); ?></button><button type="button" data-next aria-label="Imaginea următoare"><?= t_icon('next', 15); ?></button></div>

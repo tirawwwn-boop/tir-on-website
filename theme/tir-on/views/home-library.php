@@ -1,10 +1,12 @@
 <?php defined('ABSPATH') || exit; ?>
 
 <main id="continut" class="memory-library">
-    <div class="library-shelf library-opening"><?php require __DIR__ . '/hero.php'; ?></div>
-    <div class="library-shelf library-transformation"><?php require __DIR__ . '/home-transformation.php'; ?></div>
-    <div class="library-shelf library-product"><?php require __DIR__ . '/home-feature.php'; ?></div>
-    <div class="library-extras"><?php require __DIR__ . '/home-story.php'; ?></div>
+    <div class="library-cabinet">
+        <div class="library-shelf library-opening"><?php require __DIR__ . '/hero.php'; ?></div>
+        <div class="library-shelf library-transformation"><?php require __DIR__ . '/library-relief.php'; ?></div>
+        <div class="library-shelf library-product"><?php require __DIR__ . '/home-feature.php'; ?></div>
+        <div class="library-extras"><?php require __DIR__ . '/home-story.php'; ?></div>
+    </div>
     <section class="library-closing" aria-labelledby="library-final">
         <div class="wrap">
             <p class="hero-kicker"><span></span>Turning Memories ON</p>

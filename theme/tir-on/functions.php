@@ -42,9 +42,10 @@ add_action('wp_enqueue_scripts', static function () {
     if (is_front_page()) {
         $css[] = 'story';
         $css[] = 'home-v2';
-        $js[] = 'story';
         if (t_is_library_home()) {
             $css[] = 'library';
+        } else {
+            $js[] = 'story';
         }
     }
     if (function_exists('is_product') && is_product() && t_is_luna(get_queried_object_id())) {
@@ -126,7 +127,7 @@ add_action('wp_head', static function () {
     echo '<meta property="og:image" content="' . esc_url($image) . '">';
     echo '<meta property="og:url" content="' . esc_url(is_front_page() ? home_url('/') : get_permalink()) . '">';
     if (is_front_page() && !get_theme_mod('tiron_image_hero')) {
-        echo '<link rel="preload" as="image" href="' . esc_url((t_concept_asset('hero', true) ?? t_asset('images/hero-mobile.webp'))) . '" media="(max-width: 700px)">';
+        echo '<link rel="preload" as="image" href="' . esc_url((t_concept_asset('hero', true) ?? t_concept_asset('hero') ?? t_asset('images/hero-mobile.webp'))) . '" media="(max-width: 700px)">';
         echo '<link rel="preload" as="image" href="' . esc_url($image) . '" media="(min-width: 701px)">';
     }
 }, 2);
