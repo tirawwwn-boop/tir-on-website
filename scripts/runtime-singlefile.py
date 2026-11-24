@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / 'preview/dist'
 HOME = DIST / 'index.html'
 LUNA = DIST / 'produs/luna/index.html'
-OUTPUT = ROOT / 'artifacts/TIR-ON-interactiv.html'
+OUTPUT = ROOT / 'preview/TIR-ON-interactiv.html'
 ROUTES = {HOME: 'acasa', LUNA: 'produs-luna'}
 
 # Image bytes occur once in the file. The first hero picture also works in
@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const skip = document.querySelector('.skip-link');
   const productLink = document.querySelector('.head-nav a[href="#produs-luna"]');
-  const homeSections = new Map(Array.from(pages.acasa.querySelectorAll('[id]')).map(el => [el.id, el]));
+  const sections = new Map(Object.values(pages).flatMap(page =>
+    Array.from(page.querySelectorAll('[id]'), node => [node.id, {page, node}])));
   let active = pages.acasa;
   let lastHash;
   pages['produs-luna'].remove();
@@ -69,8 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showRoute({focus = true, scrollY} = {}) {
     const key = location.hash.slice(1) || 'acasa';
-    const next = key === 'produs-luna' ? pages['produs-luna'] : pages.acasa;
-    const target = homeSections.get(key) || next;
+    const section = sections.get(key);
+    const next = pages[key] || section?.page || pages.acasa;
+    const target = section?.node || next;
     if (next !== active) {
       document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
       active.replaceWith(next);
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey ||
         event.ctrlKey || event.shiftKey || event.altKey) return;
     const id = link.hash.slice(1);
-    if (!pages[id] && !homeSections.has(id)) return;
+    if (!pages[id] && !sections.has(id)) return;
     event.preventDefault();
     const dialog = link.closest('dialog[open]');
     if (dialog) dialog.close();
@@ -187,8 +189,14 @@ def bundle():
                     style = etree.SubElement(head, 'style', id=node.get('id'))
                     style.text = stylesheet
                     styled.add(path)
+            if page == HOME and node.get('rel') == 'icon':
+                node.set('href', data_uri(local_file(node.get('href'), page)))
+                continue
             node.drop_tree()
-        for node in main.xpath('.//img | .//source'):
+        image_nodes = main.xpath('.//img | .//source')
+        if page == HOME:
+            image_nodes += doc.xpath('//header//img | //footer//img')
+        for node in image_nodes:
             refs = {}
             for attribute in ('src', 'srcset', 'data-src', 'data-srcset'):
                 value = node.attrib.pop(attribute, None)
@@ -218,6 +226,7 @@ def bundle():
     for node in home.xpath('//*[@data-original-asset]'):
         packed.pop(node.get('data-original-asset'), None)
     # Retain both OFL notices alongside the single embedded copy of each font.
+    etree.SubElement(head, 'style').text = '[data-add-product][hidden] { display: none !important; }'
     licenses = sorted((DIST / 'assets/fonts').glob('*-OFL.txt'))
     add_script(body, '\n\n'.join(path.read_text() for path in licenses), 'text/plain', 'font-licenses')
     add_script(body, json.dumps(packed, separators=(',', ':')), 'application/json', 'offline-images')

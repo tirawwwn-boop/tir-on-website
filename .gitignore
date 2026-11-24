@@ -9,5 +9,6 @@ dist/
 .local/
 .private/
 artifacts/
-preview/
+preview/*
+!preview/TIR-ON-interactiv.html
 __pycache__/

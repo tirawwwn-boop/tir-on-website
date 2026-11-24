@@ -68,6 +68,21 @@ def build_page(route, dest):
     doc = html.document_fromstring(rendered.stdout)
     if not doc.xpath('//h1') or doc.xpath('//*[@id="error-page"]'):
         raise RuntimeError(f'Invalid WordPress response for {route}')
+    # Offline review uses the live theme UI and can only preview a photo locally.
+    for link in doc.xpath('//a[contains(concat(" ",normalize-space(@class)," ")," bag-trigger ")]'):
+        link.drop_tree()
+    for form in doc.xpath('//form[@data-personalization]'):
+        form.attrib.pop('action', None)
+        for node in form.xpath('.//input[@type="hidden"]'):
+            node.drop_tree()
+        for button in form.xpath('.//button[@data-add-product]'):
+            button.set('type', 'button')
+            button.set('hidden', 'hidden')
+            button.set('disabled', 'disabled')
+        for tip in form.xpath('./p[contains(text(),"Fotografia se încarcă")]'):
+            tip.text = 'Previzualizare offline. Fotografia rămâne pe dispozitiv. Comenzile se plasează din magazinul WordPress.'
+    for meta in doc.xpath('//meta[@name="robots"]'):
+        meta.set('content', 'noindex,nofollow')
     # The exported UI has local interactions, without WordPress network APIs.
     for el in doc.xpath('//script'):
         if THEME not in el.get('src',''):
