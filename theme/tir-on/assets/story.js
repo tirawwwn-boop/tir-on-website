@@ -3,7 +3,7 @@
         document.querySelectorAll('[data-transformation]').forEach((section) => {
             const stage = section.querySelector('[data-compare]');
             const range = stage?.querySelector('input[type="range"]');
-            if (!range || !range.disabled) return;
+            if (!stage) return;
 
             const modes = section.querySelector('.tl-light-modes');
             const buttons = modes.querySelectorAll('button');
@@ -12,6 +12,7 @@
             const unlit = stage.querySelector('.tl-unlit');
 
             const update = () => {
+                if (!range) return;
                 const original = range.valueAsNumber;
                 stage.style.setProperty('--split', original + '%');
                 range.setAttribute('aria-valuetext', original + '% fotografie, ' + (100 - original) + '% ' + label.textContent.toLowerCase());
@@ -29,8 +30,10 @@
             });
 
             modes.hidden = false;
-            range.disabled = false;
-            range.addEventListener('input', update);
+            if (range) {
+                range.disabled = false;
+                range.addEventListener('input', update);
+            }
             update();
         });
     }

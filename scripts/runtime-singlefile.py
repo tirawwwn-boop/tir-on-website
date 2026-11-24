@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Bundle the two WordPress review exports into a stand-alone, offline HTML file."""
+import argparse
 import base64
 import json
 import mimetypes
@@ -159,7 +160,7 @@ def add_script(body, contents, kind='text/javascript', ident=None):
     etree.SubElement(body, 'script', attributes).text = contents
 
 
-def bundle():
+def bundle(destination=OUTPUT):
     docs = {path: html.parse(str(path), parser=html.HTMLParser(encoding='utf-8')) for path in ROUTES}
     home = docs[HOME]
     head, body = home.find('head'), home.find('body')
@@ -246,11 +247,13 @@ def bundle():
         if target[1:] not in ids:
             raise ValueError(f'Missing navigation target: {target}')
     output = etree.tostring(home, method='html', encoding='utf-8', doctype='<!doctype html>')
-    OUTPUT.parent.mkdir(exist_ok=True)
+    destination.parent.mkdir(exist_ok=True)
     output = b'\n'.join(line.rstrip() for line in output.split(b'\n')) + b'\n'
-    OUTPUT.write_bytes(output)
-    print(f'{OUTPUT.name} · {len(output):,} bytes · {len(images)} images · {len(ROUTES)} views')
+    destination.write_bytes(output)
+    print(f'{destination.name} · {len(output):,} bytes · {len(images)} images · {len(ROUTES)} views')
 
 
 if __name__ == '__main__':
-    bundle()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, default=OUTPUT)
+    bundle(parser.parse_args().output)

@@ -4,6 +4,7 @@
 This optional review artifact can be opened from disk. The editable store runs
 under WordPress, with the Docker setup described in setup/INSTALARE.md.
 """
+import argparse
 import base64
 import json
 import os
@@ -31,6 +32,8 @@ $_SERVER['SERVER_NAME']='127.0.0.1';
 $_SERVER['SERVER_PORT']='4173';
 $_SERVER['SERVER_PROTOCOL']='HTTP/1.1';
 $_SERVER['REQUEST_URI']=$argv[1];
+$_SERVER['QUERY_STRING']=parse_url($argv[1], PHP_URL_QUERY) ?: '';
+parse_str($_SERVER['QUERY_STRING'], $_GET);
 $_SERVER['SCRIPT_NAME']='/index.php';
 $_SERVER['DOCUMENT_ROOT']=realpath('.runtime/wordpress');
 require 'scripts/runtime-router.php';
@@ -119,7 +122,7 @@ def build_page(route, dest):
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(etree.tostring(doc, encoding='utf-8', method='html', doctype='<!doctype html>'))
 
-def export():
+def export(library=False):
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copytree(ROOT / 'theme/tir-on/assets', OUT / 'assets', dirs_exist_ok=True)
     # Some browsers require same-origin CORS for font files under file://.
@@ -129,10 +132,12 @@ def export():
         return 'url(data:font/woff2;base64,' + base64.b64encode(font).decode() + ')'
     font_css.write_text(re.sub(r"""url\(['"]([^'"]+\.woff2)['"]\)""", inline_font, font_css.read_text()))
     for route, page in PAGES.items():
-        build_page(route,page)
+        build_page('/?tiron_home=biblioteca' if library and route == '/' else route, page)
     manifest = PREVIEW / '.openai/hosting.json'
     manifest.parent.mkdir(exist_ok=True)
     manifest.write_text(json.dumps({'static': {'directory': 'dist'}}, indent=2) + '\n')
 
 if __name__ == '__main__':
-    export()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--library', action='store_true', help='Render the Biblioteca amintirilor homepage.')
+    export(parser.parse_args().library)

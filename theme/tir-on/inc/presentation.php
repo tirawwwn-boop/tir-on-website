@@ -9,10 +9,31 @@ function t_asset($path) {
     return get_theme_file_uri('/assets/' . ltrim($path, '/'));
 }
 
+/** Map the supplied product concepts across the hero, comparison and gallery. */
+function t_concept_asset($scene, $mobile = false) {
+    $roles = [
+        'hero' => 'luna-aprinsa',
+        'hero-alt' => 'luna-living',
+        'feature' => 'luna-living',
+        'detail' => 'luna-stinsa',
+        'relief' => 'luna-aprinsa',
+        'relief-unlit' => 'luna-stinsa',
+    ];
+    if (!isset($roles[$scene])) {
+        return null;
+    }
+    $file = 'images/luna-v2/' . $roles[$scene] . ($mobile ? '-640' : '') . '.webp';
+    return is_file(get_theme_file_path('/assets/' . $file)) ? t_asset($file) : null;
+}
+
+function t_is_library_home() {
+    return is_front_page() && ($_GET['tiron_home'] ?? '') === 'biblioteca';
+}
+
 function t_scene($key) {
     $attachment = absint(get_theme_mod('tiron_image_' . $key, 0));
     $url = $attachment ? wp_get_attachment_image_url($attachment, 'full') : false;
-    return $url ?: t_asset('images/' . $key . '.webp');
+    return $url ?: (t_concept_asset($key) ?? t_asset('images/' . $key . '.webp'));
 }
 
 function t_luna_id() {
@@ -31,7 +52,7 @@ function t_url($key) {
     if ($key === 'cart') {
         return function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/');
     }
-    return home_url('/');
+    return t_is_library_home() ? add_query_arg('tiron_home', 'biblioteca', home_url('/')) : home_url('/');
 }
 
 function t_cart_count() {
@@ -71,7 +92,7 @@ function t_product_data() {
         'price' => $price_text,
         'description' => $product && $product->get_short_description() ? wp_strip_all_tags($product->get_short_description()) : 'Un litofan circular personalizat după fotografia ta, cu lumină LED alb-caldă și finisaj espresso mat.',
         'concept' => !$images,
-        'images' => $images ?: [t_asset('images/hero-mobile.webp'), t_asset('images/feature.webp'), t_asset('images/detail-mobile.webp')],
+        'images' => $images ?: [t_concept_asset('hero') ?? t_asset('images/hero-mobile.webp'), t_concept_asset('hero-alt') ?? t_asset('images/feature.webp'), t_concept_asset('detail') ?? t_asset('images/detail-mobile.webp')],
         'production' => $metadata('production'),
         'power' => $metadata('power', 'Alimentare prin cablu'),
         'diameter' => $metadata('diameter', 'aprox. 134,5 mm'),

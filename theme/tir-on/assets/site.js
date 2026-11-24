@@ -44,7 +44,7 @@
         markers[i].setAttribute('aria-pressed', String(active));
       });
       hero.querySelector('[data-position]').textContent = String(index + 1).padStart(2, '0');
-      hero.querySelector('[data-caption]').textContent = nextFrame.dataset.name + (nextFrame.dataset.concept === '1' ? ' · Imagine de concept' : '');
+      hero.querySelector('[data-caption]').textContent = nextFrame.dataset.name + (nextFrame.dataset.concept === '1' ? ' · Vizualizare de concept' : '');
     }
     markers.forEach((marker, i) => marker.addEventListener('click', () => selectSlide(i)));
     hero.querySelector('[data-prev]').addEventListener('click', () => selectSlide(index - 1));

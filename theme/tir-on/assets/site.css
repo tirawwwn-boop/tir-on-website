@@ -56,8 +56,6 @@ body a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-v
 .button-gold:hover { background: #f2d9b5; transform: translateY(-1px); }
 .button-dark { background: #241e18; color: #fffdf9; }
 .button-dark:hover { background: #493a2b; transform: translateY(-1px); }
-.hero-sub { display: inline-flex; align-items: center; min-height: 44px; color: #f6efe5; font-size: .875rem; font-weight: 500; text-underline-offset: 6px; text-decoration-thickness: 1px; text-decoration-color: #9f8c72; }
-.hero-sub:hover { text-decoration-color: #f2d6a9; }
 .hero-base { position: absolute; bottom: 24px; left: 0; right: 0; display: flex; align-items: center; gap: 1.15rem; }
 .slider-nav, .hero-indicators, .slider-num, .scene-actions { display: flex; align-items: center; }
 .hero-indicators { gap: .32rem; }
@@ -135,7 +133,6 @@ html:has(dialog[open]) { overflow: hidden; }
   .hero-intro { max-width: 34em; font-size: .94rem; line-height: 1.56; }
   .hero-actions { margin-top: 18px; gap: 1.25rem; }
   .button-gold { min-height: 44px; padding: .7rem 1.07rem; }
-  .hero-sub { font-size: .82rem; }
   .hero-base { bottom: 12px; left: var(--margin); right: var(--margin); gap: .6rem; }
   .scene-title { display: none; }
   .scene-caption { max-width: 7.4rem; }
