@@ -13,6 +13,15 @@ add_action('after_setup_theme', static function () {
     add_theme_support('html5', ['gallery', 'caption', 'style', 'script', 'search-form']);
 });
 
+// Supply the brand icon through WordPress, including its /favicon.ico redirect.
+add_filter('get_site_icon_url', static function ($url, $size, $blog_id) {
+    if (($blog_id && (int) $blog_id !== get_current_blog_id()) || get_option('site_icon')) {
+        return $url;
+    }
+    $files = [32 => 'favicon-32.png', 180 => 'apple-touch-icon.png'];
+    return t_asset('brand/' . ($files[(int) $size] ?? 'favicon.svg'));
+}, 10, 3);
+
 add_action('wp_enqueue_scripts', static function () {
     $css = ['fonts', 'site'];
     $js = ['site'];

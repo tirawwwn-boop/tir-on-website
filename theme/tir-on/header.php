@@ -11,7 +11,9 @@
 <a class="skip-link" href="#continut">Sari la conținut</a>
 <header class="site-head">
     <div class="wrap head-inner">
-        <a class="wordmark" href="<?= esc_url(t_url('home')); ?>" aria-label="TIR-ON – Acasă">TIR<span class="wordmark-dash">-</span>ON<span class="wordmark-dot" aria-hidden="true"></span></a>
+        <a class="brand-link" href="<?= esc_url(t_url('home')); ?>">
+            <img class="brand-logo" src="<?= esc_url(t_asset('brand/TIR-ON_06_alb.svg')); ?>" width="553" height="144" alt="TIR-ON – Acasă">
+        </a>
         <nav id="site-navigation" class="head-nav" aria-label="Navigație principală">
             <a href="<?= esc_url(t_url('luna')); ?>"<?= function_exists('is_product') && is_product() ? ' aria-current="page"' : ''; ?>>TIR-ON Luna</a>
             <?php foreach (['transformarea' => 'Transformarea', 'cum-functioneaza' => 'Cum funcționează', 'cadouri' => 'Cadouri'] as $anchor => $label) : ?>
