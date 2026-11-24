@@ -16,7 +16,7 @@ Comanda inițializează WordPress în română, activează WooCommerce, pluginul
 | Luna | http://localhost:8080/produs/luna/ |
 | Administrare | http://localhost:8080/wp-admin/ |
 
-Contul de dezvoltare este `atelier`. Parola inițială se află în `.local/secrets/admin_password`. Deschide fișierul local pentru autentificare. WordPress și MariaDB păstrează datele în volume Docker. Scriptul poate fi rulat din nou, inclusiv după repornirea calculatorului. Inițializarea catalogului păstrează modificările efectuate după prima instalare.
+Contul de dezvoltare este `atelier`. Parola inițială se află în `.local/secrets/admin_password`. Deschide fișierul local pentru autentificare. WordPress și MariaDB păstrează datele în volume Docker. La prima rulare cu V4, scriptul actualizează denumirea și prețul standard al produsului existent la Luna și 249 RON și elimină prețul promoțional, dacă există. Rulările ulterioare păstrează modificările din WooCommerce.
 
 Pentru a opri serviciile și a păstra catalogul
 
@@ -34,8 +34,8 @@ docker compose run --rm -T cli wp plugin list
 
 ## Administrarea produsului
 
-1. Deschide **Produse → Toate produsele → TIR-ON Luna**.
-2. În **Date produs → Generale**, modifică prețul standard de 299 RON. Aici poți actualiza și diametrul, alimentarea, sursa de lumină, finisajul și termenul de producție. Termenul pornește gol.
+1. Deschide **Produse → Toate produsele → Luna**.
+2. În **Date produs → Generale**, poți modifica prețul standard de 249 RON. Tot aici poți actualiza diametrul, alimentarea, sursa de lumină, finisajul și termenul de producție. Termenul pornește gol.
 3. Actualizează descrierile, imaginea produsului și galeria în editorul obișnuit WooCommerce. Folosește aici fotografiile comerciale ale brandului. Fotografiile personale ale clienților intră numai prin formularul de personalizare și volumul privat.
 4. Apasă **Actualizează** și reîncarcă pagina Luna pentru a verifica rezultatul.
 5. Pentru Aura sau Zenit, folosește **Produse → Adaugă produs**. Paginile proprii acestor modele și fotografiile lor pot fi pregătite când sunt disponibile.

@@ -1,17 +1,41 @@
 <?php
 /**
- * Initial catalog and settings for a new TIR-ON development installation.
+ * Initial catalog and settings for a TIR-ON development installation.
  * Run after WooCommerce activation: wp eval-file setup/seed.php.
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( get_option( 'tiron_local_seed_v1' ) ) {
+if ( get_option( 'tiron_local_seed_v1' ) && get_option( 'tiron_luna_catalog_v4' ) ) {
 	echo "Catalogul local este deja configurat.\n";
 	return;
 }
 if ( ! class_exists( 'WC_Product_Simple' ) ) {
 	throw new RuntimeException( 'Activează WooCommerce înainte de inițializarea catalogului.' );
+}
+
+// Apply the V4 catalog price once. Later edits in WooCommerce are preserved.
+$configure_luna = static function ( $product ) {
+	if ( ! $product ) {
+		throw new RuntimeException( 'Produsul Luna lipsește din catalog.' );
+	}
+	$product->set_name( 'Luna' );
+	$product->set_regular_price( '249' );
+	$product->set_sale_price( '' );
+	$product->set_date_on_sale_from( null );
+	$product->set_date_on_sale_to( null );
+	$product->save();
+	update_option( 'tiron_luna_product_id', $product->get_id() );
+	update_option( 'tiron_luna_catalog_v4', 1, false );
+};
+
+if ( get_option( 'tiron_local_seed_v1' ) ) {
+	$product_id = absint( get_option( 'tiron_luna_product_id' ) );
+	$product    = ( $product_id ? wc_get_product( $product_id ) : false )
+		?: wc_get_product( wc_get_product_id_by_sku( 'TIR-ON-LUNA' ) );
+	$configure_luna( $product );
+	echo "Produsul Luna a fost actualizat la 249 RON.\n";
+	return;
 }
 
 /** Reuse the existing WooCommerce page when the installer has already created it. */
@@ -70,13 +94,11 @@ $permalinks['product_base']   = '/produs';
 update_option( 'woocommerce_permalinks', $permalinks );
 
 $product_id = wc_get_product_id_by_sku( 'TIR-ON-LUNA' );
+$product    = $product_id ? wc_get_product( $product_id ) : new WC_Product_Simple();
 if ( ! $product_id ) {
-	$product = new WC_Product_Simple();
-	$product->set_name( 'TIR-ON Luna' );
 	$product->set_slug( 'luna' );
 	$product->set_sku( 'TIR-ON-LUNA' );
 	$product->set_status( 'publish' );
-	$product->set_regular_price( '299' );
 	$product->set_catalog_visibility( 'visible' );
 	$product->set_short_description( 'Fotografia ta prinde formă într-un litofan circular, luminat din spate de un LED alb-cald.' );
 	$product->set_description( 'Un disc luminos pe un suport sculptural curbat și o bază joasă, cu colțuri rotunjite. Textura în relief redă fotografia în nuanțe de lumină.' );
@@ -84,9 +106,8 @@ if ( ! $product_id ) {
 	$product->update_meta_data( '_tiron_power', 'Alimentare prin cablu' );
 	$product->update_meta_data( '_tiron_light', 'LED alb-cald' );
 	$product->update_meta_data( '_tiron_finish', 'Espresso mat' );
-	$product->save();
 }
-update_option( 'tiron_luna_product_id', wc_get_product_id_by_sku( 'TIR-ON-LUNA' ) );
+$configure_luna( $product );
 flush_rewrite_rules( false );
 update_option( 'tiron_local_seed_v1', 1, false );
 echo "Catalogul TIR-ON a fost configurat.\n";

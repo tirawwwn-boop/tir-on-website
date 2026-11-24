@@ -5,6 +5,20 @@ function t_e($value) {
     return esc_html((string) $value);
 }
 
+function t_home_copy_fields() {
+    return [
+        'hero_title' => ['Titlu, primul rând', 'Amintirile tale,'],
+        'hero_emphasis' => ['Titlu, rândul italic', 'într-o nouă lumină.'],
+        'hero_intro' => ['Text introductiv', 'Unele fotografii merită mai mult decât un loc în galerie. Transformă una dintre ele într-un obiect luminos, creat special pentru tine.'],
+        'feature_subtitle' => ['Subtitlu Luna', 'O fotografie. O lumină. O amintire care rămâne.'],
+        'feature_intro' => ['Prezentare Luna', 'Un portret în relief, creat după fotografia ta, care își dezvăluie detaliile atunci când îl aprinzi. Un obiect personal, pentru oamenii și momentele care contează.'],
+    ];
+}
+
+function t_home_copy($key) {
+    return get_theme_mod('tiron_' . $key, t_home_copy_fields()[$key][1]);
+}
+
 function t_asset($path) {
     return get_theme_file_uri('/assets/' . ltrim($path, '/'));
 }
@@ -67,7 +81,7 @@ function t_product_data() {
         'id' => $id,
         'minimum' => $minimum,
         'maximum' => $maximum,
-        'name' => $product ? $product->get_name() : 'TIR-ON Luna',
+        'name' => $product ? $product->get_name() : 'Luna',
         'price' => $price_text,
         'description' => $product && $product->get_short_description() ? wp_strip_all_tags($product->get_short_description()) : 'Un litofan circular personalizat după fotografia ta, cu lumină LED alb-caldă și finisaj espresso mat.',
         'concept' => !$images,

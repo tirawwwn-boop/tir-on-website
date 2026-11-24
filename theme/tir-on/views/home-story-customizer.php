@@ -4,8 +4,8 @@
  */
 function tiron_story_fields() {
     return [
-        'transformation_title' => [ 'Titlul secțiunii Transformarea', 'Din fotografie în lumină.' ],
-        'transformation_text'  => [ 'Descrierea transformării', 'Imprimăm fotografia în relief. Zonele mai subțiri lasă să treacă mai multă lumină, iar cele mai groase păstrează umbrele. Așa reapare imaginea ta.' ],
+        'transformation_title' => [ 'Titlul secțiunii Descoperă lumina', 'Aceeași fotografie. O cu totul altă perspectivă.' ],
+        'transformation_text'  => [ 'Descrierea efectului luminii', 'Stinsă, Luna dezvăluie un relief delicat. Aprinsă, lumina scoate la iveală expresii, detalii și momente pe care vrei să le păstrezi aproape.' ],
         'steps_title'          => [ 'Titlul secțiunii Cum funcționează', 'În trei pași, acasă la tine.' ],
         'gift_title'           => [ 'Titlul secțiunii Cadouri', 'Pentru cine aprinzi Luna?' ],
         'final_title'          => [ 'Titlul invitației finale', 'Dă lumină unei amintiri.' ],
@@ -31,7 +31,7 @@ if ( function_exists( 'add_action' ) ) {
                 'label'       => $label . ' · comparație',
                 'section'     => 'tiron_story_copy',
                 'mime_type'   => 'image',
-                'description' => 'Imagine editorială publică. Folosește imagini aliniate în format 3:2.',
+                'description' => 'Imagine editorială publică. Încarcă toate cele trei imagini cu același subiect și același cadraj, în format 3:2.',
             ] ) );
         }
         foreach ( tiron_story_fields() as $key => $field ) {

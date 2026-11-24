@@ -11,4 +11,8 @@ dist/
 artifacts/
 preview/*
 !preview/TIR-ON-interactiv.html
+!preview/TIR-ON-V4.html
+!preview/TIR-ON-V4-390.jpg
+!preview/TIR-ON-V4-1440.jpg
+!preview/TIR-ON-V4-hero-comparison.jpg
 __pycache__/

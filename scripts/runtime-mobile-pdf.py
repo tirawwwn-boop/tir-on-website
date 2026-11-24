@@ -24,13 +24,13 @@ OUT = ROOT / "artifacts"
 OUT.mkdir(exist_ok=True)
 PDF = OUT / "TIR-ON-mobil.pdf"
 W, H, M = 390, 796, 24
-PAPER, INK, HERO = "#F8F5EF", "#181411", "#100B09"
+PAPER, INK, HERO = "#F8F5EF", "#181411", "#17120F"
 GOLD, NUT, MUTED, WHITE = "#DFC199", "#7B5F3C", "#5E554B", "#FFFDF9"
 PALE, LIGHT, DARKLINE = "#D6C9B8", "#E2D9CD", "#655745"
 PAGE_TITLES = [
-    ("acasa", "Acasă"), ("obiectul", "Obiectul de lumină"),
-    ("transformarea", "Transformarea"), ("procesul", "Cum funcționează"),
-    ("cadouri", "Idei de cadou"), ("luna", "TIR-ON Luna"),
+    ("acasa", "Acasă"), ("obiectul", "Prezentare Luna"),
+    ("descopera-lumina", "Descoperă lumina"), ("procesul", "Cum funcționează"),
+    ("cadouri", "Idei de cadou"), ("luna", "Luna"),
     ("personalizare", "Personalizare")
 ]
 
@@ -176,39 +176,35 @@ with TemporaryDirectory() as tmp:
         box(x,y,width,44,color,r=4);tx(x+width/2,y+28,text,14,"Medium",fg,"center");goto(target,x,y,width,44)
 
     head(1,HERO)
-    kicker(field(home,"hero-kicker"),93,True)
-    tx(M,152,get(home,"//h1/text()"),48,"Serif",WHITE)
-    tx(M,200,get(home,"//h1/em"),48,"Italic",GOLD)
-    para(M,236,field(home,"hero-intro"),W-2*M,15,21,color=PALE)
+    tx(M,134,get(home,"//h1/text()"),48,"Serif",WHITE)
+    tx(M,182,get(home,"//h1/em"),48,"Italic",GOLD)
+    para(M,219,field(home,"hero-intro"),W-2*M,15,20,color=PALE)
     box(M,288,159,44,GOLD,r=4);icon("spark",M+20,310,INK,.82)
     tx(M+36,316,"Creează-ți Luna",14,"Medium",INK);goto("luna",M,288,159,44)
-    tx(205,315,"Vezi transformarea",14,"Medium",WHITE);rule(205,320,327,320,GOLD,.65);goto("transformarea",199,288,146,44)
+    tx(205,315,field(home,"hero-sub"),14,"Medium",WHITE);rule(205,320,322,320,GOLD,.65);goto("descopera-lumina",199,288,146,44)
     image("hero",0,340,W,312,focus=(1,.5),gradient=True)
     tx(M,639,"01 / 03",11.3,"Medium",WHITE)
     tx(W-M,639,"Imagine de concept",11.3,"Sans",WHITE,"right")
     box(0,652,W,78,"#EEE8DD")
-    tags=[("photo","Fotografia ta,","în relief"),("sun","Lumină LED","alb-caldă"),("layers","Realizat prin","imprimare 3D")]
+    tags=[("photo","Fotografia ta,","în relief"),("sun","Lumină caldă",""),("spark","Creată special","pentru tine")]
     for i,(symbol,a,b) in enumerate(tags):
         center=(i+.5)*W/3;icon(symbol,center,672,NUT,.88);tx(center,696,a,12.1,"Sans",MUTED,"center");tx(center,713,b,12.1,"Sans",MUTED,"center")
         if i:rule(i*W/3,674,i*W/3,710,"#C8BCAC")
     foot(1,True)
 
     head(2)
-    kicker(field(home,"section-label"),100)
     tx(M,164,get(home,"//section[@id='luna']//h2"),53,"Serif")
     image("feature-mobile",M,192,W-2*M,227)
     tx(M,442,"Imagine de concept",12,"Sans",MUTED)
-    para(M,487,field(home,"feature-description"),W-2*M,17,24)
-    rule(M,571,W-M,571,LIGHT)
-    for x,k,v in [(M,"Finisaj","Espresso mat"),(204,"Diametru","aprox. 134,5 mm")]:
-        tx(x,598,k,13,"Sans",MUTED);tx(x,624,v,17,"Medium")
+    description_y=para(M,480,field(home,"feature-subtitle"),W-2*M,24,26,font="Serif",color=NUT)
+    para(M,description_y+10,field(home,"feature-description"),W-2*M,17,24)
     button(M,665,"Descoperă Luna","luna");tx(193,693,field(product,"lp-price"),17,"Medium")
     foot(2)
 
-    head(3,"#211B16");kicker("Transformarea",101,True)
-    tx(M,163,"Din fotografie",52,"Serif",WHITE);tx(M,209,"în lumină.",52,"Serif",WHITE)
-    para(M,251,field(home,"tl-intro"),W-2*M,15,22,color=PALE)
-    x,y,w,h=M,349,W-2*M,222
+    head(3,"#211B16");kicker("Efectul luminii",101,True)
+    intro_y=para(M,152,get(home,"//*[@id='tl-transform-title']"),W-2*M,39,41,font="Serif",color=WHITE)
+    para(M,intro_y+10,field(home,"tl-intro"),W-2*M,15,21,color=PALE)
+    x,y,w,h=M,365,W-2*M,210
     image("relief-mobile",x,y,w,h)
     c.saveState();clip=c.beginPath();clip.rect(x,H-y-h,w/2,h);c.clipPath(clip,stroke=0)
     image("original-mobile",x,y,w,h);c.restoreState()
@@ -218,8 +214,7 @@ with TemporaryDirectory() as tmp:
     tx(M,595,"Fotografie",13,"Medium",WHITE);tx(W-M,595,"Litofan iluminat",13,"Medium",WHITE,"right")
     image("relief-unlit-mobile",M,624,118,83)
     tx(158,656,"Lumină stinsă",19,"Serif",WHITE)
-    tx(158,680,"Detaliu de relief",13,"Sans",PALE)
-    tx(158,700,"Studiu vizual",11.5,"Sans",PALE)
+    tx(158,680,"Vizualizare de concept",11.5,"Sans",PALE)
     foot(3,True)
 
     head(4);kicker("Cum funcționează",101)
@@ -264,7 +259,7 @@ with TemporaryDirectory() as tmp:
     button(M,680,"Personalizează Luna","personalizare",180)
     foot(6)
 
-    head(7);kicker("TIR-ON Luna",97)
+    head(7);kicker(get(product,"//h1"),97)
     tx(M,152,"Personalizează Luna",39,"Serif")
     tx(M,187,"Fotografia ta",15,"Medium")
     c.saveState();c.setDash([4,3]);box(M,202,W-2*M,74,"#F1ECE3","#9B8B77",4);c.restoreState()
@@ -279,7 +274,7 @@ with TemporaryDirectory() as tmp:
     for pos,txt in [(M+16,"−"),(M+50,"1"),(M+84,"+")]:
         tx(pos,480,txt,17,"Medium",MUTED,"center")
     box(M+109,450,W-2*M-109,47,INK,r=4);icon("bag",M+156,473,WHITE,.82);tx(M+178,480,"Adaugă în coș",15,"Medium",WHITE)
-    para(M,522,get(product,classes("lp-personalize")+"//p[contains(text(),'Coș de probă')]"),W-2*M,13.5,19)
+    para(M,522,get(product,classes("lp-personalize")+"//p[contains(text(),'Previzualizare offline')]"),W-2*M,13.5,19)
     rule(M,575,W-M,575,LIGHT)
     tx(M,610,"Detalii de design",27,"Serif")
     for i,node in enumerate(product.xpath(classes("lp-specs")+"/div")):

@@ -128,11 +128,11 @@ function tiron_cart_error( $message ) {
 }
 
 function tiron_photo_required_message() {
-    return 'Pentru TIR-ON Luna, încarcă fotografia pe pagina produsului.';
+    return 'Încarcă fotografia pe pagina produsului Luna.';
 }
 
 function tiron_photo_expired_message() {
-    return 'Fotografia pentru TIR-ON Luna nu mai este disponibilă. Reîncarcă fotografia pe pagina produsului.';
+    return 'Fotografia pentru Luna nu mai este disponibilă. Reîncarcă fotografia pe pagina produsului.';
 }
 
 function tiron_valid_luna_quantity( $value, $product ) {
@@ -264,7 +264,7 @@ add_filter( 'woocommerce_quantity_input_args', static function ( $args, $product
 
 add_filter( 'woocommerce_update_cart_validation', static function ( $valid, $key, $line, $quantity ) {
     if ( $quantity > 0 && tiron_requires_photo( $line['product_id'] ) && ! tiron_valid_luna_quantity( $quantity, $line['data'] ) ) {
-        tiron_cart_error( 'Verifică numărul de bucăți pentru TIR-ON Luna.' );
+        tiron_cart_error( 'Verifică numărul de bucăți pentru Luna.' );
         return false;
     }
     return $valid;
@@ -279,7 +279,7 @@ add_action( 'woocommerce_check_cart_items', static function () {
             tiron_cart_error( tiron_photo_expired_message() );
         }
         if ( ! tiron_valid_luna_quantity( $line['quantity'], $line['data'] ) ) {
-            tiron_cart_error( 'Verifică numărul de bucăți pentru TIR-ON Luna.' );
+            tiron_cart_error( 'Verifică numărul de bucăți pentru Luna.' );
         }
     }
 } );
@@ -309,7 +309,7 @@ add_action( 'woocommerce_checkout_create_order_line_item', static function ( $it
         throw new Exception( tiron_photo_expired_message() );
     }
     if ( ! tiron_valid_luna_quantity( $line['quantity'], $line['data'] ) ) {
-        throw new Exception( 'Verifică numărul de bucăți pentru TIR-ON Luna.' );
+        throw new Exception( 'Verifică numărul de bucăți pentru Luna.' );
     }
     // A retry may rebuild order lines. Every line retains a separate private copy.
     $order_photo = tiron_copy_photo_for_order( $line['_tiron_stage'] );

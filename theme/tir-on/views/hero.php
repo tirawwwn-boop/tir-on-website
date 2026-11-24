@@ -5,7 +5,7 @@ $scenes = [
     ['key' => 'detail', 'mobile' => 'detail-mobile', 'name' => 'Detaliu de design', 'alt' => 'Detaliu al finisajului și al reliefului iluminat'],
 ];
 ?>
-<section class="hero" aria-label="Colecția TIR-ON Luna" aria-roledescription="carusel" data-hero>
+<section class="hero" aria-label="Luna" aria-roledescription="carusel" data-hero>
     <div class="hero-media">
         <?php foreach ($scenes as $index => $scene) :
             $custom = get_theme_mod('tiron_image_' . $scene['key']);
@@ -21,12 +21,11 @@ $scenes = [
     <div class="hero-shade"></div>
     <div class="wrap hero-interior">
         <div class="hero-copy">
-            <p class="hero-kicker"><span></span>Turning Memories ON</p>
-            <h1><?= t_e(get_theme_mod('tiron_hero_title', 'Amintirile tale,')); ?><br><em><?= t_e(get_theme_mod('tiron_hero_emphasis', 'într-o nouă lumină.')); ?></em></h1>
-            <p class="hero-intro"><?= t_e(get_theme_mod('tiron_hero_intro', 'Transformăm fotografia ta într-un obiect luminos personalizat. O amintire pe care o poți ține aproape.')); ?></p>
+            <h1><?= t_e(t_home_copy('hero_title')); ?><br><em><?= t_e(t_home_copy('hero_emphasis')); ?></em></h1>
+            <p class="hero-intro"><?= t_e(t_home_copy('hero_intro')); ?></p>
             <div class="hero-actions">
                 <a class="button-gold" href="<?= esc_url(t_url('luna')); ?>"><?= t_icon('spark', 18); ?>Creează-ți Luna</a>
-                <a class="hero-sub" href="#transformarea">Vezi transformarea</a>
+                <a class="hero-sub" href="#descopera-lumina">Descoperă lumina <?= t_icon('down', 16); ?></a>
             </div>
         </div>
         <div class="hero-base">
@@ -36,7 +35,7 @@ $scenes = [
                 </div>
                 <span class="slider-num"><b data-position>01</b><span>/</span>03</span>
             </div>
-            <div class="scene-caption" aria-live="polite"><span class="scene-title">TIR-ON LUNA</span><span class="scene-name" data-caption><?= $scenes[0]['name']; ?><?= get_theme_mod('tiron_image_hero') ? '' : ' · Imagine de concept'; ?></span></div>
+            <div class="scene-caption" aria-live="polite"><span class="scene-title">Luna</span><span class="scene-name" data-caption><?= t_e($scenes[0]['name']); ?><?= get_theme_mod('tiron_image_hero') ? '' : ' · Imagine de concept'; ?></span></div>
             <div class="scene-actions"><button type="button" data-prev aria-label="Imaginea precedentă"><?= t_icon('prev', 15); ?></button><button type="button" data-next aria-label="Imaginea următoare"><?= t_icon('next', 15); ?></button></div>
         </div>
     </div>

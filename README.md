@@ -1,10 +1,12 @@
 # TIR-ON · Turning Memories ON
 
-Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul inițial este 299 RON și se modifică în WooCommerce.
+Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul standard este 249 RON și se poate modifica în WooCommerce.
 
-## Previzualizare pe telefon
+## Previzualizare V4
 
-Deschide [fișierul HTML din repository](preview/TIR-ON-interactiv.html) în GitHub, autentificat în contul cu acces. Alege **Download raw file**. Pe Android, deschide fișierul `.html` din **Descărcări**, apoi alege **Deschide cu → Chrome**. Dacă GitHub afișează fișierul în loc să îl descarce, folosește butonul de descărcare din pagina fișierului. Previzualizarea include imaginile, fonturile, cele două pagini și selecția unei fotografii pe dispozitiv. Coșul și checkout-ul sunt disponibile în instalarea WordPress.
+Deschide [HTML-ul V4](preview/TIR-ON-V4.html) în GitHub, autentificat în contul cu acces. Alege **Download raw file**. Pe Android, deschide fișierul `.html` din **Descărcări**, apoi alege **Deschide cu → Chrome**. Previzualizarea include caruselul, comparația interactivă, galeria și selecția unei fotografii pe dispozitiv. Coșul și checkout-ul sunt disponibile în instalarea WordPress.
+
+[Homepage la 390 px](preview/TIR-ON-V4-390.jpg) · [Homepage la 1440 px](preview/TIR-ON-V4-1440.jpg) · [Hero original și V4](preview/TIR-ON-V4-hero-comparison.jpg)
 
 ## Pornire locală
 
@@ -18,7 +20,7 @@ Magazinul local este la [localhost:8080](http://localhost:8080/), iar administra
 
 ## Catalog și comenzi
 
-- **Produse → TIR-ON Luna**. Editează prețul, imaginile, descrierea și detaliile tehnice din **Date produs → Generale**. Imaginile incluse sunt materiale de concept. Înlocuiește-le cu fotografii comerciale din editorul produsului și din **Aspect → Personalizare**.
+- **Produse → Luna**. Editează prețul, imaginile, descrierea și detaliile tehnice din **Date produs → Generale**. Imaginile incluse sunt materiale de concept. Înlocuiește-le cu fotografii comerciale din editorul produsului și din **Aspect → Personalizare**.
 - **WooCommerce → Comenzi**. Comenzile testate includ produsul, cantitatea și observațiile. Administratorul poate descărca sau șterge fotografia din linia produsului. **WooCommerce → Fotografii private** controlează limita de încărcare și termenele de păstrare.
 - **WooCommerce → Setări → Livrare**. Instalarea locală include o opțiune simulată pentru România. Completează zonele și tarifele comerciale înainte de lansare.
 - **WooCommerce → Setări → Plăți**. Fluxul local folosește simulatorul TIR-ON. Pluginul oficial Stripe este pregătit exclusiv în modul test și apare în checkout după conectarea contului de test. Apple Pay și Google Pay depind de eligibilitatea dispozitivului, browserului și domeniului.

@@ -13,10 +13,11 @@
     <div class="wrap head-inner">
         <a class="brand-link" href="<?= esc_url(t_url('home')); ?>">
             <img class="brand-logo" src="<?= esc_url(t_asset('brand/TIR-ON_06_alb.svg')); ?>" width="553" height="144" alt="TIR-ON – Acasă">
+            <span class="brand-tagline">Turning Memories ON</span>
         </a>
         <nav id="site-navigation" class="head-nav" aria-label="Navigație principală">
-            <a href="<?= esc_url(t_url('luna')); ?>"<?= function_exists('is_product') && is_product() ? ' aria-current="page"' : ''; ?>>TIR-ON Luna</a>
-            <?php foreach (['transformarea' => 'Transformarea', 'cum-functioneaza' => 'Cum funcționează', 'cadouri' => 'Cadouri'] as $anchor => $label) : ?>
+            <a href="<?= esc_url(t_url('luna')); ?>"<?= function_exists('is_product') && is_product() ? ' aria-current="page"' : ''; ?>>Luna</a>
+            <?php foreach (['descopera-lumina' => 'Descoperă lumina', 'cum-functioneaza' => 'Cum funcționează', 'cadouri' => 'Cadouri'] as $anchor => $label) : ?>
                 <a href="<?= esc_url(t_url('home') . '#' . $anchor); ?>"><?= t_e($label); ?></a>
             <?php endforeach; ?>
         </nav>

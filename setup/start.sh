@@ -34,7 +34,7 @@ cat <<'EOF'
 
 Magazinul local este pregătit.
   Acasă          http://localhost:8080/
-  TIR-ON Luna    http://localhost:8080/produs/luna/
+  Luna           http://localhost:8080/produs/luna/
   Administrare   http://localhost:8080/wp-admin/
   Utilizator     atelier
   Parolă         .local/secrets/admin_password (numai pe calculatorul tău)

@@ -2,30 +2,42 @@
 require_once __DIR__ . '/home-story-customizer.php';
 
 $tiron_comparison = [];
+$tiron_configured_images = [];
 foreach ( [
-    'original' => 'Vârfuri alpine și brazi reflectați într-un lac',
-    'relief' => 'Același peisaj redat în relieful litofanului iluminat',
-    'relief-unlit' => 'Detaliu al reliefului fără iluminare din spate',
-] as $tiron_key => $tiron_alt ) {
-    $tiron_id = function_exists( 'get_theme_mod' ) ? (int) get_theme_mod( 'tiron_image_' . $tiron_key, 0 ) : 0;
+    'original' => [ 'Vârfuri alpine și brazi reflectați într-un lac', 'Fotografia de referință' ],
+    'relief' => [ 'Același peisaj redat în relieful litofanului iluminat', 'Fotografia redată în litofanul iluminat' ],
+    'relief-unlit' => [ 'Același peisaj în relief, fără iluminare din spate', 'Litofanul fără iluminare din spate' ],
+] as $tiron_key => [ $tiron_alt, $tiron_custom_alt ] ) {
+    $tiron_id = (int) get_theme_mod( 'tiron_image_' . $tiron_key, 0 );
     $tiron_src = $tiron_id ? wp_get_attachment_image_url( $tiron_id, 'large' ) : false;
-    $tiron_srcset = $tiron_src ? wp_get_attachment_image_srcset( $tiron_id, 'large' ) : sprintf(
-        '%s 768w, %s 1200w',
-        t_asset( 'images/' . $tiron_key . '-mobile.webp' ),
-        t_asset( 'images/' . $tiron_key . '.webp' )
-    );
     $tiron_comparison[ $tiron_key ] = [
-        'url'     => $tiron_src ?: t_asset( 'images/' . $tiron_key . '.webp' ),
-        'srcset'  => $tiron_srcset,
-        'alt'     => $tiron_src ? ( get_post_meta( $tiron_id, '_wp_attachment_image_alt', true ) ?: $tiron_alt ) : $tiron_alt,
-        'concept' => ! $tiron_src,
+        'url'    => t_asset( 'images/' . $tiron_key . '.webp' ),
+        'srcset' => sprintf(
+            '%s 768w, %s 1200w',
+            t_asset( 'images/' . $tiron_key . '-mobile.webp' ),
+            t_asset( 'images/' . $tiron_key . '.webp' )
+        ),
+        'alt'    => $tiron_alt,
     ];
+    if ( $tiron_src ) {
+        $tiron_configured_images[ $tiron_key ] = [
+            'url'    => $tiron_src,
+            'srcset' => wp_get_attachment_image_srcset( $tiron_id, 'large' ),
+            'alt'    => get_post_meta( $tiron_id, '_wp_attachment_image_alt', true ) ?: $tiron_custom_alt,
+        ];
+    }
+}
+
+// Keep the matched concept set together until all three replacement images are available.
+$tiron_using_concept = count( $tiron_configured_images ) !== count( $tiron_comparison );
+if ( ! $tiron_using_concept ) {
+    $tiron_comparison = $tiron_configured_images;
 }
 
 $tiron_steps = [
-    [ 'Alegi fotografia', 'Încarci imaginea pe care vrei să o păstrezi în lumină. Alege o fotografie clară, cu subiectul bine conturat.' ],
-    [ 'Îi dăm formă', 'Transformăm fotografia într-un relief circular și îl imprimăm 3D, apoi îl așezăm pe suportul Luna.' ],
-    [ 'Aprinzi amintirea', 'Primești Luna acasă. O conectezi, apeși butonul și îți redescoperi fotografia în lumină caldă.' ],
+    [ 'Alegi fotografia', 'Încarci un cadru drag, cu subiectul bine luminat.' ],
+    [ 'Îi dăm formă', 'Creăm Luna după fotografia ta, detaliu cu detaliu.' ],
+    [ 'Aprinzi amintirea', 'Primești Luna acasă și redescoperi fotografia în lumină caldă.' ],
 ];
 $tiron_gifts = [
     'Familie'              => 'O fotografie cu părinții în grădină sau cu trei generații la aceeași masă. Alege un cadru în care chipurile se văd clar.',
@@ -35,10 +47,10 @@ $tiron_gifts = [
     'Momente speciale'     => 'Prima zi acasă, o revedere sau drumul spre un vârf. Caută acel cadru care spune o poveste chiar și fără cuvinte.',
 ];
 ?>
-<section id="transformarea" class="tl-transformation" aria-labelledby="tl-transform-title">
-    <div class="wrap tl-transform-grid" data-transformation>
+<section id="descopera-lumina" class="tl-transformation" aria-labelledby="tl-transform-title">
+    <div id="transformarea" class="wrap tl-transform-grid" data-transformation>
         <div class="tl-transform-copy">
-            <p class="tl-kicker">Transformarea</p>
+            <p class="tl-kicker">Efectul luminii</p>
             <h2 class="tl-title" id="tl-transform-title"><?= t_e( tiron_story_text( 'transformation_title' ) ) ?></h2>
             <p class="tl-intro"><?= t_e( tiron_story_text( 'transformation_text' ) ) ?></p>
             <div class="tl-light-modes" role="group" aria-label="Iluminarea litofanului" hidden>
@@ -62,9 +74,9 @@ $tiron_gifts = [
                         width="1200" height="800" loading="lazy" decoding="async">
                 <?php endforeach; ?>
                 <div class="tl-divider" aria-hidden="true"><span class="tl-handle"><i></i><i></i></span></div>
-                <input class="tl-compare-range" type="range" min="0" max="100" value="50" disabled aria-label="Compară fotografia cu litofanul iluminat" aria-valuetext="50% fotografie, 50% litofan iluminat">
+                <input class="tl-compare-range" type="range" min="0" max="100" value="50" disabled aria-label="Compară fotografia cu litofanul" aria-valuetext="50% fotografie, 50% litofan iluminat">
             </div>
-            <figcaption><span>Fotografie</span><?php if ( $tiron_comparison['original']['concept'] || $tiron_comparison['relief']['concept'] || $tiron_comparison['relief-unlit']['concept'] ) : ?><small>Studiu vizual</small><?php endif; ?><span data-result-label>Litofan iluminat</span></figcaption>
+            <figcaption><span>Fotografie</span><?php if ( $tiron_using_concept ) : ?><small>Vizualizare de concept</small><?php endif; ?><span data-result-label>Litofan iluminat</span></figcaption>
         </figure>
     </div>
 </section>
