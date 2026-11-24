@@ -239,6 +239,13 @@ html:has(dialog[open]) { overflow: hidden; }
   .hero h1 { font-size: clamp(2.65rem, 13vw, 2.95rem); }
   .hero-base { gap: .4rem; }
 }
+@media (max-width: 340px) {
+  .slider-num { display: none; }
+}
+@media (min-width: 701px) and (max-width: 800px) {
+  .hero-interior { min-height: 470px; }
+  .hero-frame:first-child img { object-position: 76% 52%; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -1388,6 +1395,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     unlit.hidden = illuminated;
                     label.textContent = illuminated ? 'Litofan iluminat' : 'Relief neiluminat';
                     buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+                    if (range.valueAsNumber === Number(range.max)) range.value = '50';
                     update();
                 });
             });

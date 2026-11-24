@@ -24,6 +24,7 @@
                     unlit.hidden = illuminated;
                     label.textContent = illuminated ? 'Litofan iluminat' : 'Relief neiluminat';
                     buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+                    if (range.valueAsNumber === Number(range.max)) range.value = '50';
                     update();
                 });
             });
