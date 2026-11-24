@@ -3,6 +3,8 @@
 $luna_name = $product_data['name'];
 $luna_images = array_values(array_filter($product_data['images']));
 $luna_count = count($luna_images);
+$luna_mobile_images = $product_data['concept_mobile_images'];
+$luna_has_portraits = count(array_filter($luna_mobile_images)) === 3;
 $luna_limit = (int) $product_data['limit_mb'];
 $luna_min = (int) $product_data['minimum'];
 $luna_max = max($luna_min, (int) $product_data['maximum']);
@@ -26,10 +28,13 @@ $luna_icon = static function ($name) {
     </nav>
     <div class="lp-layout">
       <section class="lp-gallery" aria-label="Galerie foto produs">
-        <div class="lp-media">
+        <div class="lp-media"<?= $luna_has_portraits ? ' data-concepts="portrait"' : ''; ?>>
           <?php if ($luna_count) : ?>
             <button type="button" class="lp-photo-open" aria-label="Mărește imaginea produsului" aria-haspopup="dialog" data-photo-open>
-              <img src="<?php echo t_e($luna_images[0]); ?>" alt="<?php echo t_e($luna_name); ?>, imaginea 1" data-main-photo fetchpriority="high" decoding="async"/>
+              <picture>
+                <?php if ($luna_has_portraits) : ?><source media="(max-width: 800px)" srcset="<?= esc_url($luna_mobile_images[0]); ?>"><?php endif; ?>
+                <img src="<?= esc_url($luna_images[0]); ?>" alt="<?= t_e($luna_name); ?>, imaginea 1" data-main-photo fetchpriority="high" decoding="async">
+              </picture>
               <span class="lp-zoom"><?php echo $luna_icon('zoom'); ?></span>
             </button>
           <?php else : ?>
@@ -42,7 +47,10 @@ $luna_icon = static function ($name) {
               <button type="button" class="lp-thumb" data-gallery-index="<?php echo (int) $i; ?>"
                       aria-label="Imaginea <?php echo (int) $i + 1; ?> din <?php echo $luna_count; ?>"
                       aria-pressed="<?php echo 0 === $i ? 'true' : 'false'; ?>">
-                <img src="<?php echo t_e($luna_src); ?>" alt="" loading="lazy" decoding="async"/>
+                <picture>
+                  <?php if ($luna_has_portraits) : ?><source media="(max-width: 800px)" srcset="<?= esc_url($luna_mobile_images[$i]); ?>"><?php endif; ?>
+                  <img src="<?= esc_url($luna_src); ?>" alt="" loading="lazy" decoding="async">
+                </picture>
               </button>
             <?php endforeach; ?>
           </div>

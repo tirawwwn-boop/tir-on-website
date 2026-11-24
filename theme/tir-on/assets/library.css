@@ -116,6 +116,8 @@
 }
 .library-relief figcaption span { color: #d3c4b4; }
 .memory-library .feature-visual img { border-radius: inherit; }
+.memory-library .feature[data-concepts="v2"] .feature-visual { width: min(100%, 30rem); margin-inline: auto; }
+.memory-library .feature[data-concepts="v2"] .feature-visual img { aspect-ratio: 4 / 5; object-fit: contain; }
 .library-product { --spill: 28%; }
 .library-extras {
     background: linear-gradient(180deg, #120b08a8, transparent 90px), #271a13;
@@ -151,7 +153,10 @@
     .library-opening .hero h1 { font-size: clamp(3.2rem, 6vw, 6.4rem); }
     .library-opening .hero-media, .library-opening .hero[data-concepts="v2"] .hero-media { left: 47%; border: 0; }
     .library-opening .hero-frame img { object-position: 77% center; }
-    .library-opening .hero[data-concepts="v2"] .hero-frame img { object-position: center 43%; }
+    .library-opening .hero[data-concepts="v2"] .hero-frame:first-child img {
+        object-fit: contain;
+        object-position: right center;
+    }
     .library-opening .hero-shade, .library-opening .hero[data-concepts="v2"] .hero-shade {
         background: linear-gradient(90deg, #211610 45%, transparent 63%),
             linear-gradient(0deg, #1d130e9c, transparent 22%);

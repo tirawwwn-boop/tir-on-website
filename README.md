@@ -19,7 +19,7 @@ Branch-ul `design-v2-experiment` conține cele două variante în aceeași temă
 
 Capturi pentru iterația curentă a variantei B: [390 px](preview/TIR-ON-V2-B-390.jpg) și [1.440 px](preview/TIR-ON-V2-B-1440.jpg). În secțiunea Transformarea, B prezintă relieful fără lumină. Un comparator înainte/după are nevoie de o pereche cu aceeași fotografie și același cadraj.
 
-Previzualizările folosesc randările provizorii existente în repository. Cele trei imagini Luna din ZIP vor fi integrate când fișierele sunt disponibile. Pentru înlocuire din WordPress, folosește **Aspect → Personalizare → TIR-ON** pentru scenele din homepage și **Produse → TIR-ON Luna → Galerie produs** pentru produs. Setează fotografia originală din secțiunea Transformarea numai dacă ai cadrul care corespunde litofanului. Tema poate folosi și imaginile de concept livrate în `theme/tir-on/assets/images/luna-v2/` sub numele `luna-aprinsa.webp`, `luna-living.webp` și `luna-stinsa.webp`, cu variante mobile `-640.webp`.
+Varianta B și galeria Luna folosesc cele trei vizualizări de concept livrate în arhivă, cu fișierele WebP optimizate pentru mobil. Homepage-ul A păstrează imaginile editoriale anterioare ca reper. Pentru înlocuire din WordPress, folosește **Aspect → Personalizare → TIR-ON** pentru scenele din homepage și **Produse → TIR-ON Luna → Galerie produs** pentru produs. Setează fotografia originală din secțiunea Transformarea numai dacă ai cadrul care corespunde litofanului. Tema poate folosi și imaginile de concept livrate în `theme/tir-on/assets/images/luna-v2/` sub numele `luna-aprinsa.webp`, `luna-living.webp` și `luna-stinsa.webp`, cu variante mobile `-640.webp`.
 
 ## Pornire locală
 

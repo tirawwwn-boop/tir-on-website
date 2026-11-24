@@ -23,7 +23,7 @@ $relief_alt = $relief_custom ? get_post_meta($relief_id, '_wp_attachment_image_a
                 <?php endif; ?>
                 <img src="<?= esc_url($relief_custom ?: t_scene('relief-unlit')); ?>"
                     alt="<?= esc_attr($relief_alt ?: 'Relieful alb al litofanului Luna, fără iluminare din spate'); ?>"
-                    width="<?= $relief_concept ? 1024 : 1200; ?>" height="<?= $relief_concept ? 1280 : 800; ?>"
+                    width="<?= $relief_concept ? 1122 : 1200; ?>" height="<?= $relief_concept ? 1402 : 800; ?>"
                     loading="lazy" decoding="async">
             </picture>
             <figcaption>Relieful fără iluminare<?php if (!$relief_custom) : ?> <span>Vizualizare de concept</span><?php endif; ?></figcaption>

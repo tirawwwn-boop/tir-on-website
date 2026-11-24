@@ -2,7 +2,7 @@
         <div class="wrap feature-inner">
             <figure class="feature-visual">
                 <img src="<?= esc_url(t_scene('feature')); ?>" <?php if (!get_theme_mod('tiron_image_feature')) : ?>
-                    srcset="<?= esc_url(t_concept_asset('feature', true) ?? t_asset('images/feature-mobile.webp')); ?> <?= t_concept_asset('feature', true) ? '640w' : '768w'; ?>, <?= esc_url(t_scene('feature')); ?> <?= t_concept_asset('feature') ? '1024w' : '1400w'; ?>"
+                    srcset="<?= esc_url(t_concept_asset('feature', true) ?? t_asset('images/feature-mobile.webp')); ?> <?= t_concept_asset('feature', true) ? '640w' : '768w'; ?>, <?= esc_url(t_scene('feature')); ?> <?= t_concept_asset('feature') ? '1122w' : '1400w'; ?>"
                     sizes="(max-width: 700px) 90vw, 45vw"
                 <?php endif; ?> loading="lazy" decoding="async" alt="TIR-ON Luna aprinsă într-un decor de interior" width="920" height="720">
                 <?php if (!get_theme_mod('tiron_image_feature')) : ?><figcaption>Vizualizare de concept</figcaption><?php endif; ?>

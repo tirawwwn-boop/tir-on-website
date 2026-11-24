@@ -11,6 +11,10 @@ function t_asset($path) {
 
 /** Map the supplied product concepts across the hero, comparison and gallery. */
 function t_concept_asset($scene, $mobile = false) {
+    // Keep the editorial homepage as the reference while the library is in review.
+    if (is_front_page() && !t_is_library_home()) {
+        return null;
+    }
     $roles = [
         'hero' => 'luna-aprinsa',
         'hero-alt' => 'luna-living',
@@ -92,6 +96,10 @@ function t_product_data() {
         'price' => $price_text,
         'description' => $product && $product->get_short_description() ? wp_strip_all_tags($product->get_short_description()) : 'Un litofan circular personalizat după fotografia ta, cu lumină LED alb-caldă și finisaj espresso mat.',
         'concept' => !$images,
+        'concept_mobile_images' => !$images ? array_map(
+            static fn($scene) => t_concept_asset($scene, true),
+            ['hero', 'hero-alt', 'detail']
+        ) : [],
         'images' => $images ?: [t_concept_asset('hero') ?? t_asset('images/hero-mobile.webp'), t_concept_asset('hero-alt') ?? t_asset('images/feature.webp'), t_concept_asset('detail') ?? t_asset('images/detail-mobile.webp')],
         'production' => $metadata('production'),
         'power' => $metadata('power', 'Alimentare prin cablu'),
