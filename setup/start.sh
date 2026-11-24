@@ -27,6 +27,7 @@ for name in db_password db_root_password admin_password; do
 done
 
 docker compose up --detach --wait db wordpress
+docker compose exec -T --user 0 wordpress install -d -o 33 -g 33 -m 0700 /var/lib/tiron/photos
 docker compose run --rm -T cli sh /project/install.sh
 
 cat <<'EOF'

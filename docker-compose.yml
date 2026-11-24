@@ -1,17 +1,22 @@
 name: tir-on
 
 x-wp-env: &wp-env
+  TIRON_ENABLE_TEST_CHECKOUT: "${TIRON_ENABLE_TEST_CHECKOUT:-1}"
   WORDPRESS_DB_HOST: db:3306
   WORDPRESS_DB_NAME: tiron
   WORDPRESS_DB_USER: tiron
   WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
   WORDPRESS_CONFIG_EXTRA: |
     define( 'WP_ENVIRONMENT_TYPE', 'local' );
+    define( 'TIRON_PRIVATE_PHOTO_DIR', '/var/lib/tiron/photos' );
+    define( 'TIRON_ENABLE_TEST_CHECKOUT', '1' === getenv( 'TIRON_ENABLE_TEST_CHECKOUT' ) );
     define( 'DISALLOW_FILE_EDIT', true );
     define( 'AUTOMATIC_UPDATER_DISABLED', true );
 
 x-wp-volumes: &wp-volumes
   - wordpress:/var/www/html
+  - private_photos:/var/lib/tiron/photos
+  - ./setup/uploads.ini:/usr/local/etc/php/conf.d/tiron-uploads.ini:ro
   - ./theme/tir-on:/var/www/html/wp-content/themes/tir-on:ro
   - ./local/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
 
@@ -68,6 +73,8 @@ services:
       - admin_password
     volumes:
       - wordpress:/var/www/html
+      - private_photos:/var/lib/tiron/photos
+      - ./setup/uploads.ini:/usr/local/etc/php/conf.d/tiron-uploads.ini:ro
       - ./theme/tir-on:/var/www/html/wp-content/themes/tir-on:ro
       - ./local/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
       - ./setup:/project:ro
@@ -78,6 +85,7 @@ services:
 volumes:
   wordpress:
   database:
+  private_photos:
 
 secrets:
   db_password:

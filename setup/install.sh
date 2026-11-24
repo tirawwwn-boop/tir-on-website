@@ -17,6 +17,11 @@ if ! wp plugin is-installed woocommerce; then
 fi
 wp plugin activate woocommerce
 wp language plugin install woocommerce ro_RO
+if ! wp plugin is-installed woocommerce-gateway-stripe; then
+    wp plugin install woocommerce-gateway-stripe --version=11.2.0
+fi
+wp plugin activate woocommerce-gateway-stripe
 wp theme activate tir-on
 wp eval-file /project/seed.php
+wp eval-file /project/test-shipping.php
 wp rewrite flush --hard

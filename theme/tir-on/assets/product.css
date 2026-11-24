@@ -58,7 +58,7 @@
 .lp-drop-copy, .lp-chosen > div { min-width: 0; flex: 1; display: grid; gap: .3rem; text-align: left; }
 .lp-drop-copy strong, .lp-chosen strong { font-weight: 600; font-size: .9375rem; line-height: 1.4; overflow-wrap: anywhere; }
 .lp-drop-copy small, .lp-chosen small { color: var(--lp-muted); line-height: 1.4; font-size: .8125rem; }
-.lp-drop input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.lp-photo-ready .lp-drop input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .lp-drop:has(input[aria-invalid="true"]) { border-color: #9a382c; }
 .lp-tip { color: var(--lp-muted); margin: .6rem 0 0; font-size: .8125rem; line-height: 1.55; }
 .lp-status { margin: .5rem 0 0; color: #903529; line-height: 1.5; font-size: .875rem; }
@@ -113,3 +113,18 @@
 @media (prefers-reduced-motion: reduce) {
   .lp-add { transition: none; }
 }
+
+
+/* The native file field exposes its filename even when JavaScript is unavailable. */
+.lp-personalize form:not(.lp-photo-ready) .lp-drop { flex-wrap: wrap; }
+.lp-personalize form:not(.lp-photo-ready) .lp-drop input { width: 100%; color: var(--lp-ink); font-size: 1rem; }
+.lp-personalize form:not(.lp-quantity-ready) .lp-quantity button { display: none; }
+.lp-personalize form:not(.lp-quantity-ready) .lp-quantity input { width: 4.5rem; }
+.lp-submit-status { margin: .6rem 0 0; font-size: .875rem; color: var(--lp-ink); }
+.lp-submit-status:empty { display: none; }
+.lp-notices :is(.woocommerce-message, .woocommerce-error, .woocommerce-info) {
+  margin: 0 0 1rem; padding: .8rem 1rem; border-inline-start: 3px solid #937146;
+  background: #efe8dc; color: var(--lp-ink); font-size: .9375rem; list-style: none;
+}
+.lp-notices .woocommerce-error { border-color: #943b2c; }
+.lp-notices li + li { margin-top: .5rem; }

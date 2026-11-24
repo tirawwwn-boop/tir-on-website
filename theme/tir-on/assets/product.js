@@ -97,33 +97,67 @@
     }
   }
 
+  const form = product.querySelector('[data-personalization]');
+  if (!form) return;
+  const quantity = get('#lp-quantity');
+  const decrease = get('[data-step="-1"]');
+  const increase = get('[data-step="1"]');
+  const minimum = Number(quantity.min);
+  const maximum = Number(quantity.max);
+
+  function updateSteps() {
+    decrease.disabled = !(quantity.valueAsNumber > minimum);
+    increase.disabled = quantity.valueAsNumber >= maximum;
+  }
+  function stepQuantity(delta) {
+    const current = Number.isFinite(quantity.valueAsNumber) ? quantity.valueAsNumber : minimum;
+    quantity.value = String(Math.max(minimum, Math.min(maximum, Math.trunc(current) + delta)));
+    updateSteps();
+  }
+  decrease.addEventListener('click', () => stepQuantity(-1));
+  increase.addEventListener('click', () => stepQuantity(1));
+  quantity.addEventListener('input', updateSteps);
+  updateSteps();
+  form.classList.add('lp-quantity-ready');
+
+  // Browsers without the image APIs retain the native file input and submit.
+  if (typeof Blob.prototype.arrayBuffer !== 'function' ||
+      typeof HTMLImageElement.prototype.decode !== 'function' ||
+      typeof URL.createObjectURL !== 'function') return;
   const fileInput = get('#lp-file');
   const fileDrop = get('[data-file-drop]');
   const photoPreview = get('[data-chosen]');
   const localImage = get('[data-local-photo]');
   const fileStatus = get('#lp-file-status');
-  const addButton = get('[data-bag-add]');
+  const submitStatus = get('.lp-submit-status');
+  const addButton = get('[data-add-product]');
   const clearButton = get('[data-clear-photo]');
-  const quantity = get('#lp-quantity');
-  const decrease = get('[data-step="-1"]');
-  const increase = get('[data-step="1"]');
   const limitMB = Number(product.dataset.limit);
-  const inStock = product.dataset.inStock !== 'false';
   let photoVersion = 0;
   let currentUrl = '';
+  let acceptedFile = null;
+  let submitting = false;
+  form.classList.add('lp-photo-ready');
 
-  function resetPhoto() {
+  function resetPreview() {
     ++photoVersion;
     if (currentUrl) URL.revokeObjectURL(currentUrl);
     currentUrl = '';
+    acceptedFile = null;
     localImage.removeAttribute('src');
     get('[data-file-name]').textContent = '';
     photoPreview.hidden = true;
     fileDrop.hidden = false;
-    fileInput.value = '';
+    fileInput.setCustomValidity('');
     fileInput.removeAttribute('aria-invalid');
     fileStatus.textContent = '';
-    addButton.disabled = !inStock;
+    addButton.disabled = submitting;
+  }
+
+  function fileError(message) {
+    fileInput.setCustomValidity(message);
+    fileInput.setAttribute('aria-invalid', 'true');
+    fileStatus.textContent = message;
   }
 
   function identifyImage(bytes) {
@@ -134,8 +168,9 @@
     return '';
   }
 
-  async function choosePhoto(file) {
-    resetPhoto();
+  async function choosePhoto() {
+    resetPreview();
+    const file = fileInput.files[0];
     if (!file) return;
     const version = photoVersion;
     let pendingUrl = '';
@@ -143,8 +178,8 @@
     fileStatus.textContent = 'Se verifică imaginea…';
     try {
       const extension = file.name.split('.').pop().toLowerCase();
-      const mimeByExtension = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
-      const expected = mimeByExtension[extension];
+      const formats = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+      const expected = formats[extension];
       if (!expected) throw new Error('Alege o fotografie în format JPG, PNG sau WebP.');
       if (file.size > limitMB * 1024 * 1024) {
         throw new Error('Fotografia depășește limita de ' + limitMB + ' MB. Alege o imagine mai mică.');
@@ -165,6 +200,7 @@
       if (version !== photoVersion) return;
       currentUrl = pendingUrl;
       pendingUrl = '';
+      acceptedFile = file;
       localImage.src = currentUrl;
       get('[data-file-name]').textContent = file.name;
       photoPreview.hidden = false;
@@ -172,18 +208,22 @@
       fileStatus.textContent = '';
       clearButton.focus({ preventScroll: true });
     } catch (error) {
-      if (version !== photoVersion) return;
-      fileInput.setAttribute('aria-invalid', 'true');
-      fileStatus.textContent = error instanceof Error ? error.message : 'Alege altă fotografie.';
+      if (version === photoVersion) {
+        fileError(error instanceof Error ? error.message : 'Alege altă fotografie.');
+      }
     } finally {
       if (pendingUrl) URL.revokeObjectURL(pendingUrl);
-      if (version === photoVersion) addButton.disabled = !inStock;
+      if (version === photoVersion) addButton.disabled = submitting;
     }
   }
 
-  fileInput.addEventListener('change', () => choosePhoto(fileInput.files[0]));
+  fileInput.addEventListener('change', choosePhoto);
+  fileInput.addEventListener('invalid', () => {
+    if (!fileInput.files.length) fileError('Alege o fotografie pentru această personalizare.');
+  });
   clearButton.addEventListener('click', () => {
-    resetPhoto();
+    fileInput.value = '';
+    resetPreview();
     fileInput.focus();
   });
   ['dragenter', 'dragover'].forEach((name) => fileDrop.addEventListener(name, (event) => {
@@ -194,44 +234,44 @@
   fileDrop.addEventListener('drop', (event) => {
     event.preventDefault();
     fileDrop.classList.remove('is-dragging');
-    if (event.dataTransfer.files.length > 1) {
-      resetPhoto();
-      fileStatus.textContent = 'Selectează o singură fotografie pentru această personalizare.';
+    const files = event.dataTransfer.files;
+    if (files.length !== 1) {
+      fileInput.value = '';
+      resetPreview();
+      fileError('Selectează o singură fotografie pentru această personalizare.');
       return;
     }
-    choosePhoto(event.dataTransfer.files[0]);
+    try {
+      fileInput.files = files;
+    } catch {
+      fileInput.value = '';
+      resetPreview();
+      fileError('Apasă pe „Alege o fotografie” pentru a selecta fișierul.');
+      return;
+    }
+    choosePhoto();
   });
 
-  function setQuantity(value) {
-    const parsed = Number.parseInt(value, 10);
-    const normalized = Number.isFinite(parsed) ? Math.max(1, Math.min(99, parsed)) : 1;
-    quantity.value = String(normalized);
-    decrease.disabled = normalized === 1;
-    increase.disabled = normalized === 99;
-    return normalized;
-  }
-  decrease.addEventListener('click', () => setQuantity(Number(quantity.value) - 1));
-  increase.addEventListener('click', () => setQuantity(Number(quantity.value) + 1));
-  quantity.addEventListener('change', () => setQuantity(quantity.value));
-  addButton.addEventListener('click', () => {
-    if (!inStock) return;
-    if (!currentUrl) {
-      fileInput.setAttribute('aria-invalid', 'true');
-      fileStatus.textContent = 'Alege o fotografie înainte de a adăuga Luna în coș.';
-      fileInput.focus();
+  form.addEventListener('submit', (event) => {
+    if (submitting || !acceptedFile || fileInput.files[0] !== acceptedFile) {
+      event.preventDefault();
+      if (!submitting && !addButton.disabled) {
+        fileError('Selectează o fotografie validă înainte de a adăuga Luna în coș.');
+        fileInput.focus();
+      }
       return;
     }
-    const handled = !product.dispatchEvent(new CustomEvent('tiron:bag-add', {
-      bubbles: true,
-      cancelable: true,
-      detail: {
-        name: product.dataset.name,
-        price: product.dataset.price,
-        sku: product.dataset.sku,
-        quantity: setQuantity(quantity.value),
-        hasPhoto: true
-      }
-    }));
-    if (!handled) fileStatus.textContent = 'Coșul de probă este indisponibil. Reîncarcă pagina și încearcă din nou.';
+    submitting = true;
+    form.setAttribute('aria-busy', 'true');
+    addButton.disabled = true;
+    submitStatus.textContent = 'Se încarcă fotografia și se adaugă produsul în coș…';
   });
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted) return;
+    submitting = false;
+    form.removeAttribute('aria-busy');
+    submitStatus.textContent = '';
+    choosePhoto();
+  });
+  if (fileInput.files.length) choosePhoto();
 })();

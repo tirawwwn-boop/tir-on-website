@@ -34,6 +34,12 @@ function t_url($key) {
     return home_url('/');
 }
 
+function t_cart_count() {
+    $cart = function_exists('WC') ? WC()->cart : null;
+    $count = $cart ? $cart->get_cart_contents_count() : 0;
+    return '<span class="bag-count" aria-live="polite">' . esc_html($count) . '</span>';
+}
+
 function t_product_data() {
     $id = t_luna_id();
     $product = $id && function_exists('wc_get_product') ? wc_get_product($id) : false;
@@ -54,7 +60,13 @@ function t_product_data() {
     $price = $product && $product->get_price() !== '' ? wc_get_price_to_display($product) : null;
     $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : 'RON';
     $price_text = $price !== null ? number_format_i18n((float) $price, floor((float) $price) === (float) $price ? 0 : wc_get_price_decimals()) . ' ' . $currency : 'Preț în curs de configurare';
+    $limit = $product ? (int) $product->get_max_purchase_quantity() : 0;
+    $minimum = $product ? max(1, (int) $product->get_min_purchase_quantity()) : 1;
+    $maximum = -1 === $limit ? 99 : min(99, $limit);
     return [
+        'id' => $id,
+        'minimum' => $minimum,
+        'maximum' => $maximum,
         'name' => $product ? $product->get_name() : 'TIR-ON Luna',
         'price' => $price_text,
         'description' => $product && $product->get_short_description() ? wp_strip_all_tags($product->get_short_description()) : 'Un litofan circular personalizat după fotografia ta, cu lumină LED alb-caldă și finisaj espresso mat.',
@@ -65,9 +77,9 @@ function t_product_data() {
         'diameter' => $metadata('diameter', 'aprox. 134,5 mm'),
         'finish' => $metadata('finish', 'Espresso mat'),
         'light' => $metadata('light', 'LED alb-cald'),
-        'limit_mb' => max(1, min(30, (int) get_option('tiron_preview_limit_mb', 10))),
-        'available' => $product && $product->is_in_stock(),
-        'sku' => $product ? $product->get_sku() : '',
+        'limit_mb' => function_exists('tiron_photo_limit_mb') ? tiron_photo_limit_mb() : 0,
+        'available' => $product && $product->is_purchasable() && $product->is_in_stock() && $maximum >= $minimum
+            && function_exists('tiron_photo_limit_mb') && function_exists('tiron_personalization_nonce'),
     ];
 }
 

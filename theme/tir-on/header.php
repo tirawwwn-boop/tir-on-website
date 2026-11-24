@@ -19,9 +19,9 @@
             <?php endforeach; ?>
         </nav>
         <div class="head-actions">
-            <button type="button" class="bag-trigger" data-bag-open aria-controls="tiron-bag" aria-label="Deschide coșul de probă">
-                <?= t_icon('bag', 19); ?><span class="bag-text">Coș</span><span class="bag-count" data-bag-count>0</span>
-            </button>
+            <a class="bag-trigger" href="<?= esc_url(t_url('cart')); ?>" aria-label="Deschide coșul"<?= function_exists('is_cart') && is_cart() ? ' aria-current="page"' : ''; ?>>
+                <?= t_icon('bag', 19); ?><span class="bag-text">Coș</span><?= t_cart_count(); ?>
+            </a>
             <button class="menu-trigger" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="Deschide meniul"><?= t_icon('menu'); ?></button>
         </div>
     </div>

@@ -16,6 +16,13 @@ add_action('after_setup_theme', static function () {
 add_action('wp_enqueue_scripts', static function () {
     $css = ['fonts', 'site'];
     $js = ['site'];
+    if (function_exists('is_cart') && (is_cart() || is_checkout())) {
+        $css[] = 'commerce';
+        if (is_cart()) {
+            // Classic cart updates quantities and removes rows with WooCommerce AJAX.
+            wp_enqueue_script('wc-cart-fragments');
+        }
+    }
     if (is_front_page()) {
         $css[] = 'story';
         $js[] = 'story';
@@ -38,7 +45,12 @@ add_action('wp_enqueue_scripts', static function () {
     }
 }, 20);
 
-// The two editorial templates do not render WooCommerce's standard forms or block grid.
+add_filter('woocommerce_add_to_cart_fragments', static function ($fragments) {
+    $fragments['span.bag-count'] = t_cart_count();
+    return $fragments;
+});
+
+// The editorial views render their own product form and layout.
 add_action('wp_enqueue_scripts', static function () {
     if (!is_front_page() && !(function_exists('is_product') && is_product() && t_is_luna(get_queried_object_id()))) {
         return;

@@ -5,12 +5,5 @@
         <small>© <?= esc_html(wp_date('Y')); ?> TIR-ON</small>
     </div>
 </footer>
-<dialog id="tiron-bag" class="bag-dialog" aria-labelledby="bag-title" data-luna-url="<?= esc_url(t_url('luna')); ?>">
-    <div class="bag-panel">
-        <div class="bag-heading"><h2 id="bag-title">Coșul tău</h2><button class="icon-plain" type="button" data-bag-close aria-label="Închide coșul"><?= t_icon('close'); ?></button></div>
-        <div class="bag-content" data-bag-content></div>
-        <p class="bag-note">Coș de probă pentru previzualizare. Fotografiile rămân pe dispozitivul tău.</p>
-    </div>
-</dialog>
 <?php wp_footer(); ?>
 </body></html>
