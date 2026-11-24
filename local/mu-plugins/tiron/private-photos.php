@@ -41,7 +41,17 @@ function tiron_photo_root() {
 		return false;
 	}
 	$uploads = wp_get_upload_dir();
-	$public  = array( ABSPATH, WP_CONTENT_DIR, WP_PLUGIN_DIR, WPMU_PLUGIN_DIR, $uploads['basedir'], $_SERVER['DOCUMENT_ROOT'] ?? '' );
+	$public  = array(
+		ABSPATH,
+		ABSPATH . WPINC,
+		WP_CONTENT_DIR,
+		WP_PLUGIN_DIR,
+		WPMU_PLUGIN_DIR,
+		get_template_directory(),
+		get_stylesheet_directory(),
+		$uploads['basedir'],
+		$_SERVER['DOCUMENT_ROOT'] ?? '',
+	);
 	// Account for an installation with additional, externally configured web server aliases.
 	if ( defined( 'TIRON_ADDITIONAL_PUBLIC_ROOTS' ) && is_array( TIRON_ADDITIONAL_PUBLIC_ROOTS ) ) {
 		$public = array_merge( $public, TIRON_ADDITIONAL_PUBLIC_ROOTS );

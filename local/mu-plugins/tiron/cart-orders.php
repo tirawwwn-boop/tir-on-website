@@ -2,6 +2,9 @@
 /**
  * Guest personalization, WooCommerce cart validation and private order-line references.
  */
+use Automattic\WooCommerce\StoreApi\Exceptions\RouteException;
+use Automattic\WooCommerce\StoreApi\Utilities\CartTokenUtils;
+
 defined( 'ABSPATH' ) || exit;
 
 function tiron_requires_photo( $product_id ) {
@@ -11,6 +14,65 @@ function tiron_requires_photo( $product_id ) {
     }
     return $id > 0 && $id === (int) $product_id;
 }
+
+/**
+ * Woo reads the complete session at init and writes it at shutdown. Serialize cart writes
+ * before that read so two simultaneous uploads neither overwrite a line nor duplicate a retry.
+ * The 256 private lock files have bounded storage and contain no session identifiers.
+ */
+add_action( 'before_woocommerce_init', static function () {
+    $method = $_SERVER['REQUEST_METHOD'] ?? '';
+    $cart_action = array_intersect( [
+        'tiron_add_luna', 'add-to-cart', 'remove_item', 'undo_item', 'update_cart', 'order_again',
+        'apply_coupon', 'remove_coupon', 'woocommerce-process-checkout-nonce', 'woocommerce_pay',
+    ], array_keys( $_GET + $_POST ) );
+    $is_write = ! in_array( $method, [ '', 'GET', 'HEAD', 'OPTIONS' ], true );
+    $route = $_GET['rest_route'] ?? ( $_SERVER['REQUEST_URI'] ?? '' );
+    $store_api = is_string( $route ) && str_contains( $route, '/wc/store/' );
+    if ( ! $cart_action && ! ( $is_write && ( isset( $_GET['wc-ajax'] ) || $store_api ) ) ) {
+        return;
+    }
+    $identity = (string) get_current_user_id();
+    $token = $store_api ? CartTokenUtils::get_request_cart_token() : '';
+    if ( $token && CartTokenUtils::validate_cart_token( $token ) ) {
+        $identity = (string) CartTokenUtils::get_cart_token_payload( $token )['user_id'];
+    } elseif ( ! $identity ) {
+        // Validate the cookie signature without reading or updating persisted session data.
+        $cookie = ( new WC_Session_Handler() )->get_session_cookie();
+        if ( ! $cookie ) {
+            return;
+        }
+        $identity = $cookie[0];
+    }
+    $root = function_exists( 'tiron_photo_root' ) ? tiron_photo_root() : false;
+    if ( ! $root ) {
+        return; // The private storage adapter also refuses every upload in this state.
+    }
+    $dir = tiron_photo_bucket( $root, 'session-locks' );
+    $slot = substr( hash_hmac( 'sha256', $identity, wp_salt( 'nonce' ) ), 0, 2 );
+    $path = $dir ? $dir . '/' . $slot . '.lock' : '';
+    $handle = $path && ! is_link( $path ) ? @fopen( $path, 'c+b' ) : false;
+    $deadline = microtime( true ) + 5;
+    $locked = false;
+    if ( $handle ) {
+        do {
+            $locked = flock( $handle, LOCK_EX | LOCK_NB, $would_block );
+            if ( $locked || ! $would_block ) {
+                break;
+            }
+            usleep( 50000 );
+        } while ( microtime( true ) < $deadline );
+    }
+    if ( ! $locked ) {
+        if ( $handle ) {
+            fclose( $handle );
+        }
+        wp_die( 'Coșul nu poate fi actualizat acum. Încearcă din nou.', '', [ 'response' => 503 ] );
+    }
+    add_action( 'shutdown', static function () use ( $handle ) {
+        fclose( $handle );
+    }, PHP_INT_MAX );
+}, 0 );
 
 /** A shared cart link copies the cart, but WooCommerce keeps this secret with its original session. */
 function tiron_photo_session_secret( $create = false ) {
@@ -55,7 +117,7 @@ function tiron_valid_photo_line( $line, $product_id ) {
     if ( '' === $expected || ! is_string( $line['_tiron_signature'] ?? null ) || ! hash_equals( $expected, $line['_tiron_signature'] ) ) {
         return false;
     }
-    $path = tiron_photo_path( $line['_tiron_stage'] );
+    $path = function_exists( 'tiron_photo_path' ) ? tiron_photo_path( $line['_tiron_stage'] ) : false;
     return is_string( $path ) && is_file( $path );
 }
 
@@ -179,7 +241,7 @@ add_filter( 'woocommerce_add_to_cart_validation', static function ( $valid, $pro
 // WC_Cart::add_to_cart() can also be called directly, without the form-handler validation filter.
 add_filter( 'woocommerce_add_cart_item_data', static function ( $line, $product_id ) {
     if ( tiron_requires_photo( $product_id ) && ! tiron_valid_photo_line( $line, $product_id ) ) {
-        throw new Exception( tiron_photo_required_message() );
+        throw new RouteException( 'tiron_photo_required', tiron_photo_required_message(), 400 );
     }
     return $line;
 }, 99, 2 );
@@ -262,22 +324,35 @@ add_action( 'woocommerce_checkout_create_order_line_item', static function ( $it
 
 /** Re-check persisted references before payment, including an existing order's pay link. */
 function tiron_validate_order_photos( $order ) {
+    if ( ! $order instanceof WC_Order ) {
+        return false;
+    }
     foreach ( $order->get_items() as $item ) {
         if ( ! tiron_requires_photo( $item->get_product_id() ) ) {
             continue;
         }
-        $file = tiron_photo_path( $item->get_meta( '_tiron_photo_id', true ) );
+        $id = $item->get_meta( '_tiron_photo_id', true );
+        $file = function_exists( 'tiron_photo_path' ) ? tiron_photo_path( $id ) : false;
         if ( ! is_string( $file ) || ! is_file( $file ) ) {
-            throw new Exception( tiron_photo_expired_message() );
+            return false;
         }
     }
+    return true;
 }
-add_action( 'woocommerce_before_pay_action', 'tiron_validate_order_photos' );
-add_action( 'woocommerce_store_api_checkout_order_processed', 'tiron_validate_order_photos' );
-add_action( 'woocommerce_checkout_order_processed', static function ( $order_id ) {
-    tiron_validate_order_photos( wc_get_order( $order_id ) );
-} );
 
-add_filter( 'woocommerce_hidden_order_itemmeta', static function ( $keys ) {
-    return array_merge( $keys, [ '_tiron_photo_id', '_tiron_notes' ] );
+add_action( 'woocommerce_before_pay_action', static function ( $order ) {
+    if ( ! tiron_validate_order_photos( $order ) ) {
+        // Woo's order-pay action checks these notices before calling process_payment().
+        tiron_cart_error( tiron_photo_expired_message() );
+    }
+} );
+add_action( 'woocommerce_store_api_checkout_order_processed', static function ( $order ) {
+    if ( ! tiron_validate_order_photos( $order ) ) {
+        throw new RouteException( 'tiron_photo_expired', tiron_photo_expired_message(), 409 );
+    }
+} );
+add_action( 'woocommerce_checkout_order_processed', static function ( $order_id ) {
+    if ( ! tiron_validate_order_photos( wc_get_order( $order_id ) ) ) {
+        throw new Exception( tiron_photo_expired_message() );
+    }
 } );
