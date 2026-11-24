@@ -1,41 +1,34 @@
 # TIR-ON · Turning Memories ON
 
-Prima versiune pentru feedback reunește o instalare locală WordPress + WooCommerce, o temă construită pentru TIR-ON și paginile Acasă și Luna. Prețul de lucru este 299 RON.
+Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul inițial este 299 RON și se modifică în WooCommerce.
 
-## Previzualizare
+## Previzualizare pe telefon
 
-**Pe telefon**, deschide [prezentarea PDF](artifacts/TIR-ON-mobil.pdf). Cele șapte pagini verticale folosesc textele, imaginile și fonturile magazinului. Pagina 6 arată produsul, iar pagina 7 arată personalizarea. PDF-ul este o ediție pentru lectură și feedback vizual.
+Deschide [fișierul HTML din repository](preview/TIR-ON-interactiv.html) în GitHub, autentificat în contul cu acces. Alege **Download raw file**. Pe Android, deschide fișierul `.html` din **Descărcări**, apoi alege **Deschide cu → Chrome**. Dacă GitHub afișează fișierul în loc să îl descarce, folosește butonul de descărcare din pagina fișierului. Previzualizarea include imaginile, fonturile, cele două pagini și selecția unei fotografii pe dispozitiv. Coșul și checkout-ul sunt disponibile în instalarea WordPress.
 
-**Pentru interacțiuni**, salvează [fișierul HTML autonom](artifacts/TIR-ON-interactiv.html) și deschide-l într-un browser cu JavaScript. Alege **Creează-ți Luna**. Poți încerca galeria, comparația dintre fotografie și litofan, alegerea unei fotografii și coșul de probă. Imaginile, fonturile și cele două pagini sunt incluse în fișier. Vizualizatoarele de atașamente de pe unele telefoane limitează JavaScript. PDF-ul se poate citi și în această situație.
+## Pornire locală
 
-**Pentru catalogul editabil și administrare**, extrage proiectul pe calculator. Cu Docker Compose v2 și OpenSSL disponibile, rulează din directorul care conține `docker-compose.yml`
+Ai nevoie de Docker Compose v2 și OpenSSL. Din directorul proiectului rulează
 
 ```sh
 sh setup/start.sh
 ```
 
-Deschide [pagina principală](http://localhost:8080/), [pagina Luna](http://localhost:8080/produs/luna/) sau [administrarea WordPress](http://localhost:8080/wp-admin/). Utilizatorul local este `atelier`. Parola inițială se găsește în `.local/secrets/admin_password`. Detaliile de instalare, oprire și diagnosticare sunt în [ghidul local](setup/INSTALARE.md).
+Magazinul local este la [localhost:8080](http://localhost:8080/), iar administrarea la [wp-admin](http://localhost:8080/wp-admin/). Folosește contul `atelier` și parola generată în `.local/secrets/admin_password`. [Instrucțiuni pentru administrare și testare](setup/INSTALARE.md)
 
-## Etapa 1 — Mediul și catalogul
+## Catalog și comenzi
 
-WordPress 7.1.5, WooCommerce 11.3.1, PHP 8.3 și MariaDB 11.4.13 formează configurația Docker. Catalogul folosește limba română, moneda RON și adrese lizibile. Tema se află în `theme/tir-on/`. Instalarea creează produsul Luna o singură dată. Repornirea păstrează prețul, fotografiile și modificările din administrare.
+- **Produse → TIR-ON Luna**. Editează prețul, imaginile, descrierea și detaliile tehnice din **Date produs → Generale**. Imaginile incluse sunt materiale de concept. Înlocuiește-le cu fotografii comerciale din editorul produsului și din **Aspect → Personalizare**.
+- **WooCommerce → Comenzi**. Comenzile testate includ produsul, cantitatea și observațiile. Administratorul poate descărca sau șterge fotografia din linia produsului. **WooCommerce → Fotografii private** controlează limita de încărcare și termenele de păstrare.
+- **WooCommerce → Setări → Livrare**. Instalarea locală include o opțiune simulată pentru România. Completează zonele și tarifele comerciale înainte de lansare.
+- **WooCommerce → Setări → Plăți**. Fluxul local folosește simulatorul TIR-ON. Pluginul oficial Stripe este pregătit exclusiv în modul test și apare în checkout după conectarea contului de test. Apple Pay și Google Pay depind de eligibilitatea dispozitivului, browserului și domeniului.
 
-În această versiune, comenzile, metodele de plată și trimiterea e-mailurilor magazinului sunt blocate. Raportarea utilizării WooCommerce și atribuirea sursei comenzilor sunt dezactivate. Accesul web prin Docker este limitat la calculatorul local.
+## Verificare
 
-## Etapa 2 — Acasă și Luna
+Rulează `python3 tests/commerce_smoke.py http://localhost:8080/` pe o instalare locală cu livrarea și simulatorul de test active. Scriptul folosește Requests, lxml și Pillow, generează un PNG sintetic la execuție și lasă o comandă de test în WooCommerce. Șterge-o ulterior din administrare, împreună cu fotografia, dacă nu mai ai nevoie de ea.
 
-Pagina principală prezintă produsul, transformarea fotografiei, procesul și ocaziile pentru cadouri. Pagina Luna citește prețul, imaginile și specificațiile din WooCommerce. Randările de concept sunt înlocuitoare provizorii pentru fotografiile comerciale ale prototipului.
+Am verificat formularul cu încărcări multipart în WordPress și WooCommerce active, checkout-ul fără cont, asocierea fotografiei, fișiere invalide, reluarea trimiterii și expirarea coșului. Am verificat descărcarea, ștergerea și retenția fotografiilor din administrare cu stocarea comenzilor WooCommerce HPOS activată și dezactivată. Paginile Acasă și Luna au fost testate în Chromium la 390 px și 1.440 px. Pentru plăți externe trebuie conectat contul Stripe de test și verificată eligibilitatea portofelelor pe dispozitive reale.
 
-Pe pagina Luna poți alege un JPG, PNG sau WebP, vedea fotografia și verifica mesajele pentru format și dimensiune. Fotografia și observațiile opționale există doar pe pagina deschisă. Browserul le folosește pentru această previzualizare, fără a le trimite pe server. Coșul de probă poate păstra în fila curentă denumirea, prețul și cantitatea. Transferul fotografiei, asocierea cu o comandă și plata aparțin etapelor următoare.
+## Înainte de lansare
 
-În **Produse → TIR-ON Luna**, modifică prețul, descrierea scurtă, imaginea principală și galeria. În **Date produs → Generale** găsești finisajul, alimentarea, lumina, diametrul și termenul de producție. În **Aspect → Personalizare**, secțiunile TIR-ON controlează textele principale, imaginile de copertă și cele pentru comparație. Pentru acestea din urmă, folosește imagini cu același cadraj.
-
-## Verificări și continuare
-
-Validarea configurației Docker Compose și verificarea sintaxei scripturilor de instalare au trecut. Daemonul Docker din mediul de lucru a refuzat accesul la socket, astfel că pornirea containerelor rămâne de verificat pe calculatorul de destinație.
-
-Testele efectuate cu WordPress și WooCommerce active, pe SQLite, au confirmat adresa produsului, prețul de 299 RON și păstrarea unui singur produs după repetarea inițializării. Cererile de cumpărare și de checkout prin Store API au primit răspunsul 403. Lista metodelor de plată a fost goală și numărul de comenzi a rămas zero.
-
-Am verificat legăturile și resursele celor două pagini exportate. Într-un DOM simulat, testele fișierului HTML au acoperit navigarea și întoarcerea între pagini, meniul, caruselul, glisorul, galeria, mesaje de validare și coșul de probă. PDF-ul a fost deschis, randat și inspectat pagină cu pagină. Previzualizarea HTTP și testele vizuale într-un browser mobil real rămân neverificate în acest mediu.
-
-După feedbackul vizual, etapa 3 adaugă încărcarea privată, validarea pe server, retenția și asocierea fotografiilor cu comenzile. Etapa 4 integrează Stripe exclusiv în modul de test. Etapele 5 și 6 includ consimțământul, verificările SEO, securitatea, performanța și testele complete ale comenzilor. Pentru lansare vor fi necesare fotografiile finale, datele operatorului, condițiile comerciale verificate juridic și aprobarea explicită pentru activarea plăților.
+Rămân de stabilit fotografiile și specificațiile comerciale, tarifele de livrare și taxele, datele operatorului și textele juridice verificate. Mediul de lansare are nevoie de HTTPS, volum privat cu backup și retenție configurată, e-mailuri funcționale, verificare SEO și configurarea consimțământului înainte de orice urmărire opțională. Modul live Stripe necesită aprobarea explicită a proprietarului.

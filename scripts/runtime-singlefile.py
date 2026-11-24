@@ -247,6 +247,7 @@ def bundle():
             raise ValueError(f'Missing navigation target: {target}')
     output = etree.tostring(home, method='html', encoding='utf-8', doctype='<!doctype html>')
     OUTPUT.parent.mkdir(exist_ok=True)
+    output = b'\n'.join(line.rstrip() for line in output.split(b'\n')) + b'\n'
     OUTPUT.write_bytes(output)
     print(f'{OUTPUT.name} · {len(output):,} bytes · {len(images)} images · {len(ROUTES)} views')
 
