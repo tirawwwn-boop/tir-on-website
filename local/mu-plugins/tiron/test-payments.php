@@ -123,6 +123,27 @@ add_filter( 'rest_pre_dispatch', static function ( $result, $server, $request ) 
     return $result;
 }, 8, 3 );
 
+// The official handler still authenticates the Stripe signature. Reject the
+// wrong mode before it sees an event or writes payment metadata.
+add_action( 'woocommerce_api_wc_stripe', static function () {
+    if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+        status_header( 405 );
+        exit;
+    }
+    $settings = get_option( 'woocommerce_stripe_settings', array() );
+    if ( empty( $settings['test_webhook_secret'] )
+        || filter_var( getenv( 'E2E_TESTING' ), FILTER_VALIDATE_BOOLEAN ) ) {
+        status_header( 403 );
+        exit;
+    }
+    $body = file_get_contents( 'php://input', false, null, 0, 1024 * 1024 + 1 );
+    $event = is_string( $body ) && strlen( $body ) <= 1024 * 1024 ? json_decode( $body ) : null;
+    if ( ! is_object( $event ) || false !== ( $event->livemode ?? null ) ) {
+        status_header( 400 );
+        exit;
+    }
+}, 0 );
+
 // Express payment on the cart or checkout uses the existing, personalized cart.
 add_action( 'wc_ajax_wc_stripe_add_to_cart', static function () {
     wp_send_json_error( array( 'message' => 'Adaugă produsul din pagina de personalizare.' ), 400 );
