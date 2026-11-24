@@ -4,11 +4,13 @@
  */
 function tiron_story_fields() {
     return [
-        'transformation_title' => [ 'Titlul secțiunii Transformarea', 'Din fotografie în lumină.' ],
-        'transformation_text'  => [ 'Descrierea transformării', 'Imprimăm fotografia în relief. Zonele mai subțiri lasă să treacă mai multă lumină, iar cele mai groase păstrează umbrele. Așa reapare imaginea ta.' ],
-        'steps_title'          => [ 'Titlul secțiunii Cum funcționează', 'În trei pași, acasă la tine.' ],
-        'gift_title'           => [ 'Titlul secțiunii Cadouri', 'Pentru cine aprinzi Luna?' ],
-        'final_title'          => [ 'Titlul invitației finale', 'Dă lumină unei amintiri.' ],
+        'transformation_title' => [ 'Titlul secțiunii Transformarea', 'Stinsă, o sculptură. Aprinsă, o amintire.' ],
+        'transformation_text'  => [ 'Descrierea transformării', 'Lumina dezvăluie chipuri, expresii și detalii ascunse în relief. Descoperă cum o simplă fotografie poate căpăta o nouă dimensiune.' ],
+        'steps_title'          => [ 'Titlul secțiunii Cum funcționează', 'De la fotografia ta la Luna ta.' ],
+        'gift_title'           => [ 'Titlul secțiunii Cadouri', 'Unele cadouri se uită. Altele păstrează amintiri.' ],
+        'gift_text'            => [ 'Introducerea secțiunii Cadouri', 'Pentru familie, pentru cineva drag sau pentru un moment pe care vrei să-l păstrezi aproape.' ],
+        'final_title'          => [ 'Titlul invitației finale', 'Ce amintire ai vrea să aprinzi?' ],
+        'final_text'           => [ 'Textul invitației finale', 'Alege fotografia. De restul ne ocupăm noi.' ],
     ];
 }
 

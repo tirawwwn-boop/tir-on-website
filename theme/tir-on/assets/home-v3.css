@@ -6,27 +6,11 @@
     display: grid;
     grid-template-areas: 'heading' 'portrait' 'intro';
     grid-template-columns: minmax(0, 1fr);
-    padding-block: 1.85rem 2.25rem;
+    padding-block: 1.45rem 2rem;
 }
 .editorial-heading { grid-area: heading; }
-.editorial-kicker, .feature .section-label {
-    display: flex;
-    align-items: center;
-    gap: .7rem;
-    margin: 0;
-    color: #e9cc9f;
-    text-transform: uppercase;
-    letter-spacing: .18em;
-    font: 600 .72rem/1.4 var(--sans);
-}
-.editorial-kicker::before, .feature .section-label span {
-    content: '';
-    width: 1.6rem;
-    height: 1px;
-    background: #b48a59;
-}
 .editorial-heading h1 {
-    margin: .8rem 0 1rem;
+    margin: 0 0 1rem;
     color: inherit;
     font: 500 clamp(2.75rem, 9.55vw, 4.8rem)/.98 var(--serif);
     letter-spacing: -.048em;
@@ -39,14 +23,15 @@
     grid-area: portrait;
     position: relative;
     align-self: center;
-    margin: 0;
-    background: #1d140e;
+    width: min(100%, 27rem);
+    margin: 0 auto;
 }
 .editorial-portrait picture { display: block; }
 .editorial-portrait img {
     width: 100%;
-    height: clamp(16.2rem, 78vw, 30rem);
-    object-fit: contain;
+    height: auto;
+    aspect-ratio: 1 / 1.08;
+    object-fit: cover;
 }
 .editorial-portrait figcaption {
     position: absolute;
@@ -60,7 +45,7 @@
 }
 .editorial-intro { grid-area: intro; }
 .editorial-intro p {
-    max-width: 40ch;
+    max-width: 44ch;
     margin: 1.05rem 0 0;
     color: #e1d6c9;
     line-height: 1.59;
@@ -93,20 +78,44 @@
 }
 .button-outline:hover { background: #3b2b20; }
 
-.feature { background: #f5efe5; }
-.feature .section-label { color: #765639; }
-.feature-visual { width: min(100%, 29rem); margin-inline: auto; }
+.feature {
+    padding-block: clamp(2.6rem, 5vw, 4.6rem);
+    background: #f5efe5;
+}
+.feature-inner {
+    display: grid;
+    align-items: center;
+    gap: 1.35rem;
+    max-width: 62rem;
+}
+.feature-visual { width: min(100%, 26rem); margin-inline: auto; }
 .feature-visual img {
+    width: 100%;
+    height: auto;
     aspect-ratio: 4 / 5;
     object-fit: contain;
     background: #231913;
+    border-radius: 4px;
 }
 .feature-visual figcaption {
-    position: static;
     margin-top: .5rem;
     color: #685847;
-    text-shadow: none;
+    font-size: .75rem;
 }
+.feature h2 {
+    margin: 0 0 .55rem;
+    font: 500 clamp(3.1rem, 4.7vw, 5rem)/1 var(--serif);
+    letter-spacing: -.045em;
+}
+.feature-subtitle {
+    margin: 0 0 .9rem;
+    color: #765639;
+    font: 500 clamp(1.45rem, 2.1vw, 1.9rem)/1.15 var(--serif);
+    text-wrap: balance;
+}
+.feature-description { max-width: 43ch; line-height: 1.65; margin: 0; color: #61574f; }
+.feature-buy { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 1.2rem; }
+.feature-buy > span { font-size: .95rem; }
 .tl-transformation {
     background: radial-gradient(ellipse at 65% 35%, #36271d, #211913 75%);
 }
@@ -172,12 +181,19 @@
     }
     .editorial-heading { align-self: end; }
     .editorial-heading h1 { font-size: clamp(3.2rem, 5.75vw, 6.45rem); margin-bottom: 0; }
-    .editorial-portrait { width: min(100%, 30rem); justify-self: end; }
-    .editorial-portrait img { height: auto; aspect-ratio: 4 / 5; }
+    .editorial-portrait { width: min(100%, 30rem); margin-inline: auto 0; }
+    .editorial-portrait img { aspect-ratio: 4 / 5; }
+    .editorial-portrait picture {
+        mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent),
+            linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
+        mask-composite: intersect;
+    }
+    .editorial-portrait figcaption { bottom: 0; background: transparent; }
     .editorial-intro { padding-top: .3rem; }
     .editorial-intro p { margin-top: 1.25rem; }
     .editorial-actions { margin-top: 1.4rem; }
     .editorial-actions a { font-size: .875rem; }
+    .feature-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); }
     .tl-transform-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 

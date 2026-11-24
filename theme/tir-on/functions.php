@@ -82,13 +82,7 @@ add_filter('template_include', static function ($template) {
 
 add_action('customize_register', static function ($customizer) {
     $customizer->add_section('tiron_home', ['title' => 'TIR-ON · Pagina de start', 'priority' => 30]);
-    $fields = [
-        'hero_title' => ['Titlu, primul rând', 'Amintirile tale,'],
-        'hero_emphasis' => ['Titlu, rândul italic', 'într-o nouă lumină.'],
-        'hero_intro' => ['Text introductiv', 'Transformăm fotografia ta într-un obiect luminos personalizat. O amintire pe care o poți ține aproape.'],
-        'feature_intro' => ['Prezentare Luna', 'Un disc sculptat în lumină, un suport cu linii fluide și o fotografie care înseamnă totul pentru tine. Acesta este Luna.'],
-    ];
-    foreach ($fields as $key => [$label, $default]) {
+    foreach (t_home_copy_fields() as $key => [$label, $default]) {
         $customizer->add_setting('tiron_' . $key, ['default' => $default, 'sanitize_callback' => 'sanitize_text_field']);
         $customizer->add_control('tiron_' . $key, ['label' => $label, 'section' => 'tiron_home', 'type' => 'text']);
     }
@@ -105,7 +99,7 @@ add_action('wp_head', static function () {
     }
     $product = t_product_data();
     $description = is_front_page()
-        ? get_theme_mod('tiron_hero_intro', 'Transformăm fotografia ta într-un obiect luminos personalizat. Descoperă TIR-ON Luna.')
+        ? t_home_copy('hero_intro')
         : $product['description'];
     $image = is_front_page() ? t_scene('hero') : $product['images'][0];
     echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";

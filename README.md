@@ -2,13 +2,13 @@
 
 Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul inițial este 299 RON și se modifică în WooCommerce.
 
-## Previzualizarea V3
+## Previzualizarea V3.1
 
-Branch-ul `design-v3-refined` pornește din versiunea stabilă WordPress și WooCommerce. Homepage-ul alternează secțiuni espresso și ivory și folosește cele trei vizualizări Luna din V2. În Transformarea, butoanele schimbă vederea completă în detaliul mărit al aceleiași imagini cu Luna stinsă.
+Pe branch-ul `design-v3-refined`, V3.1 păstrează structura editorială espresso și ivory și actualizează textele de pe homepage. Sloganul este sub sigla V6, iar portretul din Hero ocupă mai mult spațiu pe mobil. În Transformarea, butoanele schimbă vederea completă în detaliul mărit al aceleiași imagini cu Luna stinsă. O comparație stinsă/aprinsă are nevoie de două imagini cu același cadraj.
 
-Deschide [HTML-ul V3](preview/TIR-ON-V3.html) în GitHub, autentificat în contul cu acces, și alege **Download raw file**. Pe Android, deschide fișierul din **Descărcări** cu Chrome. Previzualizarea include navigarea, galeria și selecția locală a unei fotografii. Coșul și checkout-ul se folosesc din WordPress.
+Deschide [HTML-ul V3.1](preview/TIR-ON-V3.1.html) în GitHub, autentificat în contul cu acces, și alege **Download raw file**. Pe Android, deschide fișierul din **Descărcări** cu Chrome. Previzualizarea include navigarea, galeria și selecția locală a unei fotografii. Coșul și checkout-ul se folosesc din WordPress.
 
-[Capturi la 390 px](preview/TIR-ON-V3-390.jpg) · [Capturi la 1.440 px](preview/TIR-ON-V3-1440.jpg)
+[Captură la 390 px](preview/TIR-ON-V3.1-390.jpg) · [Captură la 1440 px](preview/TIR-ON-V3.1-1440.jpg) · [HTML-ul V3 pentru comparație](preview/TIR-ON-V3.html)
 
 ## Pornire locală
 

@@ -4,8 +4,8 @@
     <div class="qualities">
         <div class="wrap qualities-inner">
             <div><?= t_icon('photo', 23); ?><span>Fotografia ta, în relief</span></div>
-            <div><?= t_icon('sun', 25); ?><span>Lumină LED alb-caldă</span></div>
-            <div><?= t_icon('layers', 25); ?><span>Realizat prin imprimare 3D</span></div>
+            <div><?= t_icon('sun', 25); ?><span>O amintire în lumină</span></div>
+            <div><?= t_icon('spark', 25); ?><span>Creat special pentru tine</span></div>
         </div>
     </div>
     <section id="luna" class="feature">
@@ -21,10 +21,9 @@
                 <?php if (!get_theme_mod('tiron_image_feature')) : ?><figcaption>Vizualizare de concept</figcaption><?php endif; ?>
             </figure>
             <div class="feature-copy">
-                <p class="section-label"><span></span>Obiectul de lumină</p>
                 <h2><?= t_e($product_data['name']); ?></h2>
-                <p class="feature-description"><?= t_e(get_theme_mod('tiron_feature_intro', 'Un disc sculptat în lumină, un suport cu linii fluide și o fotografie care înseamnă totul pentru tine. Acesta este Luna.')); ?></p>
-                <dl class="feature-spec"><div><dt>Finisaj</dt><dd><?= t_e($product_data['finish']); ?></dd></div><div><dt>Diametru</dt><dd><?= t_e($product_data['diameter']); ?></dd></div></dl>
+                <p class="feature-subtitle"><?= t_e(t_home_copy('feature_subtitle')); ?></p>
+                <p class="feature-description"><?= t_e(t_home_copy('feature_intro')); ?></p>
                 <div class="feature-buy"><a class="button-dark" href="<?= esc_url(t_url('luna')); ?>">Descoperă Luna</a><span><?= t_e($product_data['price']); ?></span></div>
             </div>
         </div>

@@ -5,6 +5,20 @@ function t_e($value) {
     return esc_html((string) $value);
 }
 
+function t_home_copy_fields() {
+    return [
+        'hero_title' => ['Titlu, primul rând', 'Amintirile tale,'],
+        'hero_emphasis' => ['Titlu, rândul italic', 'într-o nouă lumină.'],
+        'hero_intro' => ['Text introductiv', 'Transformă o fotografie dragă într-un obiect luminos, creat special pentru tine. O amintire care prinde viață de fiecare dată când o aprinzi.'],
+        'feature_subtitle' => ['Subtitlu Luna', 'O fotografie. O lumină. O amintire care rămâne.'],
+        'feature_intro' => ['Prezentare Luna', 'Un portret sculptat în relief, care își dezvăluie detaliile atunci când îl aprinzi. Creat după fotografia ta, pentru momentele și oamenii care contează.'],
+    ];
+}
+
+function t_home_copy($key) {
+    return get_theme_mod('tiron_' . $key, t_home_copy_fields()[$key][1]);
+}
+
 function t_asset($path) {
     return get_theme_file_uri('/assets/' . ltrim($path, '/'));
 }

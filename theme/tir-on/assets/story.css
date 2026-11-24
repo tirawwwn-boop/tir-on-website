@@ -112,7 +112,13 @@
 }
 
 .tl-gifts .tl-title {
-    max-width: 11ch;
+    max-width: 21ch;
+}
+
+.tl-gift-intro {
+    max-width: 42ch;
+    margin: 1rem 0 0;
+    color: #62594f;
 }
 
 .tl-gift-options {
@@ -186,6 +192,15 @@
     justify-content: space-between;
     align-items: center;
     gap: 2rem;
+}
+
+.tl-final-copy p {
+    margin: .8rem 0 0;
+    color: #e1d6c9;
+}
+
+.tl-final-inner .button-gold {
+    flex: none;
 }
 
 @media (max-width: 760px) {
