@@ -39,7 +39,7 @@ function release_inside( string $path, string $parent ): bool {
 
 function release_mkdir( string $path, int $mode = 0700 ): void {
 	if ( ! is_dir( $path ) ) {
-		release_check( @mkdir( $path, $mode ), 'Crearea directorului a eșuat.' );
+		release_check( @mkdir( $path, $mode ) && chmod( $path, $mode ), 'Crearea directorului a eșuat.' );
 	}
 	release_dir( $path );
 }

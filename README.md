@@ -1,5 +1,7 @@
 # TIR-ON · Turning Memories ON
 
+[V5 · Modificări, teste și capturi](docs/V5-COMMERCE.md) · [Actualizări din GitHub prin cPanel](docs/HOSTICO-UPDATES.md)
+
 Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul standard este 249 RON și se poate modifica în WooCommerce.
 
 Pentru o instalare privată pe Hostico folosește [pachetul cPanel](dist/hostico/) și [ghidul din browser](docs/HOSTICO-DEPLOYMENT.md).

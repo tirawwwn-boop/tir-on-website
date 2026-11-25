@@ -1,6 +1,6 @@
 # Instalare privată TIR-ON pe Hostico
 
-Pachetul este pentru verificare pe o instalare protejată. Include V4 și configurarea magazinului, cu Stripe exclusiv TEST. Ai nevoie de acces cPanel și de un administrator WordPress. Activarea planului, accesul la funcții în cPanel și compatibilitatea efectivă a contului Hostico sunt de confirmat.
+Pentru magazinul deja instalat pe tir-on.ro folosește [actualizarea cu aprobare și rollback](HOSTICO-UPDATES.md). Instrucțiunile de mai jos sunt pentru o instalare nouă, protejată. Pachetul include V5, Atelier și Profit Studio, cu Stripe exclusiv TEST. Ai nevoie de acces cPanel și de un administrator WordPress.
 
 ## 1. Pregătește spațiul în cPanel
 

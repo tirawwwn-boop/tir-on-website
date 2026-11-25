@@ -49,8 +49,12 @@ async function run() {
         assert.match(await details.innerText(), new RegExp(dimensions));
         assert.match(await photo.getAttribute('src'), /^blob:/);
         assert(await page.locator('[data-file-prompt]').innerText() === 'Schimbă fotografia');
-        assert(await outline.isHidden());
-        await toggle.check();
+        if (image === landscape) {
+          assert(await toggle.isChecked());
+        } else {
+          assert(await outline.isHidden()); // Retain the customer's preference on replacement.
+          await toggle.check();
+        }
         await outline.waitFor({ state: 'visible' });
         const [guideBox, photoBox] = await Promise.all([outline.boundingBox(), photo.boundingBox()]);
         assert(Math.abs(guideBox.width - guideBox.height) < 1);

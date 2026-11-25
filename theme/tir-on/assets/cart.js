@@ -49,6 +49,20 @@
     });
   }
 
+  // A shopper can change a quantity and head straight for checkout.
+  // Keep Woo's update and validation, then let them review the recalculated total.
+  document.addEventListener('click', event => {
+    const checkout = event.target.closest('.tiron-cart-layout .checkout-button');
+    if (!checkout) return;
+    const form = document.querySelector('.tiron-cart-layout .woocommerce-cart-form');
+    if (!form || !Array.from(form.querySelectorAll('input.qty')).some(input => input.value !== input.defaultValue)) return;
+    event.preventDefault();
+    if (form.reportValidity()) {
+      const update = form.querySelector('[name="update_cart"]');
+      if (update && !update.disabled) update.click();
+    }
+  });
+
   refreshCartControls();
   if (window.jQuery) window.jQuery(document.body).on('updated_wc_div', refreshCartControls);
 })();

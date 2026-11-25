@@ -2,7 +2,7 @@
 
 În pagina Luna, clientul ajunge de lângă preț la formularul existent de personalizare. Poate selecta, previzualiza, înlocui sau elimina o fotografie înainte de a adăuga produsul în coș. Previzualizarea rămâne în browser până la trimiterea formularului.
 
-Ghidul circular este opțional și arată aproximativ zona vizibilă a litofanului. Un chip apropiat de margine poate ieși parțial din această zonă. Alegerea ghidului nu modifică fotografia și nu se transmite odată cu ea. Sub 1.200 px pe latura scurtă, apare o recomandare de rezoluție. Clientul poate folosi în continuare fotografia.
+Ghidul circular apare la prima selecție, poate fi dezactivat și arată aproximativ zona vizibilă a litofanului. Un chip apropiat de margine poate ieși parțial din această zonă. Alegerea ghidului nu modifică fotografia și nu se transmite odată cu ea. Sub 1.200 px pe latura scurtă, apare o recomandare de rezoluție. Clientul poate folosi în continuare fotografia.
 
 ## Validare și recuperare
 

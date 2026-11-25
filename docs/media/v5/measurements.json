@@ -1,0 +1,170 @@
+[
+  {
+    "width": 320,
+    "route": "home",
+    "overflow": 0,
+    "cls": 0,
+    "broken": []
+  },
+  {
+    "width": 320,
+    "route": "luna",
+    "overflow": 0,
+    "cls": 0.0086,
+    "broken": []
+  },
+  {
+    "width": 320,
+    "route": "cart",
+    "overflow": 0,
+    "cls": 0.0542,
+    "broken": []
+  },
+  {
+    "width": 320,
+    "route": "checkout",
+    "overflow": 0,
+    "cls": 0,
+    "broken": []
+  },
+  {
+    "width": 360,
+    "route": "home",
+    "overflow": 0,
+    "cls": 0,
+    "broken": []
+  },
+  {
+    "width": 360,
+    "route": "luna",
+    "overflow": 0,
+    "cls": 0.0269,
+    "broken": []
+  },
+  {
+    "width": 360,
+    "route": "cart",
+    "overflow": 0,
+    "cls": 0.0411,
+    "broken": []
+  },
+  {
+    "width": 360,
+    "route": "checkout",
+    "overflow": 0,
+    "cls": 0.0063,
+    "broken": []
+  },
+  {
+    "width": 390,
+    "route": "home",
+    "overflow": 0,
+    "cls": 0,
+    "broken": []
+  },
+  {
+    "width": 390,
+    "route": "luna",
+    "overflow": 0,
+    "cls": 0.0089,
+    "broken": []
+  },
+  {
+    "width": 390,
+    "route": "cart",
+    "overflow": 0,
+    "cls": 0.0422,
+    "broken": []
+  },
+  {
+    "width": 390,
+    "route": "checkout",
+    "overflow": 0,
+    "cls": 0.0067,
+    "broken": []
+  },
+  {
+    "width": 430,
+    "route": "home",
+    "overflow": 0,
+    "cls": 0,
+    "broken": []
+  },
+  {
+    "width": 430,
+    "route": "luna",
+    "overflow": 0,
+    "cls": 0.0086,
+    "broken": []
+  },
+  {
+    "width": 430,
+    "route": "cart",
+    "overflow": 0,
+    "cls": 0.0384,
+    "broken": []
+  },
+  {
+    "width": 430,
+    "route": "checkout",
+    "overflow": 0,
+    "cls": 0.0065,
+    "broken": []
+  },
+  {
+    "width": 768,
+    "route": "home",
+    "overflow": 0,
+    "cls": 0.0209,
+    "broken": []
+  },
+  {
+    "width": 768,
+    "route": "luna",
+    "overflow": 0,
+    "cls": 0.001,
+    "broken": []
+  },
+  {
+    "width": 768,
+    "route": "cart",
+    "overflow": 0,
+    "cls": 0.0332,
+    "broken": []
+  },
+  {
+    "width": 768,
+    "route": "checkout",
+    "overflow": 0,
+    "cls": 0.0829,
+    "broken": []
+  },
+  {
+    "width": 1440,
+    "route": "home",
+    "overflow": 0,
+    "cls": 0.0008,
+    "broken": []
+  },
+  {
+    "width": 1440,
+    "route": "luna",
+    "overflow": 0,
+    "cls": 0.0125,
+    "broken": []
+  },
+  {
+    "width": 1440,
+    "route": "cart",
+    "overflow": 0,
+    "cls": 0.0083,
+    "broken": []
+  },
+  {
+    "width": 1440,
+    "route": "checkout",
+    "overflow": 0,
+    "cls": 0.0425,
+    "broken": []
+  }
+]
