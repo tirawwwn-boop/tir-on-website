@@ -3,6 +3,7 @@
 
   const header = document.querySelector('.site-head');
   const menuButton = header.querySelector('.menu-trigger');
+  menuButton.hidden = false;
   function setMenu(open) {
     header.classList.toggle('menu-open', open);
     menuButton.setAttribute('aria-expanded', String(open));
@@ -13,12 +14,48 @@
   document.addEventListener('click', event => {
     if (!header.contains(event.target)) setMenu(false);
   });
+  header.addEventListener('focusout', event => {
+    if (event.relatedTarget && !header.contains(event.relatedTarget)) setMenu(false);
+  });
+  matchMedia('(max-width: 800px)').addEventListener('change', () => setMenu(false));
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && header.classList.contains('menu-open')) {
       setMenu(false);
       menuButton.focus();
     }
   });
+
+  function openProductDetails(hash) {
+    if (hash !== '#livrare' && hash !== '#retur') return;
+    const details = document.querySelector(hash);
+    if (details instanceof HTMLDetailsElement) details.open = true;
+  }
+  openProductDetails(location.hash);
+  window.addEventListener('hashchange', () => openProductDetails(location.hash));
+  document.querySelectorAll('.site-foot a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (link.origin === location.origin && link.pathname === location.pathname) openProductDetails(link.hash);
+    });
+  });
+
+  const share = document.querySelector('.footer-sharing');
+  if (share && navigator.clipboard) {
+    const copy = share.querySelector('[data-copy-link]');
+    const link = share.querySelector('input');
+    const status = share.querySelector('[role="status"]');
+    copy.hidden = false;
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(link.value);
+        status.textContent = 'Link copiat.';
+      } catch {
+        link.focus();
+        link.select();
+        status.textContent = 'Copiază linkul selectat.';
+      }
+    });
+    share.addEventListener('toggle', () => { status.textContent = ''; });
+  }
 
   const hero = document.querySelector('[data-hero]');
   if (hero) {

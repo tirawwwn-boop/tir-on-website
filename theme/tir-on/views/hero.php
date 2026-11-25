@@ -8,13 +8,18 @@ $scenes = [
 <section class="hero" aria-label="Luna" aria-roledescription="carusel" data-hero>
     <div class="hero-media">
         <?php foreach ($scenes as $index => $scene) :
-            $custom = get_theme_mod('tiron_image_' . $scene['key']);
+            $custom = t_storefront_image($scene['key']);
+            $mobile = $custom ? t_storefront_image($scene['mobile']) : null;
+            $mobile_srcset = $mobile ? ($mobile['srcset'] ?: $mobile['url']) : '';
+            if (!$custom) {
+                $mobile_srcset = t_asset('images/' . $scene['mobile'] . '.webp');
+            }
             $src_attr = $index === 0 ? 'src' : 'data-src';
             $srcset_attr = $index === 0 ? 'srcset' : 'data-srcset';
             ?>
             <picture class="hero-frame<?= $index === 0 ? ' is-active' : ''; ?>" data-frame data-name="<?= esc_attr($scene['name']); ?>" data-concept="<?= $custom ? '0' : '1'; ?>" aria-hidden="<?= $index === 0 ? 'false' : 'true'; ?>">
-                <?php if (!$custom) : ?><source media="(max-width: 700px)" <?= $srcset_attr; ?>="<?= esc_url(t_asset('images/' . $scene['mobile'] . '.webp')); ?>"><?php endif; ?>
-                <img <?= $src_attr; ?>="<?= esc_url(t_scene($scene['key'])); ?>" alt="<?= esc_attr($custom ? $scene['name'] : $scene['alt']); ?>" width="1672" height="941" decoding="async"<?= $index === 0 ? ' fetchpriority="high"' : ''; ?>>
+                <?php if ($mobile_srcset) : ?><source media="(max-width: 700px)" <?= $srcset_attr; ?>="<?= esc_attr($mobile_srcset); ?>" sizes="100vw"><?php endif; ?>
+                <img <?= $src_attr; ?>="<?= esc_url($custom['url'] ?? t_asset('images/' . $scene['key'] . '.webp')); ?>"<?php if (!empty($custom['srcset'])) : ?> <?= $srcset_attr; ?>="<?= esc_attr($custom['srcset']); ?>" sizes="100vw"<?php endif; ?> alt="<?= esc_attr($custom ? ($custom['alt'] ?: $scene['name']) : $scene['alt']); ?>" width="1672" height="941" decoding="async"<?= $index === 0 ? ' fetchpriority="high"' : ''; ?>>
             </picture>
         <?php endforeach; ?>
     </div>
@@ -28,15 +33,15 @@ $scenes = [
                 <a class="hero-sub" href="#descopera-lumina">Descoperă lumina <?= t_icon('down', 16); ?></a>
             </div>
         </div>
-        <div class="hero-base">
+    </div>
+    <div class="wrap hero-base">
             <div class="slider-nav">
                 <div class="hero-indicators" role="group" aria-label="Alege imaginea">
                     <?php foreach ($scenes as $i => $scene) : ?><button type="button" data-slide="<?= $i; ?>" aria-label="<?= esc_attr($scene['name']); ?>" aria-pressed="<?= $i === 0 ? 'true' : 'false'; ?>"></button><?php endforeach; ?>
                 </div>
                 <span class="slider-num"><b data-position>01</b><span>/</span>03</span>
             </div>
-            <div class="scene-caption" aria-live="polite"><span class="scene-title">Luna</span><span class="scene-name" data-caption><?= t_e($scenes[0]['name']); ?><?= get_theme_mod('tiron_image_hero') ? '' : ' · Imagine de concept'; ?></span></div>
+            <div class="scene-caption" aria-live="polite"><span class="scene-title">Luna</span><span class="scene-name" data-caption><?= t_e($scenes[0]['name']); ?><?= t_storefront_image('hero') ? '' : ' · Imagine de concept'; ?></span></div>
             <div class="scene-actions"><button type="button" data-prev aria-label="Imaginea precedentă"><?= t_icon('prev', 15); ?></button><button type="button" data-next aria-label="Imaginea următoare"><?= t_icon('next', 15); ?></button></div>
-        </div>
     </div>
 </section>

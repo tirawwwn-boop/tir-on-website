@@ -243,12 +243,15 @@
       photoPreview.hidden = false;
       filePrompt.textContent = 'Schimbă fotografia';
       fileDrop.classList.add('has-photo');
-      if (shorterSide < recommendedSide) {
-        setStatus('Unele detalii se pot pierde la această rezoluție. Dacă ai o variantă mai clară, alege una cu cel puțin ' +
-          numberFormat.format(recommendedSide) + ' px pe latura scurtă.', 'guidance');
-      } else {
-        setStatus('');
-      }
+      const lowResolution = shorterSide < recommendedSide;
+      const resolutionTip = lowResolution
+        ? 'Unele detalii se pot pierde. Dacă ai originalul, alege o fotografie cu cel puțin ' +
+          numberFormat.format(recommendedSide) + ' px pe latura scurtă.'
+        : 'Rezoluția atinge pragul recomandat. Verifică dacă subiectul este clar.';
+      const framingTip = Math.max(width, height) / shorterSide >= 1.5
+        ? ' Formatul este alungit. Verifică poziția subiectului în ghidul circular.'
+        : '';
+      setStatus(resolutionTip + framingTip, lowResolution ? 'guidance' : 'ready');
     } catch (error) {
       if (version === photoVersion) {
         resetPreview();
@@ -268,7 +271,6 @@
   });
   clearButton.addEventListener('click', () => {
     fileInput.value = '';
-    guideSwitch.checked = false;
     resetPreview();
     fileInput.focus();
   });

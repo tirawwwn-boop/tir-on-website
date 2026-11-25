@@ -12,6 +12,7 @@ function tiron_atelier_fields() {
 		'_tiron_power'      => 'Alimentare',
 		'_tiron_light'      => 'Sursă de lumină',
 		'_tiron_finish'     => 'Finisaj',
+		'_tiron_packaging'  => 'Descrierea ambalajului',
 		'_tiron_production' => 'Termen estimat de producție',
 	);
 }

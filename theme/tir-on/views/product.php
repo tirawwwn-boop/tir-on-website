@@ -31,6 +31,12 @@ $luna_icon = static function ($name) {
     </nav>
     <div class="lp-layout">
       <section class="lp-gallery" aria-label="Galerie foto produs">
+        <?php if ($luna_available) : ?>
+          <div class="lp-mobile-buy" data-mobile-buy>
+            <div><span><?php echo t_e($luna_name); ?></span><strong><?php echo t_e($product_data['price']); ?></strong></div>
+            <a class="button-gold" href="#personalizare">Personalizează Luna <?php echo t_icon('down', 16); ?></a>
+          </div>
+        <?php endif; ?>
         <div class="lp-media">
           <?php if ($luna_count) : ?>
             <button type="button" class="lp-photo-open" aria-label="Mărește imaginea produsului" aria-haspopup="dialog" data-photo-open>
@@ -96,7 +102,7 @@ $luna_icon = static function ($name) {
               <figcaption><strong data-file-name></strong><small data-file-details></small></figcaption>
             </figure>
             <div class="lp-photo-actions">
-              <label class="lp-guide-toggle"><input type="checkbox" data-guide-switch aria-describedby="lp-guide-tip"/> Arată ghidul circular</label>
+              <label class="lp-guide-toggle"><input type="checkbox" checked data-guide-switch aria-describedby="lp-guide-tip"/> Arată ghidul circular</label>
               <button type="button" class="lp-clear" data-clear-photo>Elimină fotografia</button>
             </div>
             <p class="lp-tip" id="lp-guide-tip">Cercul arată aproximativ zona vizibilă a litofanului. Lasă spațiu în interiorul cercului în jurul fețelor ca să reduci riscul de decupare.</p>
@@ -125,7 +131,22 @@ $luna_icon = static function ($name) {
         </section>
 
         <div class="lp-accordions">
-          <details open><summary>Detalii de design <?php echo t_icon('down'); ?></summary>
+          <details open id="livrare"><summary>Ambalare și livrare <?php echo t_icon('down'); ?></summary>
+            <dl class="lp-fulfilment">
+              <div><dt>Ambalare</dt><dd><?php if (!empty($product_data['packaging'])) : ?>
+                <?php echo t_e($product_data['packaging']); ?>
+              <?php elseif ($luna_available) : ?>
+                Oferi Luna cadou? Poți menționa o preferință de ambalare în <a href="#lp-notes">observațiile comenzii</a>.
+              <?php else : ?>
+                Detaliile ambalajului sunt în curs de confirmare.
+              <?php endif; ?></dd></div>
+              <?php if (!empty($product_data['production'])) : ?>
+                <div><dt>Producție</dt><dd><?php echo t_e($product_data['production']); ?></dd></div>
+              <?php endif; ?>
+              <div><dt>Livrare</dt><dd>Introdu adresa la finalizarea comenzii pentru a vedea opțiunile de livrare disponibile și costul lor.</dd></div>
+            </dl>
+          </details>
+          <details><summary>Detalii de design <?php echo t_icon('down'); ?></summary>
             <dl class="lp-specs">
               <?php foreach (array('Diametru litofan' => 'diameter', 'Finisaj' => 'finish', 'Lumină' => 'light', 'Alimentare' => 'power') as $label => $key) : ?>
                 <?php if (!empty($product_data[$key])) : ?>
@@ -134,11 +155,7 @@ $luna_icon = static function ($name) {
               <?php endforeach; ?>
             </dl>
           </details>
-          <details><summary>Producție și livrare <?php echo t_icon('down'); ?></summary>
-            <p><?php echo t_e($product_data['production'] ?: 'Termenul de producție este în curs de stabilire.'); ?></p>
-            <p>Metodele disponibile și costul livrării sunt afișate pentru adresa introdusă la finalizarea comenzii.</p>
-          </details>
-          <details><summary>Returul produselor personalizate <?php echo t_icon('down'); ?></summary>
+          <details id="retur"><summary>Returul produselor personalizate <?php echo t_icon('down'); ?></summary>
             <p>Pentru produsele realizate după specificațiile tale sau personalizate în mod clar se aplică excepția de la dreptul de retragere prevăzută la art. 16 lit. c din OUG 34/2014. Drepturile legale privind conformitatea produsului se păstrează.</p>
           </details>
         </div>

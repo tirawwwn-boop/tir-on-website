@@ -45,7 +45,7 @@
 .lp-info h1 { margin: 0 0 .8rem; font-size: clamp(3.3rem, 4.8vw, 5.75rem); letter-spacing: -.048em; line-height: 1.02; }
 .lp-description { margin: 0; max-width: 43ch; color: var(--lp-muted); font-size: 1rem; line-height: 1.65; white-space: pre-line; }
 .lp-price { margin: 1.25rem 0 1.5rem; font-size: 1.375rem; line-height: 1.4; font-weight: 500; }
-.lp-personalize-link { display: none; }
+.lp-personalize-link, .lp-mobile-buy { display: none; }
 .lp-personalize { border-top: 1px solid var(--lp-line); padding-top: 1.45rem; }
 .lp-personalize h2 { margin: 0 0 1rem; font-size: clamp(1.75rem, 2.1vw, 2.25rem); line-height: 1.1; letter-spacing: -.035em; }
 .lp-label { display: block; font-size: .875rem; font-weight: 600; line-height: 1.5; margin: 0 0 .45rem; }
@@ -67,6 +67,7 @@
 .lp-recovery { margin: 0 0 .8rem; }
 .lp-status { margin: .5rem 0 0; color: #903529; line-height: 1.5; font-size: .875rem; }
 .lp-status[data-tone="checking"] { color: var(--lp-muted); }
+.lp-status[data-tone="ready"] { color: var(--lp-muted); }
 .lp-status[data-tone="guidance"] { padding: .5rem .65rem; color: #574021; background: #f0e8da; border-inline-start: 2px solid #937146; }
 .lp-status:empty { display: none; }
 .lp-chosen { margin-top: .65rem; background: var(--lp-field); border: 1px solid var(--lp-line); padding: .7rem .85rem; }
@@ -104,6 +105,10 @@
 .lp-specs dt, .lp-accordions details p { color: var(--lp-muted); }
 .lp-specs dd { margin: 0; }
 .lp-accordions details p { margin: 0 0 1rem; font-size: .875rem; line-height: 1.6; }
+.lp-fulfilment { display: grid; gap: .85rem; margin: 0 0 1.25rem; }
+.lp-fulfilment dt { font-size: .875rem; font-weight: 600; }
+.lp-fulfilment dd { margin: .12rem 0 0; color: var(--lp-muted); font-size: .875rem; line-height: 1.55; }
+.lp-fulfilment a { color: inherit; text-underline-offset: .2em; }
 .lp-dialog { box-sizing: border-box; width: min(92vw, 78rem); padding: 0; color: #fff; border: 0; background: #16130f; }
 .lp-dialog:not([open]) { display: none; }
 .lp-dialog::backdrop { background: rgba(12,10,8,.91); }
@@ -117,6 +122,22 @@
 @media (max-width: 50rem) {
   .lp-layout { grid-template-columns: 1fr; gap: 1.8rem; }
   .lp-gallery { position: static; }
+  /* The gallery bounds the sticky row, so it leaves before the buying form. */
+  .lp-mobile-buy {
+    position: sticky; top: 0; z-index: 2; display: flex; align-items: center;
+    justify-content: space-between; gap: .75rem; min-height: 4rem;
+    background: var(--paper, #f8f5ef); border-bottom: 1px solid var(--lp-line);
+    padding: .4rem 0; margin-bottom: .6rem;
+  }
+  .lp-mobile-buy > div { display: grid; gap: .08rem; line-height: 1.2; }
+  .lp-mobile-buy > div span { color: var(--lp-muted); font-size: .8125rem; }
+  .lp-mobile-buy strong { font-size: 1.05rem; font-weight: 600; }
+  .lp-mobile-buy a { min-height: 44px; padding: .65rem .85rem; gap: .35rem; }
+  .lp-mobile-buy svg { width: 1rem; height: 1rem; }
+  .lp-gallery :is(.lp-photo-open, .lp-thumb) { scroll-margin-block-start: 4.75rem; }
+  .site-head.menu-open ~ .luna-product .lp-mobile-buy,
+  .luna-product:has(.lp-personalize :focus, .lp-dialog[open]) .lp-mobile-buy { visibility: hidden; }
+  .admin-bar .lp-mobile-buy { top: 46px; }
   .lp-breadcrumb { padding: 1rem 0 1.1rem; }
   .lp-info { padding: 0; }
   .lp-price-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0 .9rem; margin: 1.25rem 0 1.5rem; }

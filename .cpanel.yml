@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - /bin/bash deployment/hostico/release/run.sh

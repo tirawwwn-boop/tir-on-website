@@ -2,6 +2,9 @@
 defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/inc/presentation.php';
+require_once __DIR__ . '/inc/storefront.php';
+require_once __DIR__ . '/inc/cart.php';
+require_once __DIR__ . '/inc/checkout.php';
 if (is_readable(__DIR__ . '/views/home-story-customizer.php')) {
     require_once __DIR__ . '/views/home-story-customizer.php';
 }
@@ -28,8 +31,12 @@ add_action('wp_enqueue_scripts', static function () {
     if (function_exists('is_cart') && (is_cart() || is_checkout())) {
         $css[] = 'commerce';
         if (is_cart()) {
+            $css[] = 'cart';
+            $js[] = 'cart';
             // Classic cart updates quantities and removes rows with WooCommerce AJAX.
             wp_enqueue_script('wc-cart-fragments');
+        } elseif (is_checkout() && !is_wc_endpoint_url()) {
+            $css[] = 'checkout';
         }
     }
     if (is_front_page()) {
@@ -110,7 +117,7 @@ add_action('wp_head', static function () {
     $product = $home ? null : t_product_data();
     $description = $home ? t_home_copy('hero_intro') : $product['description'];
     $image = $home ? t_scene('hero') : $product['images'][0];
-    $concept = $home ? !get_theme_mod('tiron_image_hero') : $product['concept'];
+    $concept = $home ? !t_storefront_image('hero') : $product['concept'];
     echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     echo '<meta property="og:locale" content="ro_RO"><meta property="og:site_name" content="TIR-ON">';
     echo '<meta property="og:type" content="' . ($home ? 'website' : 'product') . '">';
@@ -120,7 +127,9 @@ add_action('wp_head', static function () {
     echo '<meta property="og:image:alt" content="' . esc_attr($concept ? 'Luna iluminată · vizualizare de concept' : 'Luna, litofan luminos personalizat') . '">';
     echo '<meta property="og:url" content="' . esc_url($home ? home_url('/') : get_permalink()) . '">';
     if ($home && $concept) {
-        echo '<link rel="preload" as="image" href="' . esc_url(t_asset('images/hero-mobile.webp')) . '" media="(max-width: 700px)">';
+        if (!t_storefront_image('hero-mobile')) {
+            echo '<link rel="preload" as="image" href="' . esc_url(t_asset('images/hero-mobile.webp')) . '" media="(max-width: 700px)">';
+        }
         echo '<link rel="preload" as="image" href="' . esc_url($image) . '" media="(min-width: 701px)">';
     }
 }, 2);

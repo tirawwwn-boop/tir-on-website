@@ -87,6 +87,7 @@ function t_product_data() {
         'concept' => !$images,
         'images' => $images ?: [t_asset('images/hero-mobile.webp'), t_asset('images/feature.webp'), t_asset('images/detail-mobile.webp')],
         'production' => $metadata('production'),
+        'packaging' => $metadata('packaging'),
         'power' => $metadata('power', 'Alimentare prin cablu'),
         'diameter' => $metadata('diameter', 'aprox. 134,5 mm'),
         'finish' => $metadata('finish', 'Espresso mat'),

@@ -1,0 +1,55 @@
+/* Keep Woo's checkout form, coupon toggle, validation and payment fragments native. */
+.woocommerce-checkout .content-page { padding-block: clamp(1.4rem, 4vw, 3.5rem) clamp(3rem, 6vw, 5rem); }
+.woocommerce-checkout .content-page h1 { margin-bottom: .6rem; }
+.content-page .woocommerce .woocommerce-form-coupon-toggle .woocommerce-info {
+  margin: 0 0 .85rem; padding: 0; border: 0; background: transparent;
+  color: #59493a; font-size: .92rem;
+}
+.content-page .woocommerce .woocommerce-form-coupon-toggle .woocommerce-info::before { display: none; }
+.content-page .woocommerce .showcoupon { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: .2em; }
+
+.woocommerce-checkout .content-page form.checkout h3 { margin: .35rem 0 1rem; font-size: clamp(1.8rem, 3.4vw, 2.45rem); }
+.woocommerce-checkout .content-page form.checkout .form-row { margin: 0 0 .63rem; padding: 0; }
+.woocommerce-checkout .content-page .woocommerce .form-row > label { margin-bottom: .24rem; line-height: 1.4; }
+.woocommerce-checkout .content-page .woocommerce .form-row .input-text { min-height: 46px; }
+.woocommerce-checkout #customer_details { min-width: 0; }
+.woocommerce-checkout .content-page .woocommerce #ship-to-different-address { margin: .45rem 0; }
+.woocommerce-checkout #ship-to-different-address label { display: inline-flex; gap: .55rem; align-items: center; min-height: 44px; cursor: pointer; }
+.tiron-delivery-notes { margin: .4rem 0 .75rem; border-block: 1px solid #d8cfc1; }
+.tiron-delivery-notes summary { min-height: 46px; padding: .7rem 0; cursor: pointer; font-weight: 550; }
+.tiron-delivery-notes summary small { color: #635748; font-weight: 400; }
+.tiron-delivery-notes > h3 { display: none; }
+
+.content-page .woocommerce .tiron-order-summary {
+  min-width: 0; margin-top: 1.3rem; padding: clamp(1rem, 3vw, 2rem);
+  background: #fffdf9; border: 1px solid #d9d0c4; border-radius: 4px;
+}
+.content-page .woocommerce .tiron-order-summary #order_review_heading { margin: 0 0 .8rem; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table {
+  border: 0; margin: 0; font-size: .94rem; line-height: 1.48; background: transparent;
+}
+.content-page .woocommerce .woocommerce-checkout-review-order-table :is(th,td) { padding: .7rem 0; background: transparent; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table tr > :last-child { padding-inline-start: .65rem; text-align: end; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table thead th { font-size: .82rem; color: #6a5949; font-weight: 500; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table tfoot th { color: #4b3d30; font-weight: 500; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table .order-total > * { padding-block: .85rem; font-weight: 700; color: #221a12; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table dl.variation { margin: .25rem 0 0; padding: 0; border: 0; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table dl.variation :is(dt,dd,p) { float: none; display: inline; margin-inline: 0 .15em; }
+.content-page .woocommerce .woocommerce-checkout-review-order-table dl.variation dd::after { content: ''; display: block; }
+.content-page .woocommerce .tiron-order-summary #payment { margin-top: .8rem; background: #f4efe7; }
+.content-page .woocommerce .tiron-order-summary #payment ul.payment_methods { padding: .9rem; border-color: #ded4c7; }
+.content-page .woocommerce .tiron-order-summary #payment .wc_payment_method > label { font-weight: 600; line-height: 1.4; cursor: pointer; padding-block: .65rem; }
+.content-page .woocommerce .tiron-order-summary #payment div.payment_box { margin-block: .8rem .1rem; overflow-wrap: anywhere; }
+.content-page .woocommerce .tiron-order-summary #payment .place-order { padding: .9rem; }
+.content-page .woocommerce .tiron-order-summary .woocommerce-privacy-policy-text { color: #4d4136; line-height: 1.5; font-size: .88rem; }
+.content-page .woocommerce .tiron-order-summary #place_order {
+  min-height: 48px; border-color: #dfc199; color: #221a12; background: #dfc199; border-radius: 4px;
+}
+.content-page .woocommerce .tiron-order-summary #place_order:hover { background: #f2d9b5; border-color: #b59771; }
+@media (max-width: 37.99rem) {
+  .woocommerce-checkout .content-page { width: calc(100% - 2rem); }
+}
+@media (min-width: 54rem) {
+  .content-page .woocommerce form.checkout > #customer_details { grid-row: auto; }
+  .content-page .woocommerce form.checkout > .tiron-order-summary { grid-column: 2; margin-top: 0; }
+}
