@@ -1,0 +1,10 @@
+Valori pentru cPanel → MultiPHP INI Editor, dacă planul le permite.
+PHP 8.3 sau 8.4, fileinfo, GD (JPEG, PNG, WebP), mysqli.
+memory_limit = 256M
+upload_max_filesize = 16M
+post_max_size = 20M
+display_errors = Off
+log_errors = On
+
+Lasă WP_DEBUG dezactivat. Dacă un cont impune limite mai mici, WooCommerce
+trebuie testat cu limita de fotografie afișată către client.

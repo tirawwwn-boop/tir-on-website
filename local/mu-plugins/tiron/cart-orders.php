@@ -203,6 +203,10 @@ add_action( 'template_redirect', static function () {
     if ( ! function_exists( 'WC' ) || ! WC()->cart || ! WC()->session || ! is_product() || ! tiron_requires_photo( get_queried_object_id() ) ) {
         return;
     }
+    if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+        define( 'DONOTCACHEPAGE', true );
+    }
+    do_action( 'litespeed_control_set_nocache', 'TIR-ON: formular de personalizare asociat sesiunii' );
     wc_nocache_headers();
     WC()->session->set_customer_session_cookie( true );
     if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {

@@ -93,7 +93,8 @@ function t_product_data() {
         'light' => $metadata('light', 'LED alb-cald'),
         'limit_mb' => function_exists('tiron_photo_limit_mb') ? tiron_photo_limit_mb() : 0,
         'available' => $product && $product->is_purchasable() && $product->is_in_stock() && $maximum >= $minimum
-            && function_exists('tiron_photo_limit_mb') && function_exists('tiron_personalization_nonce'),
+            && function_exists('tiron_photo_processing_ready') && tiron_photo_processing_ready()
+            && function_exists('tiron_personalization_nonce'),
     ];
 }
 

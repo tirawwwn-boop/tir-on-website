@@ -92,24 +92,59 @@ add_action('customize_register', static function ($customizer) {
     }
 });
 
+add_filter('document_title_parts', static function ($parts) {
+    if (is_front_page()) {
+        $parts['tagline'] = 'Cadouri personalizate cu lumină';
+    } elseif (function_exists('is_product') && is_product() && t_is_luna(get_queried_object_id())) {
+        $parts['title'] = 'Luna · Litofan luminos personalizat';
+    }
+    return $parts;
+});
+
 add_action('wp_head', static function () {
-    if (!is_front_page() && !(function_exists('is_product') && is_product())) {
+    $home = is_front_page();
+    $luna = function_exists('is_product') && is_product() && t_is_luna(get_queried_object_id());
+    if (!$home && !$luna) {
         return;
     }
-    $product = t_product_data();
-    $description = is_front_page()
-        ? t_home_copy('hero_intro')
-        : $product['description'];
-    $image = is_front_page() ? t_scene('hero') : $product['images'][0];
+    $product = $home ? null : t_product_data();
+    $description = $home ? t_home_copy('hero_intro') : $product['description'];
+    $image = $home ? t_scene('hero') : $product['images'][0];
+    $concept = $home ? !get_theme_mod('tiron_image_hero') : $product['concept'];
     echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     echo '<meta property="og:locale" content="ro_RO"><meta property="og:site_name" content="TIR-ON">';
-    echo '<meta property="og:type" content="' . (is_front_page() ? 'website' : 'product') . '">';
+    echo '<meta property="og:type" content="' . ($home ? 'website' : 'product') . '">';
     echo '<meta property="og:title" content="' . esc_attr(wp_get_document_title()) . '">';
     echo '<meta property="og:description" content="' . esc_attr($description) . '">';
-    echo '<meta property="og:image" content="' . esc_url($image) . '">';
-    echo '<meta property="og:url" content="' . esc_url(is_front_page() ? home_url('/') : get_permalink()) . '">';
-    if (is_front_page() && !get_theme_mod('tiron_image_hero')) {
+    echo '<meta property="og:image" content="' . esc_url($concept ? t_asset('images/social-luna.jpg') : $image) . '">';
+    echo '<meta property="og:image:alt" content="' . esc_attr($concept ? 'Luna iluminată · vizualizare de concept' : 'Luna, litofan luminos personalizat') . '">';
+    echo '<meta property="og:url" content="' . esc_url($home ? home_url('/') : get_permalink()) . '">';
+    if ($home && $concept) {
         echo '<link rel="preload" as="image" href="' . esc_url(t_asset('images/hero-mobile.webp')) . '" media="(max-width: 700px)">';
         echo '<link rel="preload" as="image" href="' . esc_url($image) . '" media="(min-width: 701px)">';
     }
 }, 2);
+
+add_action('wp', static function () {
+    if (function_exists('is_product') && is_product() && t_is_luna(get_queried_object_id())
+        && isset(WC()->structured_data)) {
+        WC()->structured_data->generate_product_data(wc_get_product(get_queried_object_id()));
+    }
+});
+
+add_filter('woocommerce_structured_data_product', static function ($markup, $product) {
+    if (t_is_luna($product->get_id()) && empty($markup['image'])) {
+        $markup['image'] = t_asset('images/social-luna.jpg');
+    }
+    return $markup;
+}, 10, 2);
+
+add_filter('woocommerce_structured_data_product_offer', static function ($offer, $product) {
+    if (t_is_luna($product->get_id()) && !$product->is_on_sale()) {
+        unset($offer['priceValidUntil']);
+        foreach (array_keys($offer['priceSpecification'] ?? []) as $key) {
+            unset($offer['priceSpecification'][$key]['validThrough']);
+        }
+    }
+    return $offer;
+}, 10, 2);

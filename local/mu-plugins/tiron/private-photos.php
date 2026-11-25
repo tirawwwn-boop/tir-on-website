@@ -75,7 +75,16 @@ function tiron_photo_bucket( string $root, string $name ) {
 	if ( ! is_dir( $path ) && ! @mkdir( $path, 0700 ) && ! is_dir( $path ) ) {
 		return false;
 	}
-	return ! is_link( $path ) && $path === realpath( $path ) && 0 === ( fileperms( $path ) & 0077 ) ? $path : false;
+	$mode = @fileperms( $path );
+	return ! is_link( $path ) && $path === realpath( $path ) && false !== $mode && 0 === ( $mode & 0077 ) ? $path : false;
+}
+
+/** Check the extensions and configured limits required to accept a private photo. */
+function tiron_photo_processing_ready(): bool {
+	return tiron_photo_limit_mb() >= 1 && function_exists( 'flock' ) && class_exists( 'finfo' )
+		&& function_exists( 'imagecreatefromjpeg' ) && function_exists( 'imagecreatefrompng' )
+		&& function_exists( 'imagecreatefromwebp' ) && function_exists( 'imagejpeg' )
+		&& false !== tiron_photo_root();
 }
 
 /** Serialize brief ownership/rename/unlink operations, never customer upload or image decode. */

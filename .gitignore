@@ -3,7 +3,8 @@
 .env.*
 !.env.example
 node_modules/
-dist/
+/dist/*
+!/dist/hostico/
 *.log
 .DS_Store
 .local/

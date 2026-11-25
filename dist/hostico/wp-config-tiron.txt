@@ -1,0 +1,11 @@
+// Copiază în wp-config.php înainte de linia „That's all, stop editing!”.
+// Verifică să nu existe deja constantele de mai jos. Folosește URL-ul HTTPS
+// al instalării private și înlocuiește CALEA_EXACTĂ cu folderul din File Manager.
+define( 'WP_ENVIRONMENT_TYPE', 'staging' );
+define( 'TIRON_HOSTICO_READINESS', true );
+define( 'TIRON_ENABLE_TEST_CHECKOUT', false );
+define( 'TIRON_PRIVATE_PHOTO_DIR', '/home/CONT_CPANEL/CALEA_EXACTĂ' );
+// Include rădăcinile publice suplimentare, dacă există (de exemplu alte domenii).
+// define( 'TIRON_ADDITIONAL_PUBLIC_ROOTS', array( '/home/CONT_CPANEL/alt-document-root' ) );
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'FORCE_SSL_ADMIN', true );

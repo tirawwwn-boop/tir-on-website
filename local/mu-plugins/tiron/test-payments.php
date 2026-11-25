@@ -8,7 +8,8 @@ defined( 'ABSPATH' ) || exit;
 function tiron_local_test_checkout_enabled() {
     return 'local' === wp_get_environment_type()
         && defined( 'TIRON_ENABLE_TEST_CHECKOUT' )
-        && true === TIRON_ENABLE_TEST_CHECKOUT;
+        && true === TIRON_ENABLE_TEST_CHECKOUT
+        && is_readable( __DIR__ . '/local-test-gateway.php' );
 }
 
 if ( 'local' === wp_get_environment_type() ) {
