@@ -33,4 +33,7 @@ if ( ! $tiron_ready ) {
         }
     } );
 }
+if ( $tiron_ready && is_readable( __DIR__ . '/tiron/atelier.php' ) ) {
+    require_once __DIR__ . '/tiron/atelier.php';
+}
 unset( $tiron_ready, $tiron_module, $tiron_path );

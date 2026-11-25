@@ -99,7 +99,7 @@ add_action( 'woocommerce_after_order_itemmeta', static function ( $item_id, $ite
 	if ( ! is_string( $photo_id ) || $photo_id === '' ) {
 		return;
 	}
-	$path = tiron_photo_path( $photo_id );
+	$path = function_exists( 'tiron_order_photo_path' ) ? tiron_order_photo_path( $photo_id ) : false;
 	if ( ! is_string( $path ) || ! is_file( $path ) ) {
 		echo '<p>Fotografia acestei comenzi a expirat sau a fost eliminată.</p>';
 		return;
@@ -120,6 +120,9 @@ function tiron_requested_photo_item( $action, $input ) {
 	if ( ! $order_id || ! $item_id || ! tiron_can_access_order_photo( $order_id ) || ! wp_verify_nonce( $nonce, $action . '_' . $order_id . '_' . $item_id ) ) {
 		wp_die( 'Acces restricționat.', '', array( 'response' => 403 ) );
 	}
+	if ( ! function_exists( 'wc_get_order' ) || ! function_exists( 'tiron_order_photo_path' ) ) {
+		wp_die( 'Fotografie indisponibilă.', '', array( 'response' => 503 ) );
+	}
 	$order = wc_get_order( $order_id );
 	$item  = $order ? $order->get_item( $item_id ) : false;
 	if ( ! $item instanceof WC_Order_Item_Product || (int) $item->get_order_id() !== $order_id || ! is_string( $item->get_meta( '_tiron_photo_id' ) ) || ! $item->get_meta( '_tiron_photo_id' ) ) {
@@ -128,9 +131,12 @@ function tiron_requested_photo_item( $action, $input ) {
 	return $item;
 }
 
-add_action( 'admin_post_tiron_download_photo', static function () {
-	$item   = tiron_requested_photo_item( 'tiron_download_photo', $_GET );
-	$path   = tiron_photo_path( $item->get_meta( '_tiron_photo_id' ) );
+function tiron_stream_order_photo( string $action, string $disposition ): void {
+	if ( 'GET' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+		wp_die( 'Metodă invalidă.', '', array( 'response' => 405 ) );
+	}
+	$item   = tiron_requested_photo_item( $action, $_GET );
+	$path   = tiron_order_photo_path( $item->get_meta( '_tiron_photo_id' ) );
 	$stream = is_string( $path ) && is_file( $path ) ? @fopen( $path, 'rb' ) : false;
 	if ( ! $stream ) {
 		wp_die( 'Fotografie indisponibilă.', '', array( 'response' => 404 ) );
@@ -139,10 +145,11 @@ add_action( 'admin_post_tiron_download_photo', static function () {
 	nocache_headers();
 	header( 'Cache-Control: private, no-store, max-age=0' );
 	header( 'Referrer-Policy: no-referrer' );
+	header( 'Cross-Origin-Resource-Policy: same-origin' );
 	header( 'X-Content-Type-Options: nosniff' );
 	header( 'X-Robots-Tag: noindex, noarchive' );
 	header( 'Content-Type: image/jpeg' );
-	header( 'Content-Disposition: attachment; filename="Luna-' . (int) $item->get_order_id() . '-' . (int) $item->get_id() . '.jpg"' );
+	header( 'Content-Disposition: ' . $disposition . '; filename="Luna-' . (int) $item->get_order_id() . '-' . (int) $item->get_id() . '.jpg"' );
 	$stat = fstat( $stream );
 	if ( $stat ) {
 		header( 'Content-Length: ' . $stat['size'] );
@@ -150,6 +157,14 @@ add_action( 'admin_post_tiron_download_photo', static function () {
 	fpassthru( $stream );
 	fclose( $stream );
 	exit;
+}
+
+add_action( 'admin_post_tiron_download_photo', static function () {
+	tiron_stream_order_photo( 'tiron_download_photo', 'attachment' );
+} );
+
+add_action( 'admin_post_tiron_preview_photo', static function () {
+	tiron_stream_order_photo( 'tiron_preview_photo', 'inline' );
 } );
 
 add_action( 'admin_post_tiron_confirm_erasure', static function () {
@@ -170,11 +185,8 @@ add_action( 'admin_post_tiron_erase_photo', static function () {
 	}
 	$item = tiron_requested_photo_item( 'tiron_erase_photo', $_POST );
 	$id   = $item->get_meta( '_tiron_photo_id' );
-	if ( ! tiron_delete_photo( $id ) ) {
-		$path = tiron_photo_path( $id );
-		if ( is_string( $path ) && is_file( $path ) ) {
-			wp_die( 'Ștergerea a eșuat. Încearcă din nou.', '', array( 'response' => 500 ) );
-		}
+	if ( tiron_order_photo_path( $id ) && ! tiron_delete_photo( $id ) && tiron_order_photo_path( $id ) ) {
+		wp_die( 'Ștergerea a eșuat. Încearcă din nou.', '', array( 'response' => 500 ) );
 	}
 	wp_safe_redirect( $item->get_order()->get_edit_order_url() );
 	exit;

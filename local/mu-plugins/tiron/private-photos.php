@@ -87,6 +87,10 @@ function tiron_photo_processing_ready(): bool {
 		&& false !== tiron_photo_root();
 }
 
+function tiron_photo_dimension_limits(): array {
+	return array( 'max_side' => 10000, 'max_pixels' => 24000000 );
+}
+
 /** Serialize brief ownership/rename/unlink operations, never customer upload or image decode. */
 function tiron_with_photo_lock( callable $operation ) {
 	$root = tiron_photo_root();
@@ -122,6 +126,12 @@ function tiron_photo_path( $id ) {
 	}
 	return tiron_private_raster( $root . '/orders/' . $id . '/photo.jpg' )
 		?: tiron_private_raster( $root . '/staged/' . $id . '.jpg' );
+}
+
+/** An order review must never resolve a staged cart upload. */
+function tiron_order_photo_path( $id ) {
+	$root = tiron_is_photo_id( $id ) ? tiron_photo_root() : false;
+	return $root ? tiron_private_raster( $root . '/orders/' . $id . '/photo.jpg' ) : false;
 }
 
 /** GD builds a new raster. No EXIF, GPS, original file chunks, or filename are copied. */
@@ -210,7 +220,8 @@ function tiron_store_photo( array $file ) {
 		return tiron_photo_failure( 'Formatul real al fotografiei trebuie să corespundă extensiei JPG, PNG sau WebP.' );
 	}
 	list( $width, $height ) = $info;
-	if ( $width < 1 || $height < 1 || $width > 10000 || $height > 10000 || $width * $height > 24000000 ) {
+	$dimensions = tiron_photo_dimension_limits();
+	if ( $width < 1 || $height < 1 || max( $width, $height ) > $dimensions['max_side'] || $width * $height > $dimensions['max_pixels'] ) {
 		return tiron_photo_failure( 'Alege o fotografie de cel mult 24 megapixeli și 10.000 px pe latură.' );
 	}
 
