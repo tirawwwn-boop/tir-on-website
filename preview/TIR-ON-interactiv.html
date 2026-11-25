@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#181613">
-<title>TIR-ON – Turning Memories ON</title>
+<title>TIR-ON – Cadouri personalizate cu lumină</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="description" content="Unele fotografii merită mai mult decât un loc în galerie. Transformă una dintre ele într-un obiect luminos, creat special pentru tine.">
 
@@ -706,30 +706,43 @@ html:has(dialog[open]) { overflow: hidden; }
 .lp-personalize h2 { margin: 0 0 1rem; font-size: clamp(1.75rem, 2.1vw, 2.25rem); line-height: 1.1; letter-spacing: -.035em; }
 .lp-label { display: block; font-size: .875rem; font-weight: 600; line-height: 1.5; margin: 0 0 .45rem; }
 .lp-label span { color: var(--lp-muted); font-weight: 400; }
-.lp-drop, .lp-chosen { display: flex; align-items: center; gap: .85rem; padding: .9rem 1rem; min-height: 5rem; }
-.lp-drop { position: relative; background: var(--lp-field); border: 1px dashed #a99a85; cursor: pointer; }
+.lp-drop { display: flex; align-items: center; gap: .85rem; padding: .9rem 1rem; min-height: 5rem; position: relative; background: var(--lp-field); border: 1px dashed #a99a85; cursor: pointer; }
+.lp-drop.has-photo { min-height: 3.5rem; padding-block: .55rem; }
 .lp-drop:focus-within, .lp-drop.is-dragging { outline: 2px solid #835c29; outline-offset: 2px; }
 .lp-drop:hover, .lp-drop.is-dragging { background: #f0e9de; }
 .lp-file-icon { color: #8a6b44; }
 .lp-file-icon svg { width: 1.75rem; height: 1.75rem; }
-.lp-drop-copy, .lp-chosen > div { min-width: 0; flex: 1; display: grid; gap: .3rem; text-align: left; }
+.lp-drop-copy, .lp-photo-figure figcaption { min-width: 0; display: grid; gap: .3rem; text-align: left; }
+.lp-drop-copy { flex: 1; }
 .lp-drop-copy strong, .lp-chosen strong { font-weight: 600; font-size: .9375rem; line-height: 1.4; overflow-wrap: anywhere; }
 .lp-drop-copy small, .lp-chosen small { color: var(--lp-muted); line-height: 1.4; font-size: .8125rem; }
 .lp-photo-ready .lp-drop input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .lp-drop:has(input[aria-invalid="true"]) { border-color: #9a382c; }
 .lp-tip { color: var(--lp-muted); margin: .6rem 0 0; font-size: .8125rem; line-height: 1.55; }
+.lp-photo-tip { margin: 0 0 .7rem; }
+.lp-recovery { margin: 0 0 .8rem; }
 .lp-status { margin: .5rem 0 0; color: #903529; line-height: 1.5; font-size: .875rem; }
+.lp-status[data-tone="checking"] { color: var(--lp-muted); }
+.lp-status[data-tone="guidance"] { padding: .5rem .65rem; color: #574021; background: #f0e8da; border-inline-start: 2px solid #937146; }
 .lp-status:empty { display: none; }
-.lp-chosen { background: var(--lp-field); border: 1px solid var(--lp-line); padding: .65rem; }
-.lp-chosen img { width: 4.25rem; height: 3.5rem; object-fit: contain; background: #e8e3dc; }
-.lp-clear { color: var(--lp-ink); background: none; padding: .65rem; border: none; }
+.lp-chosen { margin-top: .65rem; background: var(--lp-field); border: 1px solid var(--lp-line); padding: .7rem .85rem; }
+.lp-photo-figure { margin: 0; }
+.lp-preview-frame { position: relative; overflow: hidden; width: fit-content; max-width: 100%; margin-inline: auto; }
+.lp-preview-frame img { display: block; width: auto; height: auto; max-width: 100%; max-height: 13rem; }
+.lp-guide-outline { position: absolute; left: 50%; top: 50%; width: var(--lp-guide-width); aspect-ratio: 1; border: 2px dashed #fffdf9; box-shadow: 0 0 0 1px #181411, 0 0 0 20rem rgb(24 20 17 / .23); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+.lp-photo-figure figcaption { margin-top: .65rem; }
+.lp-photo-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 .75rem; margin-top: .45rem; }
+.lp-guide-toggle { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; color: var(--lp-ink); font-size: .8125rem; cursor: pointer; }
+.lp-guide-toggle input { margin: 0; width: 1rem; height: 1rem; accent-color: #705735; }
+.luna-product .lp-clear { min-height: 44px; color: #705735; background: none; padding: 0; border: none; font-size: .8125rem; text-decoration: underline; text-underline-offset: .2em; }
+.lp-chosen .lp-tip { margin-top: .15rem; }
 .lp-note-label { margin-top: 1.1rem; }
 .lp-personalize textarea { display: block; width: 100%; resize: vertical; min-height: 3.7rem; max-height: 20rem; padding: .7rem .85rem; border: 1px solid #b6ac9e; border-radius: 0; background: var(--lp-field); color: var(--lp-ink); font-size: 1rem; line-height: 1.45; }
 .lp-personalize textarea::placeholder { color: #746a5e; }
 .lp-action { display: flex; flex-wrap: wrap; gap: .65rem; align-items: stretch; margin-top: 1rem; }
 .lp-quantity { display: flex; align-items: stretch; min-height: 3.15rem; border: 1px solid #ab9e8b; }
 .lp-quantity button, .lp-quantity input { background: transparent; border: none; color: var(--lp-ink); padding: 0; }
-.lp-quantity button { display: grid; place-items: center; width: 2.5rem; }
+.lp-quantity button { display: grid; place-items: center; width: 2.75rem; }
 .lp-quantity svg { width: .9rem; height: .9rem; }
 .lp-quantity input { width: 2rem; text-align: center; appearance: textfield; -moz-appearance: textfield; font-size: 1rem; font-variant-numeric: tabular-nums; }
 .lp-quantity input::-webkit-outer-spin-button, .lp-quantity input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -809,7 +822,7 @@ html:has(dialog[open]) { overflow: hidden; }
         </div>
     </div>
 </header>
-<main id="acasa" data-page-classes="home wp-singular page-template-default page page-id-10 wp-theme-tir-on theme-tir-on woocommerce-no-js" data-page-title="TIR-ON – Turning Memories ON">
+<main id="acasa" data-page-classes="home wp-singular page-template-default page page-id-10 wp-theme-tir-on theme-tir-on woocommerce-no-js" data-page-title="TIR-ON – Cadouri personalizate cu lumină">
     <section class="hero" aria-label="Luna" aria-roledescription="carusel" data-hero>
     <div class="hero-media">
                     <picture class="hero-frame is-active" data-frame data-name="Lumină aprinsă" data-concept="1" aria-hidden="false">
@@ -949,7 +962,7 @@ html:has(dialog[open]) { overflow: hidden; }
     </div>
 </section>
 </main>
-<main id="produs-luna" class="luna-product" data-luna-product data-name="Luna" data-limit="10" data-in-stock="true" data-page-classes="wp-singular product-template-default single single-product postid-15 wp-theme-tir-on theme-tir-on woocommerce woocommerce-page woocommerce-no-js" data-page-title="Luna – TIR-ON" hidden="hidden">
+<main id="produs-luna" class="luna-product" data-luna-product data-name="Luna" data-limit="10" data-in-stock="true" data-max-side="10000" data-max-pixels="24000000" data-page-classes="wp-singular product-template-default single single-product postid-15 wp-theme-tir-on theme-tir-on woocommerce woocommerce-page woocommerce-no-js" data-page-title="Luna · Litofan luminos personalizat – TIR-ON" hidden="hidden">
   <div class="lp-wrap">
     <nav class="lp-breadcrumb" aria-label="Parcurs de navigare">
       <a href="#acasa">Acasă</a>
@@ -988,22 +1001,31 @@ html:has(dialog[open]) { overflow: hidden; }
         <section id="personalizare" class="lp-personalize" aria-labelledby="lp-personalize-title" tabindex="-1">
           <h2 id="lp-personalize-title">Personalizează Luna</h2>
                       <div class="lp-notices"></div>
-                              <form method="post" enctype="multipart/form-data" data-personalization>
+                                        <form method="post" enctype="multipart/form-data" data-personalization>
 
 
 
           <label class="lp-label" for="lp-file">Fotografia ta</label>
+          <p class="lp-tip lp-photo-tip" id="lp-photo-tip">Alege o imagine clară, bine luminată. Lasă spațiu între fețe și marginile fotografiei.</p>
           <div class="lp-drop" data-file-drop>
             <span class="lp-file-icon"><svg aria-hidden="true" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="8" cy="9" r="1.5"></circle><path d="m4 18 5-5 3 3 4-5 5 6"></path></svg></span>
-            <span class="lp-drop-copy"><strong>Alege o fotografie</strong><small>JPG, PNG sau WebP · max. 10 MB</small></span>
+            <span class="lp-drop-copy"><strong data-file-prompt>Alege o fotografie</strong><small>JPG, PNG sau WebP · max. 10 MB</small></span>
             <input type="file" id="lp-file" name="tiron_photo" required accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="lp-photo-tip lp-file-status">
           </div>
           <div class="lp-chosen" data-chosen hidden>
-            <img data-local-photo alt="Previzualizarea fotografiei alese">
-            <div><strong data-file-name></strong><small>Fotografie selectată</small></div>
-            <button type="button" class="lp-clear" data-clear-photo aria-label="Elimină fotografia"><svg aria-hidden="true" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+            <figure class="lp-photo-figure">
+              <div class="lp-preview-frame" data-preview-frame>
+                <img data-local-photo alt="Previzualizarea fotografiei alese">
+                <span class="lp-guide-outline" data-guide-outline hidden aria-hidden="true"></span>
+              </div>
+              <figcaption><strong data-file-name></strong><small data-file-details></small></figcaption>
+            </figure>
+            <div class="lp-photo-actions">
+              <label class="lp-guide-toggle"><input type="checkbox" data-guide-switch aria-describedby="lp-guide-tip"> Arată ghidul circular</label>
+              <button type="button" class="lp-clear" data-clear-photo>Elimină fotografia</button>
+            </div>
+            <p class="lp-tip" id="lp-guide-tip">Cercul arată aproximativ zona vizibilă a litofanului. Lasă spațiu în interiorul cercului în jurul fețelor ca să reduci riscul de decupare.</p>
           </div>
-          <p class="lp-tip" id="lp-photo-tip">Alege o imagine clară, bine luminată, cu subiectul aproape de centru.</p>
           <p class="lp-status" id="lp-file-status" role="status" aria-live="polite"></p>
 
           <label class="lp-label lp-note-label" for="lp-notes">Observații <span>(opțional)</span></label>
@@ -1011,13 +1033,14 @@ html:has(dialog[open]) { overflow: hidden; }
           <div class="lp-action">
             <div class="lp-quantity" role="group" aria-label="Cantitate">
               <button type="button" data-step="-1" aria-label="Micșorează cantitatea" disabled><svg aria-hidden="true" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg></button>
-              <input type="number" id="lp-quantity" name="quantity" required value="1" min="1" max="99" step="1" inputmode="numeric" aria-label="Cantitate">
+              <input type="number" id="lp-quantity" name="quantity" required value="1" min="1" max="99" step="1" inputmode="numeric" aria-label="Cantitate" aria-describedby="lp-quantity-tip">
               <button type="button" data-step="1" aria-label="Mărește cantitatea"><svg aria-hidden="true" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"></path></svg></button>
             </div>
             <button type="button" class="button-gold lp-add" data-add-product disabled>
               <svg aria-hidden="true" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l1 13H4l1-13Z"></path><path d="M8.5 9V6a3.5 3.5 0 0 1 7 0v3"></path></svg><span>Adaugă în coș</span>
             </button>
           </div>
+          <p class="lp-tip" id="lp-quantity-tip">Toate bucățile din acest articol folosesc aceeași fotografie.</p>
           <p class="lp-tip">Previzualizare offline. Fotografia rămâne pe dispozitiv. Comenzile se plasează din magazinul WordPress.</p>
           <p class="lp-submit-status" role="status" aria-live="polite"></p>
           </form>
@@ -1528,17 +1551,26 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   const maximum = Number(quantity.max);
 
   function updateSteps() {
+    quantity.setCustomValidity('');
     decrease.disabled = !(quantity.valueAsNumber > minimum);
     increase.disabled = quantity.valueAsNumber >= maximum;
   }
   function stepQuantity(delta) {
-    const current = Number.isFinite(quantity.valueAsNumber) ? quantity.valueAsNumber : minimum;
-    quantity.value = String(Math.max(minimum, Math.min(maximum, Math.trunc(current) + delta)));
+    const current = quantity.valueAsNumber;
+    quantity.value = String(Number.isFinite(current)
+      ? Math.max(minimum, Math.min(maximum, Math.trunc(current) + delta))
+      : minimum);
     updateSteps();
   }
   decrease.addEventListener('click', () => stepQuantity(-1));
   increase.addEventListener('click', () => stepQuantity(1));
   quantity.addEventListener('input', updateSteps);
+  quantity.addEventListener('invalid', () => {
+    const message = minimum === maximum
+      ? 'Poți comanda ' + minimum + ' buc. pentru această personalizare.'
+      : 'Alege o cantitate între ' + minimum + ' și ' + maximum + ' bucăți.';
+    quantity.setCustomValidity(message);
+  });
   updateSteps();
   form.classList.add('lp-quantity-ready');
 
@@ -1550,36 +1582,56 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   const fileDrop = get('[data-file-drop]');
   const photoPreview = get('[data-chosen]');
   const localImage = get('[data-local-photo]');
+  const fileName = get('[data-file-name]');
+  const fileDetails = get('[data-file-details]');
+  const filePrompt = get('[data-file-prompt]');
+  const guideSwitch = get('[data-guide-switch]');
+  const guideOutline = get('[data-guide-outline]');
   const fileStatus = get('#lp-file-status');
   const submitStatus = get('.lp-submit-status');
   const addButton = get('[data-add-product]');
   const clearButton = get('[data-clear-photo]');
+  const canSubmit = addButton.type === 'submit';
   const limitMB = Number(product.dataset.limit);
+  const maximumSide = Number(product.dataset.maxSide);
+  const maximumPixels = Number(product.dataset.maxPixels);
+  const recommendedSide = 1200;
+  const numberFormat = new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 1 });
+  const formats = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+  const formatNames = { 'image/jpeg': 'JPG', 'image/png': 'PNG', 'image/webp': 'WebP' };
   let photoVersion = 0;
   let currentUrl = '';
   let acceptedFile = null;
   let submitting = false;
   form.classList.add('lp-photo-ready');
 
+  function setStatus(message, tone = '') {
+    fileStatus.textContent = message;
+    fileStatus.dataset.tone = tone;
+  }
+
   function resetPreview() {
     ++photoVersion;
+    localImage.removeAttribute('src');
     if (currentUrl) URL.revokeObjectURL(currentUrl);
     currentUrl = '';
     acceptedFile = null;
-    localImage.removeAttribute('src');
-    get('[data-file-name]').textContent = '';
+    fileName.textContent = '';
+    fileDetails.textContent = '';
+    filePrompt.textContent = 'Alege o fotografie';
     photoPreview.hidden = true;
-    fileDrop.hidden = false;
+    guideOutline.hidden = true;
+    fileDrop.classList.remove('has-photo');
     fileInput.setCustomValidity('');
     fileInput.removeAttribute('aria-invalid');
-    fileStatus.textContent = '';
-    addButton.disabled = submitting;
+    setStatus('');
+    addButton.disabled = !canSubmit || submitting;
   }
 
   function fileError(message) {
     fileInput.setCustomValidity(message);
     fileInput.setAttribute('aria-invalid', 'true');
-    fileStatus.textContent = message;
+    setStatus(message, 'error');
   }
 
   function identifyImage(bytes) {
@@ -1595,12 +1647,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     const file = fileInput.files[0];
     if (!file) return;
     const version = photoVersion;
-    let pendingUrl = '';
     addButton.disabled = true;
-    fileStatus.textContent = 'Se verifică imaginea…';
+    setStatus('Se verifică fotografia…', 'checking');
     try {
       const extension = file.name.split('.').pop().toLowerCase();
-      const formats = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
       const expected = formats[extension];
       if (!expected) throw new Error('Alege o fotografie în format JPG, PNG sau WebP.');
       if (file.size > limitMB * 1024 * 1024) {
@@ -1611,31 +1661,46 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         throw new Error('Conținutul imaginii nu corespunde formatului. Alege un fișier JPG, PNG sau WebP valid.');
       }
       if (version !== photoVersion) return;
-      pendingUrl = URL.createObjectURL(file);
-      const probe = new Image();
-      probe.src = pendingUrl;
+      currentUrl = URL.createObjectURL(file);
+      localImage.src = currentUrl;
       try {
-        await probe.decode();
+        await localImage.decode();
       } catch {
         throw new Error('Imaginea nu poate fi deschisă. Verifică fișierul sau alege altă fotografie.');
       }
       if (version !== photoVersion) return;
-      currentUrl = pendingUrl;
-      pendingUrl = '';
+      const width = localImage.naturalWidth;
+      const height = localImage.naturalHeight;
+      const shorterSide = Math.min(width, height);
+      if (width > maximumSide || height > maximumSide || width * height > maximumPixels) {
+        throw new Error('Alege o copie de cel mult ' + numberFormat.format(maximumPixels / 1000000) +
+          ' megapixeli și ' + numberFormat.format(maximumSide) + ' px pe latură.');
+      }
+
+      const size = file.size >= 1024 * 1024
+        ? numberFormat.format(file.size / 1024 / 1024) + ' MB'
+        : Math.max(1, Math.round(file.size / 1024)) + ' KB';
       acceptedFile = file;
-      localImage.src = currentUrl;
-      get('[data-file-name]').textContent = file.name;
+      fileName.textContent = file.name;
+      fileDetails.textContent = formatNames[expected] + ' · ' + width + ' × ' + height + ' px · ' + size;
+      guideOutline.style.setProperty('--lp-guide-width', (90 * shorterSide / width) + '%');
+      guideOutline.hidden = !guideSwitch.checked;
       photoPreview.hidden = false;
-      fileDrop.hidden = true;
-      fileStatus.textContent = '';
-      clearButton.focus({ preventScroll: true });
+      filePrompt.textContent = 'Schimbă fotografia';
+      fileDrop.classList.add('has-photo');
+      if (shorterSide < recommendedSide) {
+        setStatus('Unele detalii se pot pierde la această rezoluție. Dacă ai o variantă mai clară, alege una cu cel puțin ' +
+          numberFormat.format(recommendedSide) + ' px pe latura scurtă.', 'guidance');
+      } else {
+        setStatus('');
+      }
     } catch (error) {
       if (version === photoVersion) {
+        resetPreview();
         fileError(error instanceof Error ? error.message : 'Alege altă fotografie.');
       }
     } finally {
-      if (pendingUrl) URL.revokeObjectURL(pendingUrl);
-      if (version === photoVersion) addButton.disabled = submitting;
+      if (version === photoVersion) addButton.disabled = !canSubmit || submitting;
     }
   }
 
@@ -1643,8 +1708,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   fileInput.addEventListener('invalid', () => {
     if (!fileInput.files.length) fileError('Alege o fotografie pentru această personalizare.');
   });
+  guideSwitch.addEventListener('change', () => {
+    guideOutline.hidden = !guideSwitch.checked;
+  });
   clearButton.addEventListener('click', () => {
     fileInput.value = '';
+    guideSwitch.checked = false;
     resetPreview();
     fileInput.focus();
   });
@@ -1675,6 +1744,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   });
 
   form.addEventListener('submit', (event) => {
+    if (!canSubmit) {
+      event.preventDefault();
+      return;
+    }
     if (submitting || !acceptedFile || fileInput.files[0] !== acceptedFile) {
       event.preventDefault();
       if (!submitting && !addButton.disabled) {
@@ -1691,6 +1764,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   window.addEventListener('pageshow', (event) => {
     if (!event.persisted) return;
     submitting = false;
+    updateSteps();
     form.removeAttribute('aria-busy');
     submitStatus.textContent = '';
     choosePhoto();

@@ -106,17 +106,26 @@
   const maximum = Number(quantity.max);
 
   function updateSteps() {
+    quantity.setCustomValidity('');
     decrease.disabled = !(quantity.valueAsNumber > minimum);
     increase.disabled = quantity.valueAsNumber >= maximum;
   }
   function stepQuantity(delta) {
-    const current = Number.isFinite(quantity.valueAsNumber) ? quantity.valueAsNumber : minimum;
-    quantity.value = String(Math.max(minimum, Math.min(maximum, Math.trunc(current) + delta)));
+    const current = quantity.valueAsNumber;
+    quantity.value = String(Number.isFinite(current)
+      ? Math.max(minimum, Math.min(maximum, Math.trunc(current) + delta))
+      : minimum);
     updateSteps();
   }
   decrease.addEventListener('click', () => stepQuantity(-1));
   increase.addEventListener('click', () => stepQuantity(1));
   quantity.addEventListener('input', updateSteps);
+  quantity.addEventListener('invalid', () => {
+    const message = minimum === maximum
+      ? 'Poți comanda ' + minimum + ' buc. pentru această personalizare.'
+      : 'Alege o cantitate între ' + minimum + ' și ' + maximum + ' bucăți.';
+    quantity.setCustomValidity(message);
+  });
   updateSteps();
   form.classList.add('lp-quantity-ready');
 
@@ -128,36 +137,56 @@
   const fileDrop = get('[data-file-drop]');
   const photoPreview = get('[data-chosen]');
   const localImage = get('[data-local-photo]');
+  const fileName = get('[data-file-name]');
+  const fileDetails = get('[data-file-details]');
+  const filePrompt = get('[data-file-prompt]');
+  const guideSwitch = get('[data-guide-switch]');
+  const guideOutline = get('[data-guide-outline]');
   const fileStatus = get('#lp-file-status');
   const submitStatus = get('.lp-submit-status');
   const addButton = get('[data-add-product]');
   const clearButton = get('[data-clear-photo]');
+  const canSubmit = addButton.type === 'submit';
   const limitMB = Number(product.dataset.limit);
+  const maximumSide = Number(product.dataset.maxSide);
+  const maximumPixels = Number(product.dataset.maxPixels);
+  const recommendedSide = 1200;
+  const numberFormat = new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 1 });
+  const formats = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+  const formatNames = { 'image/jpeg': 'JPG', 'image/png': 'PNG', 'image/webp': 'WebP' };
   let photoVersion = 0;
   let currentUrl = '';
   let acceptedFile = null;
   let submitting = false;
   form.classList.add('lp-photo-ready');
 
+  function setStatus(message, tone = '') {
+    fileStatus.textContent = message;
+    fileStatus.dataset.tone = tone;
+  }
+
   function resetPreview() {
     ++photoVersion;
+    localImage.removeAttribute('src');
     if (currentUrl) URL.revokeObjectURL(currentUrl);
     currentUrl = '';
     acceptedFile = null;
-    localImage.removeAttribute('src');
-    get('[data-file-name]').textContent = '';
+    fileName.textContent = '';
+    fileDetails.textContent = '';
+    filePrompt.textContent = 'Alege o fotografie';
     photoPreview.hidden = true;
-    fileDrop.hidden = false;
+    guideOutline.hidden = true;
+    fileDrop.classList.remove('has-photo');
     fileInput.setCustomValidity('');
     fileInput.removeAttribute('aria-invalid');
-    fileStatus.textContent = '';
-    addButton.disabled = submitting;
+    setStatus('');
+    addButton.disabled = !canSubmit || submitting;
   }
 
   function fileError(message) {
     fileInput.setCustomValidity(message);
     fileInput.setAttribute('aria-invalid', 'true');
-    fileStatus.textContent = message;
+    setStatus(message, 'error');
   }
 
   function identifyImage(bytes) {
@@ -173,12 +202,10 @@
     const file = fileInput.files[0];
     if (!file) return;
     const version = photoVersion;
-    let pendingUrl = '';
     addButton.disabled = true;
-    fileStatus.textContent = 'Se verifică imaginea…';
+    setStatus('Se verifică fotografia…', 'checking');
     try {
       const extension = file.name.split('.').pop().toLowerCase();
-      const formats = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
       const expected = formats[extension];
       if (!expected) throw new Error('Alege o fotografie în format JPG, PNG sau WebP.');
       if (file.size > limitMB * 1024 * 1024) {
@@ -189,31 +216,46 @@
         throw new Error('Conținutul imaginii nu corespunde formatului. Alege un fișier JPG, PNG sau WebP valid.');
       }
       if (version !== photoVersion) return;
-      pendingUrl = URL.createObjectURL(file);
-      const probe = new Image();
-      probe.src = pendingUrl;
+      currentUrl = URL.createObjectURL(file);
+      localImage.src = currentUrl;
       try {
-        await probe.decode();
+        await localImage.decode();
       } catch {
         throw new Error('Imaginea nu poate fi deschisă. Verifică fișierul sau alege altă fotografie.');
       }
       if (version !== photoVersion) return;
-      currentUrl = pendingUrl;
-      pendingUrl = '';
+      const width = localImage.naturalWidth;
+      const height = localImage.naturalHeight;
+      const shorterSide = Math.min(width, height);
+      if (width > maximumSide || height > maximumSide || width * height > maximumPixels) {
+        throw new Error('Alege o copie de cel mult ' + numberFormat.format(maximumPixels / 1000000) +
+          ' megapixeli și ' + numberFormat.format(maximumSide) + ' px pe latură.');
+      }
+
+      const size = file.size >= 1024 * 1024
+        ? numberFormat.format(file.size / 1024 / 1024) + ' MB'
+        : Math.max(1, Math.round(file.size / 1024)) + ' KB';
       acceptedFile = file;
-      localImage.src = currentUrl;
-      get('[data-file-name]').textContent = file.name;
+      fileName.textContent = file.name;
+      fileDetails.textContent = formatNames[expected] + ' · ' + width + ' × ' + height + ' px · ' + size;
+      guideOutline.style.setProperty('--lp-guide-width', (90 * shorterSide / width) + '%');
+      guideOutline.hidden = !guideSwitch.checked;
       photoPreview.hidden = false;
-      fileDrop.hidden = true;
-      fileStatus.textContent = '';
-      clearButton.focus({ preventScroll: true });
+      filePrompt.textContent = 'Schimbă fotografia';
+      fileDrop.classList.add('has-photo');
+      if (shorterSide < recommendedSide) {
+        setStatus('Unele detalii se pot pierde la această rezoluție. Dacă ai o variantă mai clară, alege una cu cel puțin ' +
+          numberFormat.format(recommendedSide) + ' px pe latura scurtă.', 'guidance');
+      } else {
+        setStatus('');
+      }
     } catch (error) {
       if (version === photoVersion) {
+        resetPreview();
         fileError(error instanceof Error ? error.message : 'Alege altă fotografie.');
       }
     } finally {
-      if (pendingUrl) URL.revokeObjectURL(pendingUrl);
-      if (version === photoVersion) addButton.disabled = submitting;
+      if (version === photoVersion) addButton.disabled = !canSubmit || submitting;
     }
   }
 
@@ -221,8 +263,12 @@
   fileInput.addEventListener('invalid', () => {
     if (!fileInput.files.length) fileError('Alege o fotografie pentru această personalizare.');
   });
+  guideSwitch.addEventListener('change', () => {
+    guideOutline.hidden = !guideSwitch.checked;
+  });
   clearButton.addEventListener('click', () => {
     fileInput.value = '';
+    guideSwitch.checked = false;
     resetPreview();
     fileInput.focus();
   });
@@ -253,6 +299,10 @@
   });
 
   form.addEventListener('submit', (event) => {
+    if (!canSubmit) {
+      event.preventDefault();
+      return;
+    }
     if (submitting || !acceptedFile || fileInput.files[0] !== acceptedFile) {
       event.preventDefault();
       if (!submitting && !addButton.disabled) {
@@ -269,6 +319,7 @@
   window.addEventListener('pageshow', (event) => {
     if (!event.persisted) return;
     submitting = false;
+    updateSteps();
     form.removeAttribute('aria-busy');
     submitStatus.textContent = '';
     choosePhoto();

@@ -43,13 +43,13 @@ add_action('wp_enqueue_scripts', static function () {
     foreach ($css as $name) {
         $path = '/assets/' . $name . '.css';
         if (is_file(__DIR__ . $path)) {
-            wp_enqueue_style('tiron-' . $name, get_theme_file_uri($path), [], (string) filemtime(__DIR__ . $path));
+            wp_enqueue_style('tiron-' . $name, get_theme_file_uri($path), [], substr(hash_file('sha256', __DIR__ . $path), 0, 12));
         }
     }
     foreach ($js as $name) {
         $path = '/assets/' . $name . '.js';
         if (is_file(__DIR__ . $path)) {
-            wp_enqueue_script('tiron-' . $name, get_theme_file_uri($path), [], (string) filemtime(__DIR__ . $path), ['strategy' => 'defer', 'in_footer' => true]);
+            wp_enqueue_script('tiron-' . $name, get_theme_file_uri($path), [], substr(hash_file('sha256', __DIR__ . $path), 0, 12), ['strategy' => 'defer', 'in_footer' => true]);
         }
     }
 }, 20);

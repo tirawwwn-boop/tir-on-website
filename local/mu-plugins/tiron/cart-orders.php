@@ -143,8 +143,24 @@ function tiron_valid_luna_quantity( $value, $product ) {
     return (int) $value >= $product->get_min_purchase_quantity() && ( $maximum < 0 || (int) $value <= $maximum );
 }
 
+/** A valid failed upload can restore text on the next visit, never the selected file. */
+function tiron_take_photo_draft(): array {
+    if ( 'GET' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! function_exists( 'WC' ) || ! WC()->session ) {
+        return [];
+    }
+    $draft = WC()->session->get( 'tiron_photo_draft' );
+    if ( ! is_array( $draft ) ) {
+        return [];
+    }
+    WC()->session->__unset( 'tiron_photo_draft' );
+    if ( ( $draft['expires'] ?? 0 ) < time() ) {
+        return [];
+    }
+    return [ 'quantity' => (int) $draft['quantity'], 'notes' => (string) $draft['notes'] ];
+}
+
 /** On success return true. WC's stock/extension validation may supply its own notices. */
-function tiron_process_personalization( $product_id ) {
+function tiron_process_personalization( $product_id, array &$draft ) {
     $token = $_POST['tiron_nonce'] ?? '';
     if ( ! is_string( $token ) || ! preg_match( '/^([a-f0-9]{32})\.([a-zA-Z0-9]{10})$/D', $token, $matches ) ||
         ! wp_verify_nonce( $matches[2], tiron_nonce_action( $matches[1] ) ) ) {
@@ -171,6 +187,8 @@ function tiron_process_personalization( $product_id ) {
     if ( ! is_string( $notes ) || ! preg_match( '/^.{0,500}$/usD', $notes ) ) {
         return new WP_Error( 'tiron_notes', 'Observațiile pot avea cel mult 500 de caractere.' );
     }
+    $notes = sanitize_textarea_field( $notes );
+    $draft = [ 'quantity' => (int) $quantity, 'notes' => $notes, 'expires' => time() + 5 * MINUTE_IN_SECONDS ];
     if ( ! is_array( $_FILES['tiron_photo'] ?? null ) ) {
         return new WP_Error( 'tiron_image_required', 'Alege o fotografie JPG, PNG sau WebP.' );
     }
@@ -183,7 +201,7 @@ function tiron_process_personalization( $product_id ) {
         tiron_photo_session_secret( true );
         $line = [
             '_tiron_stage'  => $stage,
-            '_tiron_notes'  => sanitize_textarea_field( $notes ),
+            '_tiron_notes'  => $notes,
             '_tiron_intent' => $intent,
         ];
         $line['_tiron_signature'] = tiron_photo_signature( $product_id, $line );
@@ -212,17 +230,22 @@ add_action( 'template_redirect', static function () {
     if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
         return;
     }
+    $draft = [];
     $post_limit = wp_convert_hr_to_bytes( ini_get( 'post_max_size' ) );
     if ( $post_limit > 0 && (int) ( $_SERVER['CONTENT_LENGTH'] ?? 0 ) > $post_limit && ! $_POST && ! $_FILES ) {
         $result = new WP_Error( 'tiron_post_limit', 'Fișierul depășește limita serverului. Alege o fotografie mai mică.' );
     } elseif ( '1' === ( $_POST['tiron_add_luna'] ?? '' ) ) {
-        $result = tiron_process_personalization( get_queried_object_id() );
+        $result = tiron_process_personalization( get_queried_object_id(), $draft );
     } else {
         return;
     }
     if ( true === $result ) {
+        WC()->session->__unset( 'tiron_photo_draft' );
         wp_safe_redirect( wc_get_cart_url(), 303 );
         exit;
+    }
+    if ( $draft ) {
+        WC()->session->set( 'tiron_photo_draft', $draft );
     }
     if ( is_wp_error( $result ) ) {
         tiron_cart_error( $result->get_error_message() );
@@ -336,7 +359,7 @@ function tiron_validate_order_photos( $order ) {
             continue;
         }
         $id = $item->get_meta( '_tiron_photo_id', true );
-        $file = function_exists( 'tiron_photo_path' ) ? tiron_photo_path( $id ) : false;
+        $file = function_exists( 'tiron_order_photo_path' ) ? tiron_order_photo_path( $id ) : false;
         if ( ! is_string( $file ) || ! is_file( $file ) ) {
             return false;
         }

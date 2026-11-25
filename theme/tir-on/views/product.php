@@ -7,6 +7,9 @@ $luna_limit = (int) $product_data['limit_mb'];
 $luna_min = (int) $product_data['minimum'];
 $luna_max = max($luna_min, (int) $product_data['maximum']);
 $luna_available = $product_data['available'];
+$luna_dimensions = $product_data['photo_dimensions'];
+$luna_draft = $luna_available && function_exists('tiron_take_photo_draft') ? tiron_take_photo_draft() : [];
+$luna_qty = min($luna_max, max($luna_min, (int) ($luna_draft['quantity'] ?? $luna_min)));
 $luna_icon = static function ($name) {
     $paths = array(
         'zoom'   => '<circle cx="10" cy="10" r="6.2"/><path d="m15 15 5 5M7.5 10h5M10 7.5v5"/>',
@@ -18,7 +21,9 @@ $luna_icon = static function ($name) {
 ?>
 <main id="continut" class="luna-product" data-luna-product
       data-name="<?php echo esc_attr($luna_name); ?>" data-limit="<?php echo $luna_limit; ?>"
-      data-in-stock="<?php echo $luna_available ? 'true' : 'false'; ?>">
+      data-in-stock="<?php echo $luna_available ? 'true' : 'false'; ?>"
+      data-max-side="<?php echo (int) ($luna_dimensions['max_side'] ?? 0); ?>"
+      data-max-pixels="<?php echo (int) ($luna_dimensions['max_pixels'] ?? 0); ?>">
   <div class="lp-wrap">
     <nav class="lp-breadcrumb" aria-label="Parcurs de navigare">
       <a href="<?php echo t_e(t_url('home')); ?>">Acasă</a>
@@ -68,37 +73,50 @@ $luna_icon = static function ($name) {
             <div class="lp-notices"><?php wc_print_notices(); ?></div>
           <?php endif; ?>
           <?php if ($luna_available) : ?>
+          <?php if ($luna_draft) : ?>
+            <p class="lp-tip lp-recovery" data-recovered-photo-draft>Am păstrat cantitatea și observațiile. Alege din nou fotografia pentru a continua.</p>
+          <?php endif; ?>
           <form method="post" action="<?php echo esc_url(t_url('luna')); ?>" enctype="multipart/form-data" data-personalization>
             <input type="hidden" name="tiron_add_luna" value="1">
             <input type="hidden" name="product_id" value="<?php echo absint($product_data['id']); ?>">
             <input type="hidden" name="tiron_nonce" value="<?php echo esc_attr(tiron_personalization_nonce()); ?>">
           <label class="lp-label" for="lp-file">Fotografia ta</label>
+          <p class="lp-tip lp-photo-tip" id="lp-photo-tip">Alege o imagine clară, bine luminată. Lasă spațiu între fețe și marginile fotografiei.</p>
           <div class="lp-drop" data-file-drop>
             <span class="lp-file-icon"><?php echo t_icon('photo'); ?></span>
-            <span class="lp-drop-copy"><strong>Alege o fotografie</strong><small>JPG, PNG sau WebP · max. <?php echo $luna_limit; ?> MB</small></span>
+            <span class="lp-drop-copy"><strong data-file-prompt>Alege o fotografie</strong><small>JPG, PNG sau WebP · max. <?php echo $luna_limit; ?> MB</small></span>
             <input type="file" id="lp-file" name="tiron_photo" required accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="lp-photo-tip lp-file-status"/>
           </div>
           <div class="lp-chosen" data-chosen hidden>
-            <img data-local-photo alt="Previzualizarea fotografiei alese"/>
-            <div><strong data-file-name></strong><small>Fotografie selectată</small></div>
-            <button type="button" class="lp-clear" data-clear-photo aria-label="Elimină fotografia"><?php echo t_icon('close'); ?></button>
+            <figure class="lp-photo-figure">
+              <div class="lp-preview-frame" data-preview-frame>
+                <img data-local-photo alt="Previzualizarea fotografiei alese"/>
+                <span class="lp-guide-outline" data-guide-outline hidden aria-hidden="true"></span>
+              </div>
+              <figcaption><strong data-file-name></strong><small data-file-details></small></figcaption>
+            </figure>
+            <div class="lp-photo-actions">
+              <label class="lp-guide-toggle"><input type="checkbox" data-guide-switch aria-describedby="lp-guide-tip"/> Arată ghidul circular</label>
+              <button type="button" class="lp-clear" data-clear-photo>Elimină fotografia</button>
+            </div>
+            <p class="lp-tip" id="lp-guide-tip">Cercul arată aproximativ zona vizibilă a litofanului. Lasă spațiu în interiorul cercului în jurul fețelor ca să reduci riscul de decupare.</p>
           </div>
-          <p class="lp-tip" id="lp-photo-tip">Alege o imagine clară, bine luminată, cu subiectul aproape de centru.</p>
           <p class="lp-status" id="lp-file-status" role="status" aria-live="polite"></p>
 
           <label class="lp-label lp-note-label" for="lp-notes">Observații <span>(opțional)</span></label>
-          <textarea id="lp-notes" name="tiron_notes" rows="2" maxlength="500" placeholder="Un detaliu de care să ținem cont…"></textarea>
+          <textarea id="lp-notes" name="tiron_notes" rows="2" maxlength="500" placeholder="Un detaliu de care să ținem cont…"><?php echo esc_textarea($luna_draft['notes'] ?? ''); ?></textarea>
           <div class="lp-action">
             <div class="lp-quantity" role="group" aria-label="Cantitate">
-              <button type="button" data-step="-1" aria-label="Micșorează cantitatea" disabled><?php echo $luna_icon('minus'); ?></button>
-              <input type="number" id="lp-quantity" name="quantity" required value="<?php echo $luna_min; ?>" min="<?php echo $luna_min; ?>" max="<?php echo $luna_max; ?>" step="1" inputmode="numeric" aria-label="Cantitate"/>
-              <button type="button" data-step="1" aria-label="Mărește cantitatea" <?php disabled($luna_min === $luna_max); ?>><?php echo $luna_icon('plus'); ?></button>
+              <button type="button" data-step="-1" aria-label="Micșorează cantitatea" <?php disabled($luna_qty === $luna_min); ?>><?php echo $luna_icon('minus'); ?></button>
+              <input type="number" id="lp-quantity" name="quantity" required value="<?php echo $luna_qty; ?>" min="<?php echo $luna_min; ?>" max="<?php echo $luna_max; ?>" step="1" inputmode="numeric" aria-label="Cantitate" aria-describedby="lp-quantity-tip"/>
+              <button type="button" data-step="1" aria-label="Mărește cantitatea" <?php disabled($luna_qty === $luna_max); ?>><?php echo $luna_icon('plus'); ?></button>
             </div>
             <button type="submit" class="button-gold lp-add" data-add-product>
               <?php echo t_icon('bag'); ?><span>Adaugă în coș</span>
             </button>
           </div>
-          <p class="lp-tip">Fotografia se încarcă la adăugarea în coș, pentru personalizarea litofanului tău.</p>
+          <p class="lp-tip" id="lp-quantity-tip">Toate bucățile din acest articol folosesc aceeași fotografie.</p>
+          <p class="lp-tip">Fotografia se încarcă atunci când adaugi Luna în coș.</p>
           <p class="lp-submit-status" role="status" aria-live="polite"></p>
           </form>
           <?php else : ?>

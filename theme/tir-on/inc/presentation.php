@@ -92,6 +92,7 @@ function t_product_data() {
         'finish' => $metadata('finish', 'Espresso mat'),
         'light' => $metadata('light', 'LED alb-cald'),
         'limit_mb' => function_exists('tiron_photo_limit_mb') ? tiron_photo_limit_mb() : 0,
+        'photo_dimensions' => function_exists('tiron_photo_dimension_limits') ? tiron_photo_dimension_limits() : ['max_side' => 0, 'max_pixels' => 0],
         'available' => $product && $product->is_purchasable() && $product->is_in_stock() && $maximum >= $minimum
             && function_exists('tiron_photo_processing_ready') && tiron_photo_processing_ready()
             && function_exists('tiron_personalization_nonce'),
