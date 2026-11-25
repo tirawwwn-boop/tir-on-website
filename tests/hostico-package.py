@@ -27,7 +27,8 @@ def main():
     assert set(mu) == {
         'tir-on-catalog.php', 'tir-on-local-preview.php', 'tir-on-hostico.php',
         'tiron/admin-photos.php', 'tiron/cart-orders.php', 'tiron/private-photos.php',
-        'tiron/test-payments.php', 'tiron/hostico/seed.php', 'tiron/hostico/emails.php',
+        'tiron/test-payments.php', 'tiron/atelier.php', 'tiron/atelier.css',
+        'tiron/hostico/seed.php', 'tiron/hostico/emails.php',
     }
     overrides = {
         'tir-on-hostico.php': 'deployment/hostico/mu-plugins/tir-on-hostico.php',

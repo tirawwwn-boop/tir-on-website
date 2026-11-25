@@ -37,6 +37,7 @@ def build():
         for name in (
             'tir-on-catalog.php', 'tir-on-local-preview.php', 'tiron/admin-photos.php',
             'tiron/cart-orders.php', 'tiron/private-photos.php', 'tiron/test-payments.php',
+            'tiron/atelier.php', 'tiron/atelier.css',
         )
     }
     mu.update({
