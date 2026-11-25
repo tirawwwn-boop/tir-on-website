@@ -41,9 +41,30 @@ def page(response):
     return html.fromstring(response.content)
 
 
+def checkout_payload(session, checkout_url):
+    checkout = page(session.get(checkout_url))
+    form, = checkout.xpath('//form[@name="checkout"]')
+    rates = form.xpath('.//input[@name="shipping_method[0]"]/@value')
+    assert rates, 'Configurează mai întâi livrarea locală de test.'
+    assert form.xpath('.//input[@name="payment_method"]/@value') == ['tiron_local_test'], 'Activează numai simulatorul local.'
+    assert not form.xpath('.//input[@name="createaccount"]'), 'Checkout-ul local trebuie să permită oaspeți.'
+    fields = form_fields(form)
+    fields.pop('ship_to_different_address', None)
+    fields.update({
+        'billing_first_name': 'Test', 'billing_last_name': 'TIRON',
+        'billing_email': 'tiron-qa@example.invalid', 'billing_country': 'RO',
+        'billing_address_1': 'Adresă de test 1', 'billing_city': 'București',
+        'billing_state': 'B', 'billing_postcode': '010101', 'billing_phone': '0700000000',
+        'shipping_method[0]': rates[0], 'payment_method': 'tiron_local_test',
+        'woocommerce_checkout_place_order': '1',
+    })
+    if form.xpath('.//input[@name="terms"]'):
+        fields['terms'] = 'on'
+    return urljoin(checkout_url, form.get('action')), fields
+
+
 def run_flow(session, base_url):
-    if urlparse(base_url).hostname not in ('127.0.0.1', 'localhost', '::1'):
-        raise ValueError('Testul acceptă numai o instalare locală.')
+    assert_local(base_url)
     product_url = urljoin(base_url, '/produs/luna/')
     product_page = page(session.get(product_url))
     form, = product_page.xpath('//form[@enctype="multipart/form-data"]')
@@ -58,36 +79,27 @@ def run_flow(session, base_url):
     assert len(rows) == 1 and notes in rows[0].text_content(), 'Personalizarea lipsește din coș.'
     assert rows[0].xpath('.//input[@type="number"]/@value') == ['2']
     assert cart.xpath('//span[contains(@class,"bag-count")]/text()') == ['2']
+    cart_text = cart.text_content()
+    assert '249,00' in cart_text and '498,00' in cart_text, 'Preț sau subtotal incorect.'
     assert 'mostra-qa.png' not in cart_response.text
     # Repeating the completed form submission does not double the requested quantity.
     replay = page(session.post(product_url, data=payload, files=files))
     assert replay.xpath('//span[contains(@class,"bag-count")]/text()') == ['2']
 
     checkout_url = urljoin(base_url, cart.xpath('//a[contains(@class,"checkout-button")]/@href')[0])
-    checkout = page(session.get(checkout_url))
-    form, = checkout.xpath('//form[@name="checkout"]')
-    rates = form.xpath('.//input[@name="shipping_method[0]"]/@value')
-    assert rates, 'Configurează mai întâi livrarea locală de test.'
-    assert form.xpath('.//input[@name="payment_method" and @value="tiron_local_test"]'), 'Simulatorul local trebuie activat.'
-    fields = form_fields(form)
-    fields.pop('ship_to_different_address', None)
-    fields.update({
-        'billing_first_name': 'Test', 'billing_last_name': 'TIRON',
-        'billing_email': 'tiron-qa@example.invalid', 'billing_country': 'RO',
-        'billing_address_1': 'Adresă de test 1', 'billing_city': 'București',
-        'billing_state': 'B', 'billing_postcode': '010101', 'billing_phone': '0700000000',
-        'shipping_method[0]': rates[0], 'payment_method': 'tiron_local_test',
-        'woocommerce_checkout_place_order': '1',
-    })
-    if form.xpath('.//input[@name="terms"]'):
-        fields['terms'] = 'on'
-    confirmation = session.post(urljoin(checkout_url, form.get('action')), data=fields)
+    action, fields = checkout_payload(session, checkout_url)
+    confirmation = session.post(action, data=fields)
     result = page(confirmation)
     assert '/order-received/' in confirmation.url, 'WooCommerce nu a confirmat comanda locală.'
     assert result.xpath('//*[contains(@class,"woocommerce-order-overview")]')
     assert 'mostra-qa.png' not in confirmation.text
     assert '_tiron_photo_id' not in confirmation.text
     return int(urlparse(confirmation.url).path.rstrip('/').split('/')[-1])
+
+
+def assert_local(base_url):
+    if urlparse(base_url).hostname not in ('127.0.0.1', 'localhost', '::1'):
+        raise ValueError('Testul acceptă numai o instalare locală.')
 
 
 if __name__ == '__main__':

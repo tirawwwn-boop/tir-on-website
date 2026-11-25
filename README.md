@@ -2,6 +2,8 @@
 
 Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul standard este 249 RON și se poate modifica în WooCommerce.
 
+Pentru o instalare privată pe Hostico folosește [pachetul cPanel](dist/hostico/) și [ghidul din browser](docs/HOSTICO-DEPLOYMENT.md).
+
 ## Previzualizare V4
 
 Deschide [HTML-ul V4](preview/TIR-ON-V4.html) în GitHub, autentificat în contul cu acces. Alege **Download raw file**. Pe Android, deschide fișierul `.html` din **Descărcări**, apoi alege **Deschide cu → Chrome**. Previzualizarea include caruselul, comparația interactivă, galeria și selecția unei fotografii pe dispozitiv. Coșul și checkout-ul sunt disponibile în instalarea WordPress.

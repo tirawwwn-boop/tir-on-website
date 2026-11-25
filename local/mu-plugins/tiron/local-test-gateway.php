@@ -25,6 +25,11 @@ final class Tiron_Local_Test_Gateway extends WC_Payment_Gateway {
         }
         if ( $order->has_status( array( 'pending', 'failed' ) ) ) {
             $order->update_meta_data( '_tiron_local_simulation', 'yes' );
+            if ( apply_filters( 'tiron_local_test_decline', false, $order ) ) {
+                $order->update_status( 'failed', 'Plată refuzată în simulatorul local.' );
+                wc_add_notice( 'Plata de test a fost refuzată. Poți reîncerca din checkout.', 'error' );
+                return array( 'result' => 'failure' );
+            }
             $order->update_status( 'on-hold', 'Comandă locală de test. Plata este simulată. Comanda nu se expediază.' );
         }
         if ( WC()->cart ) {
