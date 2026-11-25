@@ -28,6 +28,7 @@ def main():
         'tir-on-catalog.php', 'tir-on-local-preview.php', 'tir-on-hostico.php',
         'tiron/admin-photos.php', 'tiron/cart-orders.php', 'tiron/private-photos.php',
         'tiron/test-payments.php', 'tiron/atelier.php', 'tiron/atelier.css',
+        'tir-on-profit.php', 'tiron/profit-calculator.php', 'tiron/profit.css',
         'tiron/hostico/seed.php', 'tiron/hostico/emails.php',
     }
     overrides = {

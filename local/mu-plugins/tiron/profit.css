@@ -1,0 +1,60 @@
+.tp { --espresso:#251a13; --warm:#f8f4ed; --bronze:#725431; --line:#dfd5c7; max-width:1440px; color:var(--espresso); }
+.tp-hero { display:flex; justify-content:space-between; align-items:center; gap:1.5rem; padding:clamp(1.25rem,4vw,3rem); margin:1rem 0; background:linear-gradient(115deg,#22170f,#463121); color:#fffaf1; border-radius:12px; }
+.tp-hero h1 { margin:0; color:inherit; font:clamp(2.25rem,5vw,3.6rem)/1.1 Georgia,serif; }
+.tp-hero p { margin:.3rem 0; font-size:14px; }
+.tp-hero p:first-child { color:#e9c999; font-weight:600; }
+.tp-hero a { color:#f2d7af; text-underline-offset:3px; padding:.6rem 0; }
+.tp-section { margin:1rem 0; padding:clamp(1rem,2vw,1.6rem); background:#fffdfa; border:1px solid var(--line); border-radius:10px; }
+.tp-section h2 { margin:0; font-size:1.35rem; line-height:1.35; }
+.tp-section h3 { margin:1rem 0 .35rem; }
+.tp-section p { color:#594b3d; max-width:85ch; }
+.tp dl,.tp dd { margin:0; }
+.tp dd { font-variant-numeric:tabular-nums; font-weight:650; }
+.tp-kpis,.tp-parts,.tp-scenarios,.tp-costs { display:grid; gap:.8rem; }
+.tp-kpis { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.tp-kpis div { padding:.95rem; background:var(--warm); border:1px solid #eadfce; border-radius:7px; }
+.tp-kpis div:first-child { background:#ecdbc2; }
+.tp-kpis dd { font-size:clamp(1rem,2vw,1.65rem); overflow-wrap:anywhere; margin-top:.2rem; }
+.tp .tp-parts { grid-template-columns:repeat(6,minmax(0,1fr)); margin-top:1rem; }
+.tp-parts div { border-inline-start:1px solid var(--line); padding-inline-start:.65rem; }
+.tp-parts dd { overflow-wrap:anywhere; }
+.tp-scenarios { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.tp-scenario { border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.tp-scenario h3 { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.2rem .5rem; align-items:center; background:var(--warm); margin:0; padding:.85rem; font-size:1.15rem; }
+.tp-scenario:first-child h3 { background:#ecdbc2; }
+.tp-scenario h3 small { color:var(--bronze); font-size:.75rem; }
+.tp-scenario dl { padding:.25rem .85rem; }
+.tp-scenario dl div { display:grid; grid-template-columns:minmax(0,1fr) minmax(min-content,auto); gap:.4rem; border-bottom:1px solid #eee6db; padding:.44rem 0; }
+.tp-scenario dl div:last-child { border:0; }
+.tp-scenario dd { text-align:right; }
+.tp-scenario dd small { display:block; font-size:11px; }
+.tp-negative { color:#951f24; }
+.tp-form-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:.65rem; }
+.tp .button-primary { background:#3d2b20; border-color:#3d2b20; color:#fffaf1; min-height:36px; }
+.tp .button-primary:hover { background:#5b3d2b; border-color:#5b3d2b; }
+.tp-materials { table-layout:fixed; }
+.tp .tp-materials th,.tp .tp-materials td { padding:.55rem .4rem; }
+.tp-materials th:first-child { width:17%; }
+.tp-materials td { vertical-align:middle; }
+.tp-materials tbody tr:nth-child(even) { background:var(--warm); }
+.tp-materials input,.tp-costs input { width:100%; min-width:0; margin:0; }
+.tp-field-label { position:absolute; clip-path:inset(50%); width:1px; height:1px; overflow:hidden; white-space:nowrap; }
+.tp-component-cost { font-weight:600; }
+.tp-costs { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.tp-costs label { display:grid; gap:.25rem; font-weight:600; }
+@media (max-width:1100px) {
+  .tp .tp-parts { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .tp-materials,.tp-materials tbody { display:block; width:100%; }
+  .tp-materials thead { position:absolute; clip-path:inset(50%); width:1px; height:1px; overflow:hidden; }
+  .tp-materials tbody tr { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-bottom:1px solid var(--line); }
+  .tp-materials tbody th:first-child { grid-column:1/-1; width:auto; font-weight:650; }
+  .tp-field-label { position:static; clip-path:none; width:auto; height:auto; white-space:normal; display:block; margin-bottom:.2rem; }
+}
+@media (max-width:700px) {
+  .tp-hero { display:block; }
+  .tp-hero a { display:inline-block; }
+  .tp-kpis,.tp .tp-parts,.tp-costs { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .tp-scenarios { grid-template-columns:1fr; }
+  .tp-materials tbody tr { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .tp-materials input,.tp-costs input { min-height:40px; }
+}
