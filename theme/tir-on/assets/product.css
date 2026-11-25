@@ -8,7 +8,7 @@
   padding: 0 0 clamp(4rem, 9vw, 8rem);
 }
 .luna-product, .luna-product * { box-sizing: border-box; }
-.luna-product button, .luna-product input, .luna-product textarea { font: inherit; }
+.luna-product button:where(:not(.button-gold)), .luna-product input, .luna-product textarea { font: inherit; }
 .luna-product button { cursor: pointer; }
 .luna-product [hidden] { display: none !important; }
 .luna-product button:focus-visible, .luna-product a:focus-visible, .luna-product input:focus-visible,
@@ -45,6 +45,7 @@
 .lp-info h1 { margin: 0 0 .8rem; font-size: clamp(3.3rem, 4.8vw, 5.75rem); letter-spacing: -.048em; line-height: 1.02; }
 .lp-description { margin: 0; max-width: 43ch; color: var(--lp-muted); font-size: 1rem; line-height: 1.65; white-space: pre-line; }
 .lp-price { margin: 1.25rem 0 1.5rem; font-size: 1.375rem; line-height: 1.4; font-weight: 500; }
+.lp-personalize-link { display: none; }
 .lp-personalize { border-top: 1px solid var(--lp-line); padding-top: 1.45rem; }
 .lp-personalize h2 { margin: 0 0 1rem; font-size: clamp(1.75rem, 2.1vw, 2.25rem); line-height: 1.1; letter-spacing: -.035em; }
 .lp-label { display: block; font-size: .875rem; font-weight: 600; line-height: 1.5; margin: 0 0 .45rem; }
@@ -77,9 +78,8 @@
 .lp-quantity input { width: 2rem; text-align: center; appearance: textfield; -moz-appearance: textfield; font-size: 1rem; font-variant-numeric: tabular-nums; }
 .lp-quantity input::-webkit-outer-spin-button, .lp-quantity input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .lp-quantity button:disabled { opacity: .3; cursor: default; }
-.lp-add { display: flex; justify-content: center; align-items: center; gap: .65rem; flex: 1 1 9.5rem; min-height: 3.15rem; padding: .7rem 1.1rem; color: #fffdf9; background: #201a15; border: 1px solid #201a15; border-radius: 0; font-size: .9375rem; font-weight: 600; transition: background-color .18s ease; }
-.lp-add:hover { background: #433227; }
-.lp-add:disabled { opacity: .65; cursor: wait; }
+.lp-add { flex: 1 1 9.5rem; }
+.lp-add:disabled { opacity: .65; cursor: default; transform: none; }
 .lp-accordions { margin-top: 2rem; border-top: 1px solid var(--lp-line); }
 .lp-accordions details { border-bottom: 1px solid var(--lp-line); }
 .lp-accordions summary { list-style: none; cursor: pointer; display: flex; gap: .8rem; align-items: center; justify-content: space-between; min-height: 3.6rem; padding: .9rem .1rem; font-size: .95rem; font-weight: 550; }
@@ -106,6 +106,10 @@
   .lp-gallery { position: static; }
   .lp-breadcrumb { padding: 1rem 0 1.1rem; }
   .lp-info { padding: 0; }
+  .lp-price-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0 .9rem; margin: 1.25rem 0 1.5rem; }
+  .lp-price-row .lp-price { margin: 0; }
+  .lp-personalize-link { display: inline-flex; align-items: center; gap: .25rem; min-height: 44px; color: #705735; font-size: .875rem; font-weight: 600; text-underline-offset: .22em; }
+  .lp-personalize-link svg { width: 1rem; height: 1rem; }
   .lp-media { aspect-ratio: 1.2; }
   .lp-dialog { width: 100%; max-width: 100%; }
   .lp-dialog img { height: 72svh; }

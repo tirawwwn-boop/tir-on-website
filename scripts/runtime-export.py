@@ -77,7 +77,6 @@ def build_page(route, dest):
             node.drop_tree()
         for button in form.xpath('.//button[@data-add-product]'):
             button.set('type', 'button')
-            button.set('hidden', 'hidden')
             button.set('disabled', 'disabled')
         for tip in form.xpath('./p[contains(text(),"Fotografia se încarcă")]'):
             tip.text = 'Previzualizare offline. Fotografia rămâne pe dispozitiv. Comenzile se plasează din magazinul WordPress.'

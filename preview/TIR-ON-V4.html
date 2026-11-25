@@ -664,7 +664,7 @@ html:has(dialog[open]) { overflow: hidden; }
   padding: 0 0 clamp(4rem, 9vw, 8rem);
 }
 .luna-product, .luna-product * { box-sizing: border-box; }
-.luna-product button, .luna-product input, .luna-product textarea { font: inherit; }
+.luna-product button:where(:not(.button-gold)), .luna-product input, .luna-product textarea { font: inherit; }
 .luna-product button { cursor: pointer; }
 .luna-product [hidden] { display: none !important; }
 .luna-product button:focus-visible, .luna-product a:focus-visible, .luna-product input:focus-visible,
@@ -701,6 +701,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .lp-info h1 { margin: 0 0 .8rem; font-size: clamp(3.3rem, 4.8vw, 5.75rem); letter-spacing: -.048em; line-height: 1.02; }
 .lp-description { margin: 0; max-width: 43ch; color: var(--lp-muted); font-size: 1rem; line-height: 1.65; white-space: pre-line; }
 .lp-price { margin: 1.25rem 0 1.5rem; font-size: 1.375rem; line-height: 1.4; font-weight: 500; }
+.lp-personalize-link { display: none; }
 .lp-personalize { border-top: 1px solid var(--lp-line); padding-top: 1.45rem; }
 .lp-personalize h2 { margin: 0 0 1rem; font-size: clamp(1.75rem, 2.1vw, 2.25rem); line-height: 1.1; letter-spacing: -.035em; }
 .lp-label { display: block; font-size: .875rem; font-weight: 600; line-height: 1.5; margin: 0 0 .45rem; }
@@ -733,9 +734,8 @@ html:has(dialog[open]) { overflow: hidden; }
 .lp-quantity input { width: 2rem; text-align: center; appearance: textfield; -moz-appearance: textfield; font-size: 1rem; font-variant-numeric: tabular-nums; }
 .lp-quantity input::-webkit-outer-spin-button, .lp-quantity input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .lp-quantity button:disabled { opacity: .3; cursor: default; }
-.lp-add { display: flex; justify-content: center; align-items: center; gap: .65rem; flex: 1 1 9.5rem; min-height: 3.15rem; padding: .7rem 1.1rem; color: #fffdf9; background: #201a15; border: 1px solid #201a15; border-radius: 0; font-size: .9375rem; font-weight: 600; transition: background-color .18s ease; }
-.lp-add:hover { background: #433227; }
-.lp-add:disabled { opacity: .65; cursor: wait; }
+.lp-add { flex: 1 1 9.5rem; }
+.lp-add:disabled { opacity: .65; cursor: default; transform: none; }
 .lp-accordions { margin-top: 2rem; border-top: 1px solid var(--lp-line); }
 .lp-accordions details { border-bottom: 1px solid var(--lp-line); }
 .lp-accordions summary { list-style: none; cursor: pointer; display: flex; gap: .8rem; align-items: center; justify-content: space-between; min-height: 3.6rem; padding: .9rem .1rem; font-size: .95rem; font-weight: 550; }
@@ -762,6 +762,10 @@ html:has(dialog[open]) { overflow: hidden; }
   .lp-gallery { position: static; }
   .lp-breadcrumb { padding: 1rem 0 1.1rem; }
   .lp-info { padding: 0; }
+  .lp-price-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0 .9rem; margin: 1.25rem 0 1.5rem; }
+  .lp-price-row .lp-price { margin: 0; }
+  .lp-personalize-link { display: inline-flex; align-items: center; gap: .25rem; min-height: 44px; color: #705735; font-size: .875rem; font-weight: 600; text-underline-offset: .22em; }
+  .lp-personalize-link svg { width: 1rem; height: 1rem; }
   .lp-media { aspect-ratio: 1.2; }
   .lp-dialog { width: 100%; max-width: 100%; }
   .lp-dialog img { height: 72svh; }
@@ -977,8 +981,11 @@ html:has(dialog[open]) { overflow: hidden; }
         <p class="lp-kicker"><span></span> Litofan personalizat</p>
         <h1>Luna</h1>
         <p class="lp-description">Fotografia ta prinde formă într-un litofan circular, luminat din spate de un LED alb-cald.</p>
-        <p class="lp-price">249 RON</p>
-        <section id="personalizare" class="lp-personalize" aria-labelledby="lp-personalize-title">
+        <div class="lp-price-row">
+          <p class="lp-price">249 RON</p>
+                      <a class="lp-personalize-link" href="#personalizare">Personalizează Luna <svg aria-hidden="true" width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></a>
+                  </div>
+        <section id="personalizare" class="lp-personalize" aria-labelledby="lp-personalize-title" tabindex="-1">
           <h2 id="lp-personalize-title">Personalizează Luna</h2>
                       <div class="lp-notices"></div>
                               <form method="post" enctype="multipart/form-data" data-personalization>
@@ -1007,7 +1014,7 @@ html:has(dialog[open]) { overflow: hidden; }
               <input type="number" id="lp-quantity" name="quantity" required value="1" min="1" max="99" step="1" inputmode="numeric" aria-label="Cantitate">
               <button type="button" data-step="1" aria-label="Mărește cantitatea"><svg aria-hidden="true" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"></path></svg></button>
             </div>
-            <button type="button" class="lp-add" data-add-product hidden="hidden" disabled>
+            <button type="button" class="button-gold lp-add" data-add-product disabled>
               <svg aria-hidden="true" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l1 13H4l1-13Z"></path><path d="M8.5 9V6a3.5 3.5 0 0 1 7 0v3"></path></svg><span>Adaugă în coș</span>
             </button>
           </div>
@@ -1705,7 +1712,7 @@ document.addEventListener('DOMContentLoaded', () => {
   pages['produs-luna'].remove();
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-  function showRoute({focus = true, scrollY} = {}) {
+  function showRoute({focus = true, scrollY, smooth = false} = {}) {
     const key = location.hash.slice(1) || 'acasa';
     const section = sections.get(key);
     const next = pages[key] || section?.page || pages.acasa;
@@ -1727,7 +1734,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (Number.isFinite(scrollY)) window.scrollTo({top: scrollY, behavior: 'instant'});
     else if (target === next) window.scrollTo({top: 0, behavior: 'instant'});
-    else target.scrollIntoView({block: 'start', behavior: 'instant'});
+    else target.scrollIntoView({block: 'start', behavior: smooth ? 'auto' : 'instant'});
     lastHash = location.hash;
   }
 
@@ -1750,7 +1757,7 @@ document.addEventListener('DOMContentLoaded', () => {
         location.hash = link.hash;
       }
     }
-    showRoute();
+    showRoute({smooth: id === 'personalizare'});
   });
   window.addEventListener('popstate', event => showRoute({scrollY: event.state?.y}));
   window.addEventListener('hashchange', () => {

@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   pages['produs-luna'].remove();
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-  function showRoute({focus = true, scrollY} = {}) {
+  function showRoute({focus = true, scrollY, smooth = false} = {}) {
     const key = location.hash.slice(1) || 'acasa';
     const section = sections.get(key);
     const next = pages[key] || section?.page || pages.acasa;
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (Number.isFinite(scrollY)) window.scrollTo({top: scrollY, behavior: 'instant'});
     else if (target === next) window.scrollTo({top: 0, behavior: 'instant'});
-    else target.scrollIntoView({block: 'start', behavior: 'instant'});
+    else target.scrollIntoView({block: 'start', behavior: smooth ? 'auto' : 'instant'});
     lastHash = location.hash;
   }
 
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         location.hash = link.hash;
       }
     }
-    showRoute();
+    showRoute({smooth: id === 'personalizare'});
   });
   window.addEventListener('popstate', event => showRoute({scrollY: event.state?.y}));
   window.addEventListener('hashchange', () => {

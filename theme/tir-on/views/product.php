@@ -56,8 +56,13 @@ $luna_icon = static function ($name) {
         <p class="lp-kicker"><span></span> Litofan personalizat</p>
         <h1><?php echo t_e($luna_name); ?></h1>
         <p class="lp-description"><?php echo t_e($product_data['description']); ?></p>
-        <p class="lp-price"><?php echo t_e($product_data['price']); ?></p>
-        <section id="personalizare" class="lp-personalize" aria-labelledby="lp-personalize-title">
+        <div class="lp-price-row">
+          <p class="lp-price"><?php echo t_e($product_data['price']); ?></p>
+          <?php if ($luna_available) : ?>
+            <a class="lp-personalize-link" href="#personalizare">Personalizează Luna <?php echo t_icon('down', 16); ?></a>
+          <?php endif; ?>
+        </div>
+        <section id="personalizare" class="lp-personalize" aria-labelledby="lp-personalize-title" tabindex="-1">
           <h2 id="lp-personalize-title">Personalizează Luna</h2>
           <?php if (function_exists('wc_print_notices')) : ?>
             <div class="lp-notices"><?php wc_print_notices(); ?></div>
@@ -89,7 +94,7 @@ $luna_icon = static function ($name) {
               <input type="number" id="lp-quantity" name="quantity" required value="<?php echo $luna_min; ?>" min="<?php echo $luna_min; ?>" max="<?php echo $luna_max; ?>" step="1" inputmode="numeric" aria-label="Cantitate"/>
               <button type="button" data-step="1" aria-label="Mărește cantitatea" <?php disabled($luna_min === $luna_max); ?>><?php echo $luna_icon('plus'); ?></button>
             </div>
-            <button type="submit" class="lp-add" data-add-product>
+            <button type="submit" class="button-gold lp-add" data-add-product>
               <?php echo t_icon('bag'); ?><span>Adaugă în coș</span>
             </button>
           </div>
