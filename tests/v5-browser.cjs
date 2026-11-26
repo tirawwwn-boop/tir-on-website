@@ -147,6 +147,16 @@ async function pageAt(browser,width) {
     await page.locator('#billing_email').waitFor({state:'visible'});
     await measure(page,width,'checkout');
     if(!before) {
+      const amounts=page.locator('.woocommerce-checkout-review-order-table .woocommerce-Price-amount bdi');
+      assert(await amounts.count() > 0);
+      for (const amount of await amounts.all()) {
+        assert(await amount.evaluate(el => {
+          const range=document.createRange();
+          range.selectNodeContents(el);
+          const lines=Array.from(range.getClientRects()).filter(rect=>rect.width > 0);
+          return lines.length && Math.max(...lines.map(rect=>rect.top))-Math.min(...lines.map(rect=>rect.top)) < 3;
+        }), 'checkout currency split onto another line');
+      }
       const phones=page.locator('form.checkout input[type=tel]:visible');
       assert.equal(await phones.count(),1);
       assert(await phones.evaluate(el=>el.required || el.getAttribute('aria-required')==='true'

@@ -1,5 +1,7 @@
 # TIR-ON · Turning Memories ON
 
+[V6 · Configurare comercială și rezultate](docs/V6-LAUNCH.md) · [Diagnostic Stripe TEST](docs/V6-STRIPE-DIAGNOSTIC.md)
+
 [V5 · Modificări, teste și capturi](docs/V5-COMMERCE.md) · [Actualizări din GitHub prin cPanel](docs/HOSTICO-UPDATES.md)
 
 Magazin WordPress și WooCommerce în română, cu tema proprie TIR-ON, sigla oficială V6 și produsul Luna. Prețul standard este 249 RON și se poate modifica în WooCommerce.

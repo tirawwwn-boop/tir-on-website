@@ -5,6 +5,7 @@ require_once __DIR__ . '/inc/presentation.php';
 require_once __DIR__ . '/inc/storefront.php';
 require_once __DIR__ . '/inc/cart.php';
 require_once __DIR__ . '/inc/checkout.php';
+require_once __DIR__ . '/inc/marketing.php';
 if (is_readable(__DIR__ . '/views/home-story-customizer.php')) {
     require_once __DIR__ . '/views/home-story-customizer.php';
 }
@@ -116,6 +117,8 @@ add_action('wp_head', static function () {
     }
     $product = $home ? null : t_product_data();
     $description = $home ? t_home_copy('hero_intro') : $product['description'];
+    $settings = function_exists('tiron_commercial_options') ? tiron_commercial_options() : [];
+    $description = ($settings[$home ? 'home_description' : 'luna_description'] ?? '') ?: $description;
     $image = $home ? t_scene('hero') : $product['images'][0];
     $concept = $home ? !t_storefront_image('hero') : $product['concept'];
     echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
@@ -124,6 +127,7 @@ add_action('wp_head', static function () {
     echo '<meta property="og:title" content="' . esc_attr(wp_get_document_title()) . '">';
     echo '<meta property="og:description" content="' . esc_attr($description) . '">';
     echo '<meta property="og:image" content="' . esc_url($concept ? t_asset('images/social-luna.jpg') : $image) . '">';
+    echo '<meta name="twitter:card" content="summary_large_image">';
     echo '<meta property="og:image:alt" content="' . esc_attr($concept ? 'Luna iluminată · vizualizare de concept' : 'Luna, litofan luminos personalizat') . '">';
     echo '<meta property="og:url" content="' . esc_url($home ? home_url('/') : get_permalink()) . '">';
     if ($home && $concept) {
@@ -157,3 +161,20 @@ add_filter('woocommerce_structured_data_product_offer', static function ($offer,
     }
     return $offer;
 }, 10, 2);
+
+
+add_filter('wp_sitemaps_posts_query_args', static function ($args, $type) {
+    if ($type === 'page' && function_exists('wc_get_page_id')) {
+        $private = array_map('wc_get_page_id', ['cart', 'checkout', 'myaccount']);
+        $args['post__not_in'] = array_unique(array_merge($args['post__not_in'] ?? [], array_filter($private, static fn($id) => $id > 0)));
+    }
+    return $args;
+}, 10, 2);
+
+add_filter('wp_robots', static function ($robots) {
+    if (function_exists('is_checkout') && (is_checkout() || is_cart() || is_account_page())) {
+        unset($robots['index']);
+        $robots['noindex'] = true;
+    }
+    return $robots;
+});

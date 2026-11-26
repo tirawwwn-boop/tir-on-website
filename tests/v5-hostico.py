@@ -8,7 +8,7 @@ from zipfile import ZipFile
 from io import BytesIO
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = '1d6ad55b78893399fdea32f4e0fa2f383c7704b6'
+BASE = os.environ.get('TIRON_QA_RELEASE_BASE', '1d6ad55b78893399fdea32f4e0fa2f383c7704b6')
 
 
 def test(account):

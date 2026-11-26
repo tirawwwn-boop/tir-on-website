@@ -53,3 +53,6 @@
   .content-page .woocommerce form.checkout > #customer_details { grid-row: auto; }
   .content-page .woocommerce form.checkout > .tiron-order-summary { grid-column: 2; margin-top: 0; }
 }
+.woocommerce-checkout .woocommerce-Price-amount { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.content-page .woocommerce .tiron-order-summary #payment .payment_box { min-width: 0; margin-inline: 0; }
+.content-page .woocommerce-checkout .woocommerce-error, .woocommerce-NoticeGroup-checkout { overflow-wrap: anywhere; }

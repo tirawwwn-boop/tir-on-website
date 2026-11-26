@@ -94,3 +94,10 @@ add_action('woocommerce_checkout_before_order_review_heading', static function (
 add_action('woocommerce_checkout_after_order_review', static function () {
     echo '</section>';
 }, 1);
+
+add_filter('woocommerce_get_script_data', static function ($data, $handle) {
+    if ($handle === 'wc-checkout' && is_array($data)) {
+        $data['i18n_checkout_error'] = 'Confirmarea comenzii nu a ajuns la browser. Verifică starea plății înainte de o nouă încercare. Dacă situația persistă, comunică atelierului ora încercării.';
+    }
+    return $data;
+}, 10, 2);

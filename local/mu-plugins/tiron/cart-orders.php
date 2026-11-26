@@ -67,6 +67,7 @@ add_action( 'before_woocommerce_init', static function () {
         if ( $handle ) {
             fclose( $handle );
         }
+        wc_get_logger()->warning( 'session_lock_timeout', [ 'source' => 'tiron-checkout' ] );
         wp_die( 'Coșul nu poate fi actualizat acum. Încearcă din nou.', '', [ 'response' => 503 ] );
     }
     add_action( 'shutdown', static function () use ( $handle ) {
@@ -341,6 +342,7 @@ add_action( 'woocommerce_checkout_create_order_line_item', static function ( $it
     // A retry may rebuild order lines. Every line retains a separate private copy.
     $order_photo = tiron_copy_photo_for_order( $line['_tiron_stage'] );
     if ( is_wp_error( $order_photo ) ) {
+        wc_get_logger()->warning( 'order_photo_copy_failed', [ 'source' => 'tiron-checkout' ] );
         throw new Exception( $order_photo->get_error_message() );
     }
     $item->add_meta_data( '_tiron_photo_id', $order_photo, true );
@@ -380,6 +382,7 @@ add_action( 'woocommerce_store_api_checkout_order_processed', static function ( 
 } );
 add_action( 'woocommerce_checkout_order_processed', static function ( $order_id ) {
     if ( ! tiron_validate_order_photos( wc_get_order( $order_id ) ) ) {
+        wc_get_logger()->warning( 'order_photo_unavailable', [ 'source' => 'tiron-checkout', 'order_id' => (int) $order_id ] );
         throw new Exception( tiron_photo_expired_message() );
     }
 } );

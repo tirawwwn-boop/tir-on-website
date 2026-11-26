@@ -39,6 +39,7 @@ def build():
             'tiron/cart-orders.php', 'tiron/private-photos.php', 'tiron/test-payments.php',
             'tiron/atelier.php', 'tiron/atelier.css',
             'tir-on-profit.php', 'tiron/profit-calculator.php', 'tiron/profit.css',
+            'tir-on-commerce.php', 'tiron/ro-delivery.php',
         )
     }
     mu.update({

@@ -71,7 +71,7 @@ function release_save( string $file, array $data, string $private ): void {
 
 function release_mu_path( string $name ): bool {
 	static $entries = array(
-		'tir-on-catalog.php', 'tir-on-hostico.php', 'tir-on-local-preview.php', 'tir-on-profit.php',
+		'tir-on-commerce.php', 'tiron/ro-delivery.php', 'tir-on-catalog.php', 'tir-on-hostico.php', 'tir-on-local-preview.php', 'tir-on-profit.php',
 		'tiron/admin-photos.php', 'tiron/cart-orders.php', 'tiron/private-photos.php', 'tiron/test-payments.php',
 		'tiron/atelier.php', 'tiron/atelier.css', 'tiron/profit-calculator.php', 'tiron/profit.css',
 		'tiron/hostico/emails.php', 'tiron/hostico/seed.php',

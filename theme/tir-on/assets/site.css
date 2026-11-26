@@ -188,3 +188,7 @@ html:has(dialog[open]) { overflow: hidden; }
   .feature-copy, .tl-transform-copy, .tl-steps, .tl-final-inner { transition: transform .45s ease, opacity .45s ease; }
   .awaiting-view { opacity: .45; transform: translateY(8px); }
 }
+.seasonal-note { padding: .85rem var(--margin); margin: 0; text-align: center; background: #e9d8bd; color: #312319; }
+.marketing-choice { background: var(--paper); padding: .75rem var(--margin); color: var(--ink); font-size: .9rem; }
+.marketing-choice summary { cursor: pointer; padding-block: .65rem; }
+.marketing-choice button { min-height: 44px; padding: .45rem 1rem; color: var(--ink); background: transparent; border: 1px solid currentColor; }

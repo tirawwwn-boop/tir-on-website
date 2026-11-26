@@ -6,7 +6,10 @@
 defined( 'ABSPATH' ) || exit;
 
 // This release is for private validation. WooCommerce can render and preview emails.
-add_filter( 'pre_option_blog_public', static fn() => '0', PHP_INT_MAX );
+// Indexing needs a separate owner decision and the native Reading setting.
+if ( wp_get_environment_type() !== 'production' || ! defined( 'TIRON_INDEXING_APPROVED' ) || true !== TIRON_INDEXING_APPROVED ) {
+    add_filter( 'pre_option_blog_public', static fn() => '0', PHP_INT_MAX );
+}
 add_filter( 'pre_wp_mail', '__return_true', PHP_INT_MAX );
 
 add_action( 'admin_menu', static function () {
@@ -36,7 +39,7 @@ function tiron_hostico_setup_page(): void {
 	?>
 	<div class="wrap">
 		<h1>Instalare TIR-ON</h1>
-		<p>Instalare privată de verificare. Indexarea și trimiterea e-mailurilor sunt oprite.</p>
+		<p>Instalare privată de verificare. Verifică vizibilitatea în Setări → Citire. Trimiterea e-mailurilor este oprită.</p>
 		<ul>
 			<?php foreach ( $checks as $label => $ok ) : ?>
 				<li><?php echo esc_html( ( $ok ? 'OK — ' : 'Verifică — ' ) . $label ); ?></li>

@@ -86,6 +86,7 @@ function t_product_data() {
         'description' => $product && $product->get_short_description() ? wp_strip_all_tags($product->get_short_description()) : 'Un litofan circular personalizat după fotografia ta, cu lumină LED alb-caldă și finisaj espresso mat.',
         'concept' => !$images,
         'images' => $images ?: [t_asset('images/hero-mobile.webp'), t_asset('images/feature.webp'), t_asset('images/detail-mobile.webp')],
+        'delivery' => $metadata('delivery'),
         'production' => $metadata('production'),
         'packaging' => $metadata('packaging'),
         'power' => $metadata('power', 'Alimentare prin cablu'),

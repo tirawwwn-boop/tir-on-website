@@ -143,7 +143,7 @@ $luna_icon = static function ($name) {
               <?php if (!empty($product_data['production'])) : ?>
                 <div><dt>Producție</dt><dd><?php echo t_e($product_data['production']); ?></dd></div>
               <?php endif; ?>
-              <div><dt>Livrare</dt><dd>Introdu adresa la finalizarea comenzii pentru a vedea opțiunile de livrare disponibile și costul lor.</dd></div>
+              <div><dt>Livrare</dt><dd><?php if (!empty($product_data['delivery'])) echo t_e($product_data['delivery']) . ' '; ?>Introdu adresa la finalizarea comenzii pentru a vedea opțiunile de livrare disponibile și costul lor.</dd></div>
             </dl>
           </details>
           <details><summary>Detalii de design <?php echo t_icon('down'); ?></summary>

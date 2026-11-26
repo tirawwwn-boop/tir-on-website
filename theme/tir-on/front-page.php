@@ -1,6 +1,11 @@
 <?php get_header(); $product_data = t_product_data(); $editorial_feature = t_storefront_image('feature'); ?>
 <main id="continut">
     <?php require __DIR__ . '/views/hero.php'; ?>
+    <?php $campaign = function_exists('tiron_commercial_options') ? tiron_commercial_options() : [];
+    $today = wp_date('Y-m-d');
+    if (!empty($campaign['christmas']) && !empty($campaign['from']) && $campaign['from'] <= $today && $today <= ($campaign['until'] ?? '')) : ?>
+        <aside class="seasonal-note" aria-label="Crăciun"><?= esc_html($campaign['christmas']); ?></aside>
+    <?php endif; ?>
     <div class="qualities">
         <div class="wrap qualities-inner">
             <div><?= t_icon('photo', 23); ?><span>Fotografia ta, în relief</span></div>
