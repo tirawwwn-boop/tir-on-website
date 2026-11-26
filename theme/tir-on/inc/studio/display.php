@@ -37,7 +37,7 @@ foreach (ts_groups() as [,$fields]) foreach ($fields as $key=>$field) {
     if (!str_starts_with($key,'tiron_')) continue;
     add_filter('theme_mod_'.$key, static function ($old) use ($key,$field) {
         $new=ts_value($key);
-        if (!$new || ($field[1]==='image' && !ts_public_media($new,'image'))) return $old;
+        if ($new==='' || ($field[1]==='image' && !ts_public_media($new,'image'))) return $old;
         return $new;
     });
 }

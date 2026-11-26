@@ -30,3 +30,8 @@
 .ts-field:has(#ts-logo) .ts-selected { background-color: #30261f; border-radius:4px; }
 .ts-field:has(#ts-logo) .ts-selected img { margin:0; padding:10px; height:48px; }
 .ts-selected:not(:empty) { margin-bottom:8px; }
+.ts-field .ts-selected > span { display:inline-grid; grid-template-columns:auto auto; gap:3px; }
+.ts-field .ts-selected > span > img { grid-column:1/-1; }
+.ts-fields-group summary { font-weight:600; }
+.ts-fields-group:last-of-type { margin-bottom:16px; }
+@media(max-width:700px) { .ts-field :is(input,select,textarea) { font-size:16px; } }

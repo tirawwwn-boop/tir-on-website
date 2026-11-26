@@ -20,7 +20,7 @@ function ts_field($key,$field,$value) {
         foreach (array_filter(explode(',',(string)$value)) as $id) {
             if (!ts_public_media($id,$type)) continue;
             if ($type==='video') echo esc_html(get_the_title($id));
-            else echo wp_get_attachment_image((int)$id,'thumbnail');
+            else echo wp_get_attachment_image((int)$id,'thumbnail',false,['data-media-id'=>(int)$id]);
         }
         if (!$value) {
             $default='';
@@ -52,6 +52,28 @@ function ts_field($key,$field,$value) {
     echo '</div>';
 }
 
+/** Keep longer forms navigable with native keyboard- and touch-friendly disclosures. */
+function ts_section_fields($tab,$fields,$values): void {
+    $breaks=[
+        'hero'=>['tiron_hero_title'=>'Titlu și introducere','tiron_image_hero'=>'Imagini și cadre','primary_label'=>'Butoane'],
+        'story'=>['tiron_image_original'=>'Comparația','tiron_transformation_title'=>'Titluri și descrieri','step_title_1'=>'Cum funcționează','gift_title_1'=>'Idei de cadouri','hide_hero'=>'Vizibilitatea secțiunilor'],
+        'luna'=>['tiron_feature_subtitle'=>'Prezentarea produsului','gallery'=>'Galerie și ambalaj','spec_diameter'=>'Specificații și livrare'],
+        'campaign'=>['announcement'=>'Anunț și perioadă','q1'=>'Întrebări frecvente'],
+    ];
+    $sets=[]; $heading='';
+    foreach ($fields as $key=>$field) {
+        $heading=$breaks[$tab][$key]??$heading;
+        $sets[$heading][$key]=$field;
+    }
+    foreach ($sets as $title=>$items) {
+        if ($title) echo '<details class="ts-fields-group" '.($title===array_key_first($sets)?'open':'').'><summary>'.esc_html($title).'</summary>';
+        echo '<div class="ts-grid">';
+        foreach ($items as $key=>$field) ts_field($key,$field,$values[$key]??'');
+        echo '</div>';
+        if ($title) echo '</details>';
+    }
+}
+
 function ts_editor(): void {
     if (!ts_can_edit()) wp_die('Acces restricționat.','',['response'=>403]);
     $groups=ts_groups();
@@ -77,9 +99,13 @@ function ts_editor(): void {
     'campaign'=>'Anunțul poate avea o perioadă opțională. Întrebările și răspunsurile completate apar pe homepage.',
     'footer'=>'Introdu doar datele publice aprobate și paginile juridice publicate.',
     'seo'=>'Câmpurile goale folosesc titlurile, descrierile și imaginile existente.'][$tab])?></p>
-    <div class="ts-grid"><?php foreach ($groups[$tab][1] as $key=>$field) ts_field($key,$field,$s['draft'][$key]??''); ?></div>
+    <?php ts_section_fields($tab,$groups[$tab][1],$s['draft']); ?>
     <button class="button button-primary" name="op" value="save">Salvează secțiunea în ciornă</button>
     </form><section class="ts-card"><h2>Previzualizare și publicare</h2><p>Verifică ultima ciornă salvată. Publicarea aplică toate secțiunile împreună.</p>
+    <?php if ($s['draft']!==$s['published']) : ?><details><summary>Modificări în așteptare</summary><ul>
+    <?php foreach ($groups as [$group,$fields]) foreach ($fields as $key=>[$label]) {
+        if (($s['draft'][$key]??'')!==($s['published'][$key]??'')) echo '<li>'.esc_html($group.' · '.$label).'</li>';
+    } ?></ul></details><?php endif; ?>
     <p><a class="button" href="<?=esc_url(add_query_arg($preview,home_url('/')))?>">Previzualizează Acasă</a>
     <a class="button" href="<?=esc_url(add_query_arg($preview,t_url('luna')))?>">Previzualizează Luna</a></p>
     <form method="post" action="<?=esc_url(admin_url('admin-post.php'))?>">
@@ -87,7 +113,7 @@ function ts_editor(): void {
     <label><input type="checkbox" name="confirm" value="1"> Am verificat ciorna și aprob publicarea.</label>
     <button class="button button-primary" name="op" value="publish">Publică versiunea</button>
     <details><summary>Istoric și resetare</summary><p>Restaurarea și resetarea modifică numai ciorna.</p>
-    <?php foreach ($s['history'] as $entry) : ?><p><?=esc_html(wp_date('d.m.Y H:i',$entry['time']).' · '.get_the_author_meta('display_name',$entry['author']))?> <button class="button" name="op" value="restore-<?=(int)$entry['version']?>">Restaurează v<?=(int)$entry['version']?></button></p><?php endforeach; ?>
+    <?php foreach ($s['history'] as $entry) : ?><p><?=esc_html($entry['author'] ? wp_date('d.m.Y H:i',$entry['time']).' · '.get_the_author_meta('display_name',$entry['author']) : 'Configurația inițială')?> <button class="button" name="op" value="restore-<?=(int)$entry['version']?>">Restaurează v<?=(int)$entry['version']?></button></p><?php endforeach; ?>
     <button class="button" name="op" value="reset">Revino în ciornă la setările de bază</button></details></form></section></main>
     <?php
 }
@@ -108,7 +134,9 @@ add_action('admin_post_tiron_studio_edit',static function () {
         } elseif ($op==='reset') $after['draft']=[];
         elseif ($op==='publish' && ($_POST['confirm']??'')==='1') {
             ts_validate_release($s['draft']);
-            array_unshift($after['history'],['version'=>$s['version'],'time'=>time(),'author'=>get_current_user_id(),'values'=>$s['published']]);
+            $previous=$s['release']??['version'=>0,'time'=>time(),'author'=>0];
+            array_unshift($after['history'],$previous+['values'=>$s['published']]);
+            $after['release']=['version'=>$s['version']+1,'time'=>time(),'author'=>get_current_user_id()];
             $after['history']=array_slice($after['history'],0,12);
             $after['published']=$s['draft'];
         } elseif (str_starts_with($op,'restore-')) {
