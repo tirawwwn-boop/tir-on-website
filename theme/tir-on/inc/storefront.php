@@ -41,7 +41,8 @@ add_action('after_setup_theme', static function () {
 
 /** A configured footer menu takes precedence over the published store destinations. */
 function t_footer_links($slot, $fallback = []) {
-    if (has_nav_menu('tiron-footer-' . $slot)) {
+    $studio_links = ($slot==='legal' && (ts_value('terms') || ts_value('privacy'))) || ($slot==='social' && $fallback);
+    if (!$studio_links && has_nav_menu('tiron-footer-' . $slot)) {
         wp_nav_menu([
             'theme_location' => 'tiron-footer-' . $slot,
             'container' => false,

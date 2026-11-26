@@ -47,6 +47,7 @@ $tiron_gifts = [
     'Momente speciale'     => 'Prima zi acasă, o revedere sau drumul spre un vârf. Caută acel cadru care spune o poveste chiar și fără cuvinte.',
 ];
 ?>
+<?php if (!ts_value('hide_descopera-lumina')) : ?>
 <section id="descopera-lumina" class="tl-transformation" aria-labelledby="tl-transform-title">
     <div id="transformarea" class="wrap tl-transform-grid" data-transformation>
         <div class="tl-transform-copy">
@@ -80,7 +81,9 @@ $tiron_gifts = [
         </figure>
     </div>
 </section>
+<?php endif; ?>
 
+<?php if (!ts_value('hide_cum-functioneaza')) : ?>
 <section id="cum-functioneaza" class="tl-process" aria-labelledby="tl-process-title">
     <div class="wrap">
         <p class="tl-kicker">Cum funcționează</p>
@@ -89,14 +92,16 @@ $tiron_gifts = [
             <?php foreach ( $tiron_steps as $tiron_i => $tiron_step ) : ?>
                 <li>
                     <span class="tl-step-number" aria-hidden="true"><?= t_e( sprintf( '%02d', $tiron_i + 1 ) ) ?></span>
-                    <h3><?= t_e( $tiron_step[0] ) ?></h3>
-                    <p><?= t_e( $tiron_step[1] ) ?></p>
+                    <h3><?= t_e( ts_value('step_title_'.($tiron_i+1),$tiron_step[0]) ) ?></h3>
+                    <p><?= t_e( ts_value('step_copy_'.($tiron_i+1),$tiron_step[1]) ) ?></p>
                 </li>
             <?php endforeach; ?>
         </ol>
     </div>
 </section>
+<?php endif; ?>
 
+<?php if (!ts_value('hide_cadouri')) : ?>
 <section id="cadouri" class="tl-gifts" aria-labelledby="tl-gifts-title">
     <div class="wrap tl-gifts-grid">
         <div>
@@ -104,19 +109,22 @@ $tiron_gifts = [
             <h2 id="tl-gifts-title" class="tl-title"><?= t_e( tiron_story_text( 'gift_title' ) ) ?></h2>
         </div>
         <div class="tl-gift-options">
-            <?php foreach ( $tiron_gifts as $tiron_occasion => $tiron_idea ) : ?>
+            <?php foreach ( array_keys($tiron_gifts) as $gift_index=>$tiron_occasion ) : $tiron_idea=$tiron_gifts[$tiron_occasion]; ?>
                 <details name="tiron-cadou"<?= 'Familie' === $tiron_occasion ? ' open' : '' ?>>
-                    <summary><?= t_e( $tiron_occasion ) ?><span class="tl-toggle" aria-hidden="true"></span></summary>
-                    <p><?= t_e( $tiron_idea ) ?></p>
+                    <summary><?= t_e(ts_value('gift_title_'.($gift_index+1),$tiron_occasion)) ?><span class="tl-toggle" aria-hidden="true"></span></summary>
+                    <p><?= t_e(ts_value('gift_copy_'.($gift_index+1),$tiron_idea)) ?></p>
                 </details>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
+<?php if (!ts_value('hide_final')) : ?>
 <section class="tl-final" aria-labelledby="tl-final-title">
     <div class="wrap tl-final-inner">
         <h2 id="tl-final-title" class="tl-title"><?= t_e( tiron_story_text( 'final_title' ) ) ?></h2>
         <a class="tl-create" href="<?= t_e( t_url( 'luna' ) ) ?>">Creează-ți Luna</a>
     </div>
 </section>
+<?php endif; ?>

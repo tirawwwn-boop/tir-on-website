@@ -1,11 +1,14 @@
 <?php get_header(); $product_data = t_product_data(); $editorial_feature = t_storefront_image('feature'); ?>
 <main id="continut">
-    <?php require __DIR__ . '/views/hero.php'; ?>
+    <?php if (!ts_value('hide_hero')) require __DIR__ . '/views/hero.php'; else echo '<h1 class="screen-reader-text">TIR-ON</h1>'; ?>
     <?php $campaign = function_exists('tiron_commercial_options') ? tiron_commercial_options() : [];
     $today = wp_date('Y-m-d');
     if (!empty($campaign['christmas']) && !empty($campaign['from']) && $campaign['from'] <= $today && $today <= ($campaign['until'] ?? '')) : ?>
         <aside class="seasonal-note" aria-label="Crăciun"><?= esc_html($campaign['christmas']); ?></aside>
     <?php endif; ?>
+    <?php if (ts_value('announcement') && (!ts_value('start') || ts_value('start') <= $today) && (!ts_value('end') || ts_value('end') >= $today)) : ?>
+    <aside class="seasonal-note" aria-label="Anunț"><?=esc_html(ts_value('announcement'))?></aside>
+    <?php endif; if (!ts_value('hide_qualities')) : ?>
     <div class="qualities">
         <div class="wrap qualities-inner">
             <div><?= t_icon('photo', 23); ?><span>Fotografia ta, în relief</span></div>
@@ -13,6 +16,7 @@
             <div><?= t_icon('spark', 25); ?><span>Creată special pentru tine</span></div>
         </div>
     </div>
+    <?php endif; if (!ts_value('hide_luna')) : ?>
     <section id="luna" class="feature">
         <div class="wrap feature-inner">
             <figure class="feature-visual">
@@ -31,6 +35,6 @@
             </div>
         </div>
     </section>
-    <?php require __DIR__ . '/views/home-story.php'; ?>
+    <?php endif; require __DIR__ . '/views/home-story.php'; ts_faq(); ?>
 </main>
 <?php get_footer(); ?>

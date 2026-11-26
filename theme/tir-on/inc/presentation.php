@@ -60,6 +60,11 @@ function t_product_data() {
     $images = [];
     if ($product) {
         $ids = array_filter(array_merge([$product->get_image_id()], $product->get_gallery_image_ids()));
+        $gallery=ts_value('gallery');
+        if ($gallery) {
+            $public=array_filter(explode(',',$gallery),static fn($image)=>ts_public_media($image,'image'));
+            if ($public) $ids=$public;
+        }
         foreach (array_unique($ids) as $image_id) {
             $url = wp_get_attachment_image_url($image_id, 'large');
             if ($url) {
@@ -69,7 +74,7 @@ function t_product_data() {
     }
     $metadata = static function ($key, $fallback = '') use ($id) {
         $value = $id ? get_post_meta($id, '_tiron_' . $key, true) : '';
-        return $value !== '' ? $value : $fallback;
+        return ts_value('spec_'.$key,$value !== '' ? $value : $fallback);
     };
     $price = $product && $product->get_price() !== '' ? wc_get_price_to_display($product) : null;
     $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : 'RON';

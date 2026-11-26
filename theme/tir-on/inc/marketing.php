@@ -3,6 +3,7 @@
 defined('ABSPATH') || exit;
 
 function tiron_pixel_ids(): array {
+    if (isset($_GET['tiron_studio'])) return [];
     if (!defined('TIRON_MARKETING_APPROVED') || TIRON_MARKETING_APPROVED !== true || !function_exists('tiron_commercial_options')) return [];
     $settings = tiron_commercial_options();
     return array_filter([

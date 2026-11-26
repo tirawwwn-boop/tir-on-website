@@ -44,6 +44,7 @@ function tiron_clean_commercial($input): array {
 
 function tiron_commercial_page(): void {
     if (!current_user_can('manage_options')) return;
+    if (isset($_GET['studio']) && function_exists('ts_editor')) { ts_editor(); return; }
     $settings = tiron_commercial_options();
     $product = absint(get_option('tiron_luna_product_id'));
     $links = [
@@ -54,6 +55,7 @@ function tiron_commercial_page(): void {
         'Plăți' => 'admin.php?page=wc-settings&tab=checkout',
         'Jurnale de diagnostic' => 'admin.php?page=wc-status&tab=logs',
     ];
+    if (function_exists('ts_can_edit') && ts_can_edit()) $links=['Brand Studio'=>'admin.php?page=tiron-commercial&studio=brand'] + $links;
     if ($product) $links['Luna · producție, livrare și ambalare'] = 'post.php?action=edit&post=' . $product;
     echo '<div class="wrap"><h1>Magazin TIR-ON</h1><p>';
     foreach ($links as $label => $target) {

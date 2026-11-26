@@ -10,6 +10,10 @@ if (is_readable(__DIR__ . '/views/home-story-customizer.php')) {
     require_once __DIR__ . '/views/home-story-customizer.php';
 }
 
+require_once __DIR__ . '/inc/studio/model.php';
+require_once __DIR__ . '/inc/studio/display.php';
+if (is_admin()) require_once __DIR__ . '/inc/studio/admin.php';
+
 add_action('after_setup_theme', static function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
@@ -19,6 +23,10 @@ add_action('after_setup_theme', static function () {
 
 // Supply the brand icon through WordPress, including its /favicon.ico redirect.
 add_filter('get_site_icon_url', static function ($url, $size, $blog_id) {
+    if (!$blog_id || (int)$blog_id===get_current_blog_id()) {
+        $icon=ts_media_url('icon');
+        if ($icon) return $icon;
+    }
     if (($blog_id && (int) $blog_id !== get_current_blog_id()) || get_option('site_icon')) {
         return $url;
     }
@@ -119,16 +127,19 @@ add_action('wp_head', static function () {
     $description = $home ? t_home_copy('hero_intro') : $product['description'];
     $settings = function_exists('tiron_commercial_options') ? tiron_commercial_options() : [];
     $description = ($settings[$home ? 'home_description' : 'luna_description'] ?? '') ?: $description;
+    $scope=$home?'home':'product';
+    $description=ts_value($scope.'_desc_seo',$description);
     $image = $home ? t_scene('hero') : $product['images'][0];
     $concept = $home ? !t_storefront_image('hero') : $product['concept'];
+    $share=ts_media_url($scope.'_social');
     echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     echo '<meta property="og:locale" content="ro_RO"><meta property="og:site_name" content="TIR-ON">';
     echo '<meta property="og:type" content="' . ($home ? 'website' : 'product') . '">';
     echo '<meta property="og:title" content="' . esc_attr(wp_get_document_title()) . '">';
     echo '<meta property="og:description" content="' . esc_attr($description) . '">';
-    echo '<meta property="og:image" content="' . esc_url($concept ? t_asset('images/social-luna.jpg') : $image) . '">';
+    echo '<meta property="og:image" content="' . esc_url($share ?: ($concept ? t_asset('images/social-luna.jpg') : $image)) . '">';
     echo '<meta name="twitter:card" content="summary_large_image">';
-    echo '<meta property="og:image:alt" content="' . esc_attr($concept ? 'Luna iluminată · vizualizare de concept' : 'Luna, litofan luminos personalizat') . '">';
+    echo '<meta property="og:image:alt" content="' . esc_attr($share ? get_post_meta(ts_value($scope.'_social'),'_wp_attachment_image_alt',true) : ($concept ? 'Luna iluminată · vizualizare de concept' : 'Luna, litofan luminos personalizat')) . '">';
     echo '<meta property="og:url" content="' . esc_url($home ? home_url('/') : get_permalink()) . '">';
     if ($home && $concept) {
         if (!t_storefront_image('hero-mobile')) {

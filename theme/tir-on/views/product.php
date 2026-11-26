@@ -61,6 +61,7 @@ $luna_icon = static function ($name) {
         <?php if (!empty($product_data['concept']) && $luna_count) : ?>
           <p class="lp-caption">Vizualizare de concept. Detaliile prototipului pot varia.</p>
         <?php endif; ?>
+        <?php if ($video=ts_media_url('video','','video')) : ?><video class="ts-product-video" controls playsinline preload="none" aria-label="Prezentare Luna" src="<?=esc_url($video)?>"></video><?php if (ts_value('video_text')) : ?><p><?=esc_html(ts_value('video_text'))?></p><?php endif; endif; ?>
       </section>
 
       <div class="lp-info">
@@ -133,7 +134,7 @@ $luna_icon = static function ($name) {
         <div class="lp-accordions">
           <details open id="livrare"><summary>Ambalare și livrare <?php echo t_icon('down'); ?></summary>
             <dl class="lp-fulfilment">
-              <div><dt>Ambalare</dt><dd><?php if (!empty($product_data['packaging'])) : ?>
+              <div><dt>Ambalare</dt><dd><?php if ($package_image=ts_media_url('package_image')) echo wp_get_attachment_image(ts_value('package_image'),'medium',false,['loading'=>'lazy']); ?><?php if (!empty($product_data['packaging'])) : ?>
                 <?php echo t_e($product_data['packaging']); ?>
               <?php elseif ($luna_available) : ?>
                 Oferi Luna cadou? Poți menționa o preferință de ambalare în <a href="#lp-notes">observațiile comenzii</a>.

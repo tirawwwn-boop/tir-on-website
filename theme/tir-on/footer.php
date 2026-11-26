@@ -9,17 +9,19 @@ $terms_url = $terms_id && get_post_status($terms_id) === 'publish' ? get_permali
     <div class="wrap footer-inner">
         <div class="footer-brand">
             <a class="brand-link" href="<?= esc_url(t_url('home')); ?>">
-                <img class="brand-logo" src="<?= esc_url(t_asset('brand/TIR-ON_06_alb.svg')); ?>" width="553" height="144" alt="TIR-ON – Acasă">
+                <img class="brand-logo" src="<?= esc_url(ts_media_url('logo',t_asset('brand/TIR-ON_06_alb.svg'))); ?>" width="553" height="144" alt="TIR-ON – Acasă">
             </a>
+            <?php if (ts_value('footnote')) : ?><p><?= esc_html(ts_value('footnote')) ?></p><?php endif; ?>
             <small>© <?= esc_html(wp_date('Y')); ?> TIR-ON</small>
         </div>
         <nav aria-label="Asistență clienți">
             <h2>Asistență</h2>
             <?php t_footer_links('help', [
                 'Contact' => $contact_url,
-                'Cum funcționează' => t_url('home') . '#cum-functioneaza',
+                'Cum funcționează' => ts_value('hide_cum-functioneaza') ? '' : t_url('home') . '#cum-functioneaza',
                 'Alegerea fotografiei' => $luna_url . '#personalizare',
             ]); ?>
+            <?php foreach (['email'=>'mailto:', 'phone'=>'tel:'] as $key=>$protocol) if ($value=ts_value($key)) : ?><p><a href="<?=esc_url($protocol.$value)?>"><?=esc_html($value)?></a></p><?php endif; ?>
         </nav>
         <nav aria-label="Livrare">
             <h2>Livrare</h2>
@@ -28,14 +30,14 @@ $terms_url = $terms_id && get_post_status($terms_id) === 'publish' ? get_permali
         <nav aria-label="Informații legale">
             <h2>Informații legale</h2>
             <?php t_footer_links('legal', [
-                'Confidențialitate' => get_privacy_policy_url(),
-                'Termeni și condiții' => $terms_url,
+                'Confidențialitate' => ts_link_page('privacy',get_privacy_policy_url()),
+                'Termeni și condiții' => ts_link_page('terms',$terms_url),
                 'Produse personalizate și retur' => $luna_url . '#retur',
             ]); ?>
         </nav>
         <section class="footer-social" aria-label="Rețele sociale">
             <h2>Social</h2>
-            <?php t_footer_links('social'); ?>
+            <?php t_footer_links('social',array_filter(['Instagram'=>ts_value('instagram'),'TikTok'=>ts_value('tiktok'),'Facebook'=>ts_value('facebook')])); ?>
             <details class="footer-sharing">
                 <summary>Distribuie Luna</summary>
                 <input type="url" aria-label="Linkul către Luna" readonly value="<?= esc_url($luna_url); ?>">
